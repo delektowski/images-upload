@@ -3,6 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import firebase from 'firebase/app';
+import 'firebase/storage';
+import 'firebase/database';
+
+// Initialize Firebase
+const config = {
+	apiKey: 'AIzaSyB05MIkrZq52LQIiRrC1nFsUp7hkBG3odc',
+	authDomain: 'upload-images-69afc.firebaseapp.com',
+	databaseURL: 'https://upload-images-69afc.firebaseio.com',
+	projectId: 'upload-images-69afc',
+	storageBucket: 'upload-images-69afc.appspot.com',
+	messagingSenderId: '419462563824'
+};
+firebase.initializeApp(config);
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
