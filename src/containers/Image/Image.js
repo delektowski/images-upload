@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classes from './Image.module.scss';
 import Button from '../../components/Button/Button';
-import ImageContainer from '../ImageContainer/ImageContainer';
+import ImageContainer from '../../components/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateObj } from './utylity';
@@ -56,10 +56,8 @@ class Image extends Component {
 		}
 	};
 
-	componentDidUpdate = () => {};
-
 	componentDidMount() {
-		// Recognize state of this picture based on Firebase data
+		// Recognize state of the element based on Firebase data
 		for (let key in this.props.picturesDataObj) {
 			if (key === this.props.caption[0]) {
 				let color = '';
@@ -76,6 +74,17 @@ class Image extends Component {
 				);
 			}
 		}
+		// Firebase listener for state change of the element based on the database state
+
+		// 	const userNameDbElement = firebase.database().ref('Marcin/' + this.props.caption[0]);
+		// 	userNameDbElement.on('value', (snapshot) => {
+		// 		if (this.state.isClickedBlue !== snapshot.val().isClickedBlue)
+		// 			this.setState({ isClickedBlue: snapshot.val().isClickedBlue });
+		// 	});
+	}
+
+	componentDidUpdate() {
+		console.log('update');
 	}
 
 	render() {

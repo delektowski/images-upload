@@ -20,8 +20,9 @@ class Uploader extends Component {
 
 	componentDidMount() {
 		const userNameDbElement = firebase.database().ref().child(this.state.userName);
+
 		userNameDbElement.on('value', (snapshot) => {
-			if (snapshot.val() === null) return;
+			if (!snapshot.exists()) return;
 			const picturesTitles = Object.keys(snapshot.val());
 			const picturesPaths = [];
 			const picturesDataObj = snapshot.val();
