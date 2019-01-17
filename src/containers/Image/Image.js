@@ -74,17 +74,28 @@ class Image extends Component {
 				);
 			}
 		}
-		// Firebase listener for state change of the element based on the database state
-
-		// 	const userNameDbElement = firebase.database().ref('Marcin/' + this.props.caption[0]);
-		// 	userNameDbElement.on('value', (snapshot) => {
-		// 		if (this.state.isClickedBlue !== snapshot.val().isClickedBlue)
-		// 			this.setState({ isClickedBlue: snapshot.val().isClickedBlue });
-		// 	});
 	}
 
 	componentDidUpdate() {
-		console.log('update');
+		// Those if statements make possible to see changes simultaneously on different instances of the app
+		if (this.props.picturesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
+			this.setState({
+				isClickedGreen: this.props.picturesDataObj[this.props.caption[0]].isClickedGreen,
+				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+			});
+		}
+		if (this.props.picturesDataObj[this.props.caption[0]].isClickedBlue !== this.state.isClickedBlue) {
+			this.setState({
+				isClickedBlue: this.props.picturesDataObj[this.props.caption[0]].isClickedBlue,
+				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+			});
+		}
+		if (this.props.picturesDataObj[this.props.caption[0]].isClickedRed !== this.state.isClickedRed) {
+			this.setState({
+				isClickedRed: this.props.picturesDataObj[this.props.caption[0]].isClickedRed,
+				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+			});
+		}
 	}
 
 	render() {
