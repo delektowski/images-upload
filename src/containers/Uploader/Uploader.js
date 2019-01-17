@@ -17,11 +17,12 @@ class Uploader extends Component {
 
 	componentDidMount() {
 		const userNameDbElement = firebase.database().ref().child(this.state.userName);
-
 		userNameDbElement.on('value', (snapshot) => {
+			if (snapshot.val() === null) return;
 			const picturesTitles = Object.keys(snapshot.val());
 			const picturesPaths = [];
 			const picturesDataObj = snapshot.val();
+
 			for (const prop in snapshot.val()) {
 				const picturePath = snapshot.val()[prop].path;
 				picturesPaths.push(picturePath);
@@ -44,7 +45,6 @@ class Uploader extends Component {
 		const metadata = {
 			contentType: 'image/jpeg'
 		};
-
 		const storageRef = firebase.storage().ref();
 		const filesArr = [ ...files ];
 
@@ -73,14 +73,12 @@ class Uploader extends Component {
 				},
 				() => {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
-					console.log(pictureTitle);
-
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 						firebase.database().ref(this.state.userName + '/').child(pictureTitle).set({
 							path: downloadURL,
-							selectYes: false,
-							selectMaybe: false,
-							selectNot: false
+							isClickedGreen: false,
+							isClickedBlue: false,
+							isClickedRed: false
 						});
 					});
 				}
