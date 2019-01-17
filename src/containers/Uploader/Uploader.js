@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ImagesGenerator from '../../components/ImagesGenerator/ImagesGenerator';
 import Button from '../../components/Button/Button';
+import Counter from '../../components/Counter/Counter';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -11,7 +12,7 @@ class Uploader extends Component {
 		userName: 'Marcin',
 		picturesPaths: [],
 		picturesTitles: [],
-		pictureDataObj: null,
+		picturesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
 		inputValue: ''
@@ -103,7 +104,7 @@ class Uploader extends Component {
 					buttonColor="Button__green"
 					buttonIsDisabled={this.state.buttonIsDisabled}
 				/>
-
+				<Counter picturesDataObj={this.state.picturesDataObj} />
 				<div className={classes.Uploader__imagesContainer}>
 					<ImagesGenerator
 						images={this.state.picturesPaths}
