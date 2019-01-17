@@ -1,0 +1,22 @@
+.ImageContainer {
+	width: 300px;
+	background: rgba(207, 197, 197, 0.562);
+	margin: 1%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+	transition: all .3s ease-in-out;
+}
+
+.ImageContainer__green {
+	background: rgba(83, 146, 83, 0.562);
+}
+
+.ImageContainer__blue {
+	background: rgba(64, 97, 146, 0.562);
+}
+
+.ImageContainer__red {
+	background: rgba(145, 58, 58, 0.562);
+}

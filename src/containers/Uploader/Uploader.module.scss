@@ -1,0 +1,23 @@
+.Uploader {
+	text-align: center;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.Uploader__imagesContainer {
+	width: 90%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+h1,
+input,
+button {
+	margin: 2%;
+	margin-top: 1%;
+}
