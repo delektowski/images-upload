@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ImagesGenerator from '../../components/ImagesGenerator/ImagesGenerator';
+import Button from '../../components/Button/Button';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -12,6 +13,7 @@ class Uploader extends Component {
 		picturesTitles: [],
 		pictureDataObj: null,
 		selectedfiles: null,
+		buttonIsDisabled: true,
 		inputValue: ''
 	};
 
@@ -37,7 +39,10 @@ class Uploader extends Component {
 	}
 
 	selectImageHandler = (e) => {
-		this.setState({ selectedfiles: e.target.files });
+		this.setState({
+			selectedfiles: e.target.files,
+			buttonIsDisabled: false
+		});
 	};
 
 	uploadHandler = () => {
@@ -92,7 +97,13 @@ class Uploader extends Component {
 			<div className={classes.Uploader}>
 				<h1>{this.state.userName}</h1>
 				<input type="file" multiple onChange={this.selectImageHandler} />
-				<button onClick={this.uploadHandler}>Upload</button>
+				<Button
+					clicked={this.uploadHandler}
+					buttonText="UPLOAD"
+					buttonColor="Button__green"
+					buttonIsDisabled={this.state.buttonIsDisabled}
+				/>
+
 				<div className={classes.Uploader__imagesContainer}>
 					<ImagesGenerator
 						images={this.state.picturesPaths}
