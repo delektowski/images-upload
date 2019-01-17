@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import classes from './Image.module.scss';
 import Button from '../../components/Button/Button';
 import ImageContainer from '../ImageContainer/ImageContainer';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import { updateObj } from './utylity';
 
 class Image extends Component {
 	state = {
+		containerColor: '',
 		isClickedGreen: false,
 		isClickedBlue: false,
-		isClickedRed: false,
-		containerColor: ''
+		isClickedRed: false
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -17,36 +20,35 @@ class Image extends Component {
 				this.setState((prevState) => {
 					let color = 'green';
 					if (prevState.isClickedGreen === true) color = '';
-					return {
-						isClickedGreen: !prevState.isClickedGreen,
-						isClickedBlue: false,
-						isClickedRed: false,
-						containerColor: color
-					};
+					firebase
+						.database()
+						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.update(updateObj(color, !prevState.isClickedGreen, false, false));
+
+					return updateObj(color, !prevState.isClickedGreen, false, false);
 				});
+
 				break;
 			case 'blue':
 				this.setState((prevState) => {
 					let color = 'blue';
 					if (prevState.isClickedBlue === true) color = '';
-					return {
-						isClickedBlue: !prevState.isClickedBlue,
-						isClickedGreen: false,
-						isClickedRed: false,
-						containerColor: color
-					};
+					firebase
+						.database()
+						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.update(updateObj(color, false, !prevState.isClickedBlue, false));
+					return updateObj(color, false, !prevState.isClickedBlue, false);
 				});
 				break;
 			case 'red':
 				this.setState((prevState) => {
 					let color = 'red';
 					if (prevState.isClickedRed === true) color = '';
-					return {
-						isClickedRed: !prevState.isClickedRed,
-						isClickedGreen: false,
-						isClickedBlue: false,
-						containerColor: color
-					};
+					firebase
+						.database()
+						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.update(updateObj(color, false, false, !prevState.isClickedRed));
+					return updateObj(color, false, false, !prevState.isClickedRed);
 				});
 				break;
 			default:
@@ -54,21 +56,24 @@ class Image extends Component {
 		}
 	};
 
+	componentDidUpdate = () => {};
+
 	componentDidMount() {
-		console.log(this.props.picturesDataObj);
+		// Recognize state of this picture based on Firebase data
 		for (let key in this.props.picturesDataObj) {
-			// Recognize state of this picture from Firebase data
 			if (key === this.props.caption[0]) {
 				let color = '';
 				if (this.props.picturesDataObj[key].isClickedGreen) color = 'green';
 				if (this.props.picturesDataObj[key].isClickedBlue) color = 'blue';
 				if (this.props.picturesDataObj[key].isClickedRed) color = 'red';
-				this.setState({
-					isClickedGreen: this.props.picturesDataObj[key].isClickedGreen,
-					isClickedBlue: this.props.picturesDataObj[key].isClickedBlue,
-					isClickedRed: this.props.picturesDataObj[key].isClickedRed,
-					containerColor: color
-				});
+				this.setState(
+					updateObj(
+						color,
+						this.props.picturesDataObj[key].isClickedGreen,
+						this.props.picturesDataObj[key].isClickedBlue,
+						this.props.picturesDataObj[key].isClickedRed
+					)
+				);
 			}
 		}
 	}

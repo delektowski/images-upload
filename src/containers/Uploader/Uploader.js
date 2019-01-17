@@ -75,6 +75,7 @@ class Uploader extends Component {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 						firebase.database().ref(this.state.userName + '/').child(pictureTitle).set({
+							containerColor: '',
 							path: downloadURL,
 							isClickedGreen: false,
 							isClickedBlue: false,
@@ -97,6 +98,7 @@ class Uploader extends Component {
 						images={this.state.picturesPaths}
 						titles={this.state.picturesTitles}
 						picturesDataObj={this.state.picturesDataObj}
+						userName={this.state.userName}
 					/>
 				</div>
 			</div>

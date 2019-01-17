@@ -22,6 +22,7 @@ const imagesGenerator = (props) => {
 				src={Object.values(element)}
 				caption={Object.keys(element)}
 				picturesDataObj={picturesDataObj}
+				userName={props.userName}
 			/>
 		);
 	});
