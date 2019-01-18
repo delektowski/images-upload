@@ -77,7 +77,7 @@ class Image extends Component {
 	}
 
 	componentDidUpdate() {
-		// Those if statements make possible to see changes simultaneously on different instances of the app
+		// This make possible to see changes simultaneously on different instances of the app
 		if (this.props.picturesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
 			this.setState({
 				isClickedGreen: this.props.picturesDataObj[this.props.caption[0]].isClickedGreen,

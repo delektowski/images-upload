@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ImagesGenerator from '../../components/ImagesGenerator/ImagesGenerator';
 import Button from '../../components/Button/Button';
 import Counter from '../../components/Counter/Counter';
+import Filter from '../../components/Filter/Filter';
+import Layout from '../../Layout/Layout';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -10,31 +12,17 @@ import classes from './Uploader.module.scss';
 class Uploader extends Component {
 	state = {
 		userName: 'Marcin',
-		picturesPaths: [],
-		picturesTitles: [],
 		picturesDataObj: null,
 		selectedfiles: null,
-		buttonIsDisabled: true,
-		inputValue: ''
+		buttonIsDisabled: true
 	};
 
 	componentDidMount() {
 		const userNameDbElement = firebase.database().ref().child(this.state.userName);
-
 		userNameDbElement.on('value', (snapshot) => {
 			if (!snapshot.exists()) return;
-			const picturesTitles = Object.keys(snapshot.val());
-			const picturesPaths = [];
 			const picturesDataObj = snapshot.val();
-
-			for (const prop in snapshot.val()) {
-				const picturePath = snapshot.val()[prop].path;
-				picturesPaths.push(picturePath);
-			}
-
 			this.setState({
-				picturesTitles: picturesTitles,
-				picturesPaths: picturesPaths,
 				picturesDataObj: picturesDataObj
 			});
 		});
@@ -96,25 +84,28 @@ class Uploader extends Component {
 
 	render() {
 		return (
-			<div className={classes.Uploader}>
-				<h1>{this.state.userName}</h1>
-				<input type="file" multiple onChange={this.selectImageHandler} />
-				<Button
-					clicked={this.uploadHandler}
-					buttonText="UPLOAD"
-					buttonColor="Button__green"
-					buttonIsDisabled={this.state.buttonIsDisabled}
-				/>
-				<Counter picturesDataObj={this.state.picturesDataObj} />
-				<div className={classes.Uploader__imagesContainer}>
-					<ImagesGenerator
-						images={this.state.picturesPaths}
-						titles={this.state.picturesTitles}
-						picturesDataObj={this.state.picturesDataObj}
-						userName={this.state.userName}
+			<Layout>
+				<div className={classes.Uploader}>
+					<h1>{this.state.userName}</h1>
+					<input type="file" multiple onChange={this.selectImageHandler} />
+					<Button
+						clicked={this.uploadHandler}
+						buttonText="UPLOAD"
+						buttonColor="Button__green"
+						buttonIsDisabled={this.state.buttonIsDisabled}
 					/>
+					<Counter picturesDataObj={this.state.picturesDataObj} />
+					<Filter />
+					<div className={classes.Uploader__imagesContainer}>
+						<ImagesGenerator
+							images={this.state.picturesPaths}
+							titles={this.state.picturesTitles}
+							picturesDataObj={this.state.picturesDataObj}
+							userName={this.state.userName}
+						/>
+					</div>
 				</div>
-			</div>
+			</Layout>
 		);
 	}
 }
