@@ -3,6 +3,7 @@ import ImagesGenerator from '../../components/ImagesGenerator/ImagesGenerator';
 import Button from '../../components/Button/Button';
 import Counter from '../../components/Counter/Counter';
 import Filter from '../../components/Filter/Filter';
+import Reset from '../../components/Reset/Reset';
 import Layout from '../../Layout/Layout';
 import firebase from 'firebase/app';
 import 'firebase/storage';
@@ -12,18 +13,19 @@ import classes from './Uploader.module.scss';
 class Uploader extends Component {
 	state = {
 		userName: 'Marcin',
-		picturesDataObj: null,
+		imagesDataObj: null,
 		selectedfiles: null,
-		buttonIsDisabled: true
+		buttonIsDisabled: true,
+		filterButtonsState: false
 	};
 
 	componentDidMount() {
 		const userNameDbElement = firebase.database().ref().child(this.state.userName);
 		userNameDbElement.on('value', (snapshot) => {
 			if (!snapshot.exists()) return;
-			const picturesDataObj = snapshot.val();
+			const imagesDataObj = snapshot.val();
 			this.setState({
-				picturesDataObj: picturesDataObj
+				imagesDataObj: imagesDataObj
 			});
 		});
 	}
@@ -82,6 +84,12 @@ class Uploader extends Component {
 		});
 	};
 
+	filterButtonsStateHandler = (buttonsStateObj) => {
+		this.setState({
+			filterButtonsState: buttonsStateObj
+		});
+	};
+
 	render() {
 		return (
 			<Layout>
@@ -94,14 +102,17 @@ class Uploader extends Component {
 						buttonColor="Button__green"
 						buttonIsDisabled={this.state.buttonIsDisabled}
 					/>
-					<Counter picturesDataObj={this.state.picturesDataObj} />
-					<Filter />
+					<Counter imagesDataObj={this.state.imagesDataObj} />
+					<Filter filterButtonsState={this.filterButtonsStateHandler} />
+					<Reset userName={this.state.userName} imagesDataObj={this.state.imagesDataObj} />
 					<div className={classes.Uploader__imagesContainer}>
 						<ImagesGenerator
 							images={this.state.picturesPaths}
 							titles={this.state.picturesTitles}
-							picturesDataObj={this.state.picturesDataObj}
+							imagesDataObj={this.state.imagesDataObj}
 							userName={this.state.userName}
+							filterButtonsState={this.state.filterButtonsState}
+							reset={this.state.reset}
 						/>
 					</div>
 				</div>

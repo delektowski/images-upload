@@ -4,7 +4,7 @@ import Button from '../../components/Button/Button';
 import ImageContainer from '../../components/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { updateObj } from './utylity';
+import { updateImageState } from './utylity';
 
 class Image extends Component {
 	state = {
@@ -23,9 +23,9 @@ class Image extends Component {
 					firebase
 						.database()
 						.ref(`${this.props.userName}/${this.props.caption[0]}`)
-						.update(updateObj(color, !prevState.isClickedGreen, false, false));
+						.update(updateImageState(color, !prevState.isClickedGreen, false, false));
 
-					return updateObj(color, !prevState.isClickedGreen, false, false);
+					return updateImageState(color, !prevState.isClickedGreen, false, false);
 				});
 
 				break;
@@ -36,8 +36,8 @@ class Image extends Component {
 					firebase
 						.database()
 						.ref(`${this.props.userName}/${this.props.caption[0]}`)
-						.update(updateObj(color, false, !prevState.isClickedBlue, false));
-					return updateObj(color, false, !prevState.isClickedBlue, false);
+						.update(updateImageState(color, false, !prevState.isClickedBlue, false));
+					return updateImageState(color, false, !prevState.isClickedBlue, false);
 				});
 				break;
 			case 'red':
@@ -47,8 +47,8 @@ class Image extends Component {
 					firebase
 						.database()
 						.ref(`${this.props.userName}/${this.props.caption[0]}`)
-						.update(updateObj(color, false, false, !prevState.isClickedRed));
-					return updateObj(color, false, false, !prevState.isClickedRed);
+						.update(updateImageState(color, false, false, !prevState.isClickedRed));
+					return updateImageState(color, false, false, !prevState.isClickedRed);
 				});
 				break;
 			default:
@@ -58,18 +58,18 @@ class Image extends Component {
 
 	componentDidMount() {
 		// Recognize state of the element based on Firebase data
-		for (let key in this.props.picturesDataObj) {
+		for (let key in this.props.imagesDataObj) {
 			if (key === this.props.caption[0]) {
 				let color = '';
-				if (this.props.picturesDataObj[key].isClickedGreen) color = 'green';
-				if (this.props.picturesDataObj[key].isClickedBlue) color = 'blue';
-				if (this.props.picturesDataObj[key].isClickedRed) color = 'red';
+				if (this.props.imagesDataObj[key].isClickedGreen) color = 'green';
+				if (this.props.imagesDataObj[key].isClickedBlue) color = 'blue';
+				if (this.props.imagesDataObj[key].isClickedRed) color = 'red';
 				this.setState(
-					updateObj(
+					updateImageState(
 						color,
-						this.props.picturesDataObj[key].isClickedGreen,
-						this.props.picturesDataObj[key].isClickedBlue,
-						this.props.picturesDataObj[key].isClickedRed
+						this.props.imagesDataObj[key].isClickedGreen,
+						this.props.imagesDataObj[key].isClickedBlue,
+						this.props.imagesDataObj[key].isClickedRed
 					)
 				);
 			}
@@ -78,22 +78,22 @@ class Image extends Component {
 
 	componentDidUpdate() {
 		// This make possible to see changes simultaneously on different instances of the app
-		if (this.props.picturesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
 			this.setState({
-				isClickedGreen: this.props.picturesDataObj[this.props.caption[0]].isClickedGreen,
-				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+				isClickedGreen: this.props.imagesDataObj[this.props.caption[0]].isClickedGreen,
+				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
 			});
 		}
-		if (this.props.picturesDataObj[this.props.caption[0]].isClickedBlue !== this.state.isClickedBlue) {
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedBlue !== this.state.isClickedBlue) {
 			this.setState({
-				isClickedBlue: this.props.picturesDataObj[this.props.caption[0]].isClickedBlue,
-				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+				isClickedBlue: this.props.imagesDataObj[this.props.caption[0]].isClickedBlue,
+				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
 			});
 		}
-		if (this.props.picturesDataObj[this.props.caption[0]].isClickedRed !== this.state.isClickedRed) {
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedRed !== this.state.isClickedRed) {
 			this.setState({
-				isClickedRed: this.props.picturesDataObj[this.props.caption[0]].isClickedRed,
-				containerColor: this.props.picturesDataObj[this.props.caption[0]].containerColor
+				isClickedRed: this.props.imagesDataObj[this.props.caption[0]].isClickedRed,
+				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
 			});
 		}
 	}

@@ -1,4 +1,4 @@
-export const updateObj = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
+export const updateImageState = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
 	return {
 		containerColor: containerColor,
 		isClickedGreen: isClickedGreen,
