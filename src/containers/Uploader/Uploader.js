@@ -20,7 +20,7 @@ class Uploader extends Component {
 	};
 
 	componentDidMount() {
-		//Firebase starts listening for any changes over user database; if any occurs the app state of user data is also changing
+		//Firebase starts listening for any changes over the user database; if any occurs the app state of user data is changing also
 		const userNameDbElement = firebase.database().ref().child(this.state.userName);
 		userNameDbElement.on('value', (snapshot) => {
 			if (!snapshot.exists()) return;
