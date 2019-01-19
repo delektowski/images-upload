@@ -8,7 +8,7 @@ const Button = (props) => {
 			onClick={props.clicked}
 			className={[ classes.Button, classes[props.buttonColor] ].join(' ')}
 		>
-			{props.buttonText}
+			<span className={classes[props.buttonTextStyle]}>{props.buttonText}</span>
 		</button>
 	);
 };

@@ -1,9 +1,14 @@
-.Counter {
+.Payment {
 	width: 100%;
 	max-height: 10%;
-	background: rgba(0, 128, 0, 0.459);
+	background: rgba(130, 224, 158, 0.527);
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
 	font-size: .7rem;
+	margin: .5% 0;
+}
+
+.Counter__variable {
+	color: blue;
 }

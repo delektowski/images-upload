@@ -66,7 +66,7 @@ const imagesGenerator = (props) => {
 			return (
 				<Image
 					key={Object.keys(element)}
-					src="https://www.readersdigest.ca/wp-content/uploads/sites/14/2011/01/4-ways-cheer-up-depressed-cat.jpg"
+					src={Object.values(element)}
 					caption={Object.keys(element)}
 					imagesDataObj={imagesDataObj}
 					userName={props.userName}

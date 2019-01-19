@@ -1,10 +1,12 @@
 import React from 'react';
-import Button from '../Button/Button';
+
+import Payment from './Payment/Payment';
 import classes from './Counter.module.scss';
 
 const counter = (props) => {
 	const selectedElementsAmount = (elementColor) => {
 		let amountOfElement = 0;
+
 		switch (elementColor) {
 			case 'green':
 				for (let isClickedGreen in props.imagesDataObj) {
@@ -23,14 +25,14 @@ const counter = (props) => {
 				}
 				return amountOfElement;
 
-			case 'wszystkie':
+			case 'all':
 				for (let everyPicture in props.imagesDataObj) {
 					if (everyPicture) amountOfElement++;
 				}
 				return amountOfElement;
-			case 'niezaznaczone':
+			case 'notSelected':
 				return (
-					selectedElementsAmount('wszystkie') -
+					selectedElementsAmount('all') -
 					selectedElementsAmount('green') -
 					selectedElementsAmount('blue') -
 					selectedElementsAmount('red')
@@ -40,37 +42,19 @@ const counter = (props) => {
 		}
 	};
 
-	const countPayPerImage = (howManySelected) => {
-		console.log(howManySelected);
-	};
-
 	return (
 		<React.Fragment>
 			<div className={classes.Counter}>
 				<p>TAK: {selectedElementsAmount('green')} </p>
 				<p>MOŻE: {selectedElementsAmount('blue')}</p>
 				<p>NIE: {selectedElementsAmount('red')}</p>
-				<p>WSZYSTKIE: {selectedElementsAmount('wszystkie')}</p>
-				<p>NIEZAZNACZONE: {selectedElementsAmount('niezaznaczone')}</p>
+				<p>WSZYSTKIE: {selectedElementsAmount('all')}</p>
+				<p>NIEZAZNACZONE: {selectedElementsAmount('notSelected')}</p>
 			</div>
-			<div className={classes.Counter}>
-				<div className={classes.Counter__section}>
-					<p>Możesz wybrać 10 zdjęć. Każde kolejne kosztuje 5 zł</p>
-				</div>
-				<div className={classes.Counter__section}>
-					<p>
-						Pozostało do wyboru:{' '}
-						<span style={{ color: 'blue' }}>{10 - selectedElementsAmount('green')} zdjęć</span>{' '}
-					</p>
-				</div>
-				<div className={classes.Counter__section}>
-					<p>
-						Koszt dodatkowych zdjęć: {countPayPerImage(selectedElementsAmount('green'))}
-						zł
-					</p>
-				</div>
-				<Button buttonText="WYBIERZ WSZYSTKIE I ZAPŁAĆ 40 zł" buttonColor="Button__green" />
-			</div>
+			<Payment
+				selectedGreenAmount={selectedElementsAmount('green')}
+				allSelectedAmount={selectedElementsAmount('all')}
+			/>
 		</React.Fragment>
 	);
 };
