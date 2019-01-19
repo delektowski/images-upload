@@ -9,12 +9,12 @@ import 'firebase/database';
 
 // Initialize Firebase
 const config = {
-	apiKey: 'AIzaSyB05MIkrZq52LQIiRrC1nFsUp7hkBG3odc',
-	authDomain: 'upload-images-69afc.firebaseapp.com',
-	databaseURL: 'https://upload-images-69afc.firebaseio.com',
-	projectId: 'upload-images-69afc',
-	storageBucket: 'upload-images-69afc.appspot.com',
-	messagingSenderId: '419462563824'
+	apiKey: 'AIzaSyCj6Pdybp3u5NdOUGzCK8ly2UnjtKoRfMs',
+	authDomain: 'hooks-b96d6.firebaseapp.com',
+	databaseURL: 'https://hooks-b96d6.firebaseio.com',
+	projectId: 'hooks-b96d6',
+	storageBucket: 'hooks-b96d6.appspot.com',
+	messagingSenderId: '114520526525'
 };
 firebase.initializeApp(config);
 
