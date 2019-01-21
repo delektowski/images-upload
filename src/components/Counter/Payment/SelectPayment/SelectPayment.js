@@ -5,11 +5,24 @@ import classes from './SelectPayment.module.scss';
 const SelectPayment = (props) => {
 	return (
 		<div className={classes.SelectPayment}>
-			<Button
-				buttonText={`WSZYSTKIE koszt dodatkowy: ${props.allSelectedAmount * 5 * 0.4} zł`}
-				buttonColor="Button__green"
-			/>
-			<Button buttonText={`TYLKO WYBRANE koszt dodatkowy: ${props.paymentPerImage} zł`} buttonColor="" />
+			<div className={classes.SelectPayment__buttonContainer}>
+				<Button buttonText="WSZYSTKIE" buttonColor="Button__green" />
+				<p className={classes.SelectPayment__buttonSubText}>
+					Koszt dodatkowy:
+					<span className={classes.SelectPayment__buttonSubTextVar}>{` ${props.allSelectedAmount *
+						5 *
+						0.4} zł`}</span>{' '}
+				</p>
+			</div>
+			<div className={classes.SelectPayment__buttonContainer}>
+				<Button buttonText="TYLKO WYBRANE" buttonColor="" />
+				<p className={classes.SelectPayment__buttonSubText}>
+					Koszt dodatkowy:
+					<span
+						className={classes.SelectPayment__buttonSubTextVar}
+					>{` ${props.paymentPerImage} zł`}</span>{' '}
+				</p>
+			</div>
 		</div>
 	);
 };
