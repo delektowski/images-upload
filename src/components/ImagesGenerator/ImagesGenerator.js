@@ -70,6 +70,7 @@ const imagesGenerator = (props) => {
 					caption={Object.keys(element)}
 					imagesDataObj={imagesDataObj}
 					userName={props.userName}
+					isAdminLogin={props.isAdminLogin}
 				/>
 			);
 		});
