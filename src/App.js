@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Uploader from './containers/Uploader/Uploader';
+import MainView from './containers/MainView/MainView';
 
 class App extends Component {
 	render() {
-		return <Uploader />;
+		return <MainView />;
 	}
 }
 
