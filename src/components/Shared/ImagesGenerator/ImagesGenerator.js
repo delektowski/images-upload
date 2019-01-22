@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from '../../containers/Image/Image';
+import Image from '../../../containers/Image/Image';
 
 const imagesGenerator = (props) => {
 	let imagesPaths = [];

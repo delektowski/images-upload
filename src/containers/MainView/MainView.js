@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import ImagesGenerator from '../../components/ImagesGenerator/ImagesGenerator';
-import Uploader from '../../components/Uploader/Uploader';
-import Counter from '../../components/Counter/Counter';
-import Filter from '../../components/Filter/Filter';
-import Button from '../../components/Button/Button';
-import Reset from '../../components/Reset/Reset';
+import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
+import Uploader from '../../components/AdminPanel/Uploader/Uploader';
+import Button from '../../components/Shared/Button/Button';
 import Layout from '../../Layout/Layout';
+import AdminPanel from '../../components/AdminPanel/AdminPanel';
+import UserPanel from '../../components/UserPanel/UserPanel';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -107,15 +106,12 @@ class MainView extends Component {
 		if (this.state.isAdminLogin) {
 			adminPanel = (
 				<React.Fragment>
-					<Button clicked={(e) => this.onLogoutHandler(e)} buttonText="Logout" buttonColor="Button__red" />
-					<label>Create User:</label>
-					<input
-						placeholder="user name"
-						value={this.state.createUserField}
-						onChange={(e) => this.setState({ createUserField: e.target.value })}
+					<AdminPanel
+						logout={(e) => this.onLogoutHandler(e)}
+						loginInputValue={this.state.createUserField}
+						createUserField={(e) => this.setState({ createUserField: e.target.value })}
+						buttonCreate={(e) => this.onCreateUserHandler(e)}
 					/>
-					<Button clicked={(e) => this.onCreateUserHandler(e)} buttonText="Create" buttonColor="" />
-
 					<Uploader
 						userName={this.state.userName}
 						pickSelectedImages={this.getSelectedImagesHandler}
@@ -129,10 +125,12 @@ class MainView extends Component {
 		if (this.state.userName && !this.state.isAdminLogin) {
 			userPanel = (
 				<React.Fragment>
-					<Button clicked={(e) => this.onLogoutHandler(e)} buttonText="Logout" buttonColor="Button__red" />
-					<Counter imagesDataObj={this.state.imagesDataObj} />
-					<Filter filterButtonsState={this.filterButtonsStateHandler} />
-					<Reset userName={this.state.userName} imagesDataObj={this.state.imagesDataObj} />
+					<UserPanel
+						buttonLogout={(e) => this.onLogoutHandler(e)}
+						imagesDataObj={this.state.imagesDataObj}
+						filterButtonsState={this.filterButtonsStateHandler}
+						userName={this.state.userName}
+					/>
 				</React.Fragment>
 			);
 		}

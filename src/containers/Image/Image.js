@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classes from './Image.module.scss';
-import Button from '../../components/Button/Button';
-import ImageContainer from '../../components/ImageContainer/ImageContainer';
+import Button from '../../components/Shared/Button/Button';
+import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateImageState } from './utylity';

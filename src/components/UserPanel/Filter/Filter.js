@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from '../Button/Button';
+import Button from '../../Shared/Button/Button';
 import classes from './Filter.module.scss';
 
 class Filter extends Component {

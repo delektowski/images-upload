@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../Button/Button';
+import Button from '../../Shared/Button/Button';
 import classes from './Reset.module.scss';
 import firebase from 'firebase/app';
 import 'firebase/database';
