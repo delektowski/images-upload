@@ -43,6 +43,8 @@ const uploader = (props) => {
 				},
 				() => {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
+					console.log('jestem', props.userName);
+
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 						firebase.database().ref(props.userName + '/').child(pictureTitle).set({
 							containerColor: '',

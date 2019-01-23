@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
-import Uploader from '../../components/AdminPanel/Uploader/Uploader';
 import Button from '../../components/Shared/Button/Button';
 import Layout from '../../Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/storage';
 import 'firebase/database';
 import classes from './MainView.module.scss';
@@ -14,8 +14,11 @@ class MainView extends Component {
 	state = {
 		userName: '',
 		loginField: '',
+		passwordField: '',
 		isLoginClicked: false,
-		createUserField: '',
+		isCreateClicked: false,
+		createUserLogin: '',
+		createUserPassword: '',
 		imagesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
@@ -23,24 +26,7 @@ class MainView extends Component {
 		isAdminLogin: false
 	};
 
-	componentDidUpdate() {
-		if (this.state.loginField && this.state.isLoginClicked && this.state.userName) {
-			console.log('fik');
-
-			const userNameDbElement = firebase.database().ref().child(this.state.userName);
-			userNameDbElement.on('value', (snapshot) => {
-				if (!snapshot.exists()) return;
-				const imagesDataObj = snapshot.val();
-				this.setState({
-					imagesDataObj: imagesDataObj,
-					isLoginClicked: false
-				});
-			});
-		}
-	}
-
 	onLoginHandler = (e) => {
-		//Firebase starts listening for any changes over the user database; if any occurs the app state of user data is changing also
 		if (e) e.preventDefault();
 		if (this.state.loginField === 'admin') {
 			this.setState({
@@ -48,36 +34,80 @@ class MainView extends Component {
 				isLoginClicked: true
 			});
 		} else {
-			console.log('else');
-
 			this.setState({
 				userName: this.state.loginField,
 				isLoginClicked: true
 			});
 		}
+
+		if (this.state.loginField && this.state.passwordField) {
+			console.log('signIn');
+
+			firebase
+				.auth()
+				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
+				.then((resp) => console.log(resp.user))
+				.catch(function(error) {
+					console.log('Login Error: ', error);
+				});
+
+			firebase.auth().onAuthStateChanged((user) => {
+				if (user) {
+					const userNameDbElement = firebase.database().ref(this.state.loginField);
+					userNameDbElement.on('value', (snapshot) => {
+						if (!snapshot.exists()) return;
+						const imagesDataObj = snapshot.val();
+						this.setState({
+							imagesDataObj: imagesDataObj,
+							isLoginClicked: false
+						});
+					});
+				}
+			});
+		}
 	};
 
 	onLogoutHandler = (e) => {
+		firebase.database().ref(this.state.userName).off();
 		this.setState({
 			userName: '',
 			loginField: '',
+			passwordField: '',
 			isLoginClicked: false,
-			createUserField: '',
+			isCreateClicked: false,
+			createUserLogin: '',
+			createUserPassword: '',
 			imagesDataObj: null,
 			selectedfiles: null,
 			buttonIsDisabled: true,
 			filterButtonsState: false,
 			isAdminLogin: false
 		});
+
+		firebase
+			.auth()
+			.signOut()
+			.then(function() {
+				console.log('Logout');
+			})
+			.catch(function(error) {
+				console.log('Logout: ', error);
+			});
 	};
 
 	onCreateUserHandler = (e) => {
 		e.preventDefault();
 		this.setState({
 			isAdminLogin: true,
-			userName: this.state.createUserField
+			userName: this.state.createUserLogin
 		});
-		this.onLoginHandler();
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(`${this.state.createUserLogin}@aaa.aa`, this.state.createUserPassword)
+			.then((resp) => console.log(`${resp.user.email} is ${resp.operationType}`))
+			.catch(function(error) {
+				console.log('Create error: ', error);
+			});
 	};
 
 	getSelectedImagesHandler = (files) => {
@@ -108,11 +138,11 @@ class MainView extends Component {
 				<React.Fragment>
 					<AdminPanel
 						logout={(e) => this.onLogoutHandler(e)}
-						loginInputValue={this.state.createUserField}
-						createUserField={(e) => this.setState({ createUserField: e.target.value })}
+						loginInputValue={this.state.createUserLogin}
+						passwordInputValue={this.state.createUserPassword}
+						createUserLogin={(e) => this.setState({ createUserLogin: e.target.value })}
+						createUserPassword={(e) => this.setState({ createUserPassword: e.target.value })}
 						buttonCreate={(e) => this.onCreateUserHandler(e)}
-					/>
-					<Uploader
 						userName={this.state.userName}
 						pickSelectedImages={this.getSelectedImagesHandler}
 						uploadSelectedImages={this.state.selectedfiles}
@@ -142,6 +172,15 @@ class MainView extends Component {
 						placeholder="user login"
 						value={this.state.loginField}
 						onChange={(e) => this.setState({ loginField: e.target.value })}
+						onKeyPress={(e) => {
+							if (e.key === 'Enter') this.onLoginHandler(e);
+						}}
+					/>
+					<label>Password:</label>
+					<input
+						placeholder="user password"
+						value={this.state.passwordField}
+						onChange={(e) => this.setState({ passwordField: e.target.value })}
 						onKeyPress={(e) => {
 							if (e.key === 'Enter') this.onLoginHandler(e);
 						}}
