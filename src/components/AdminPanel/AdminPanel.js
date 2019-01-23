@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../Shared/Button/Button';
 import Uploader from './Uploader/Uploader';
+import PaymentConf from './PaymentConf/PaymentConf';
 
 const AdminPanel = (props) => {
 	return (
@@ -21,6 +22,15 @@ const AdminPanel = (props) => {
 				onChange={(e) => props.createUserPassword(e)}
 			/>
 			<Button clicked={(e) => props.buttonCreate(e)} buttonText="Create" buttonColor="" />
+			<PaymentConf
+				freePicturesAmount={props.freePicturesAmount}
+				discountProcent={props.discountProcent}
+				changeFreePicturesAmount={props.changeFreePicturesAmount}
+				changeDiscountValue={props.changeDiscountValue}
+				imagesAmount={props.imagesAmount}
+				changePicturePrice={props.changePicturePrice}
+				picturePrice={props.picturePrice}
+			/>
 
 			<Uploader
 				userName={props.userName}

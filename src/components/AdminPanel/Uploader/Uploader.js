@@ -19,7 +19,7 @@ const uploader = (props) => {
 		const filesArr = [ ...files ];
 
 		filesArr.forEach((file, i) => {
-			const uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+			const uploadTask = storageRef.child(`images/${props.userName}/${file.name}`).put(file, metadata);
 			uploadTask.on(
 				firebase.storage.TaskEvent.STATE_CHANGED,
 				(snapshot) => {
@@ -43,8 +43,6 @@ const uploader = (props) => {
 				},
 				() => {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
-					console.log('jestem', props.userName);
-
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
 						firebase.database().ref(props.userName + '/').child(pictureTitle).set({
 							containerColor: '',

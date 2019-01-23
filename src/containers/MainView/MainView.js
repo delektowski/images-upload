@@ -19,11 +19,14 @@ class MainView extends Component {
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
+		freePicturesAmount: 3,
+		discountProcent: 50,
 		imagesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
 		filterButtonsState: false,
-		isAdminLogin: false
+		isAdminLogin: false,
+		picturePrice: 5
 	};
 
 	onLoginHandler = (e) => {
@@ -46,7 +49,6 @@ class MainView extends Component {
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
-				.then((resp) => console.log(resp.user))
 				.catch(function(error) {
 					console.log('Login Error: ', error);
 				});
@@ -77,6 +79,8 @@ class MainView extends Component {
 			isCreateClicked: false,
 			createUserLogin: '',
 			createUserPassword: '',
+			freePicturesAmount: 0,
+			discountProcent: 0,
 			imagesDataObj: null,
 			selectedfiles: null,
 			buttonIsDisabled: true,
@@ -108,6 +112,19 @@ class MainView extends Component {
 			.catch(function(error) {
 				console.log('Create error: ', error);
 			});
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				const userNameDbElement = firebase.database().ref(this.state.loginField);
+				userNameDbElement.on('value', (snapshot) => {
+					if (!snapshot.exists()) return;
+					const imagesDataObj = snapshot.val();
+					this.setState({
+						imagesDataObj: imagesDataObj,
+						isLoginClicked: false
+					});
+				});
+			}
+		});
 	};
 
 	getSelectedImagesHandler = (files) => {
@@ -118,8 +135,23 @@ class MainView extends Component {
 	};
 
 	disableUploadButtonHandler = () => {
+		console.log('disable');
+
 		this.setState({
 			buttonIsDisabled: true
+		});
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				const userNameDbElement = firebase.database().ref(this.state.userName);
+				userNameDbElement.on('value', (snapshot) => {
+					if (!snapshot.exists()) return;
+					const imagesDataObj = snapshot.val();
+					this.setState({
+						imagesDataObj: imagesDataObj,
+						isLoginClicked: false
+					});
+				});
+			}
 		});
 	};
 
@@ -129,7 +161,25 @@ class MainView extends Component {
 		});
 	};
 
+	changeDiscountValueHandler = (value) => {
+		this.setState({
+			discountProcent: value
+		});
+	};
+	changeFreePicturesAmountHandler = (value) => {
+		this.setState({
+			freePicturesAmount: value
+		});
+	};
+	changepicturePriceHandler = (value) => {
+		this.setState({
+			picturePrice: value
+		});
+	};
+
 	render() {
+		// if (this.state.imagesDataObj) console.log('images', Object.keys(this.state.imagesDataObj).length);
+
 		let adminPanel = null;
 		let userPanel = null;
 		let login = null;
@@ -148,6 +198,13 @@ class MainView extends Component {
 						uploadSelectedImages={this.state.selectedfiles}
 						isButtonDisabled={this.state.buttonIsDisabled}
 						disableButton={this.disableUploadButtonHandler}
+						freePicturesAmount={this.state.freePicturesAmount}
+						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
+						discountProcent={this.state.discountProcent}
+						changeDiscountValue={this.changeDiscountValueHandler}
+						picturePrice={this.state.picturePrice}
+						changePicturePrice={this.changepicturePriceHandler}
+						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
 					/>
 				</React.Fragment>
 			);
