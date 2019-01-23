@@ -8,7 +8,8 @@ const imageContainer = (props) => {
 				classes.ImageContainer,
 				props.containerColor === 'green' ? classes.ImageContainer__green : null,
 				props.containerColor === 'blue' ? classes.ImageContainer__blue : null,
-				props.containerColor === 'red' ? classes.ImageContainer__red : null
+				props.containerColor === 'red' ? classes.ImageContainer__red : null,
+				props.containerLarge ? classes.ImageContainer__large : null
 			].join(' ')}
 		>
 			{props.children}

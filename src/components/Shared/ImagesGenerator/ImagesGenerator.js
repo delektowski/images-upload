@@ -65,6 +65,7 @@ const imagesGenerator = (props) => {
 		imagesTitlesPaths = imageTitleArr.map((element) => {
 			return (
 				<Image
+					onImageClick={props.onImageClick}
 					key={Object.keys(element)}
 					src={Object.values(element)}
 					caption={Object.keys(element)}

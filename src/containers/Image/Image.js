@@ -11,7 +11,10 @@ class Image extends Component {
 		containerColor: '',
 		isClickedGreen: false,
 		isClickedBlue: false,
-		isClickedRed: false
+		isClickedRed: false,
+		isImageClicked: false,
+		ImageClickedSrc: '',
+		ImageClickedId: ''
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -77,7 +80,6 @@ class Image extends Component {
 	}
 
 	componentDidUpdate() {
-		// This make possible to see changes simultaneously on different instances of the app
 		if (this.props.imagesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
 			this.setState({
 				isClickedGreen: this.props.imagesDataObj[this.props.caption[0]].isClickedGreen,
@@ -98,12 +100,70 @@ class Image extends Component {
 		}
 	}
 
+	ImageClickedHandler = (e) => {
+		const ImageClickedSrc = e.target.getAttribute('src');
+		const ImageClickedId = e.target.getAttribute('alt');
+
+		this.setState((prevState) => {
+			return {
+				isImageClicked: !prevState.isImageClicked,
+				ImageClickedSrc: ImageClickedSrc,
+				ImageClickedId: ImageClickedId
+			};
+		});
+		this.props.onImageClick();
+	};
+
 	render() {
-		return (
-			<React.Fragment>
+		let image = null;
+		if (this.state.isImageClicked) {
+			image = (
+				<React.Fragment>
+					<ImageContainer
+						containerColor={this.state.containerColor}
+						containerLarge={this.state.isImageClicked}
+					>
+						<figure>
+							<img
+								onClick={this.ImageClickedHandler}
+								className={[ classes.Image, classes.Image__large ].join(' ')}
+								src={this.state.ImageClickedSrc}
+								alt={this.state.ImageClickedId}
+							/>
+							<figcaption className={classes.Image__title}>{this.state.ImageClickedId}</figcaption>
+						</figure>
+						{!this.props.isAdminLogin ? (
+							<div className={classes.Image__selectionButtons}>
+								<Button
+									clicked={() => this.buttonClickHandler('green')}
+									buttonText="Tak"
+									buttonColor="Button__green"
+								/>
+								<Button
+									clicked={() => this.buttonClickHandler('blue')}
+									buttonText="Może"
+									buttonColor="Button__blue"
+								/>
+								<Button
+									clicked={() => this.buttonClickHandler('red')}
+									buttonText="Nie"
+									buttonColor="Button__red"
+								/>
+							</div>
+						) : null}
+					</ImageContainer>
+				</React.Fragment>
+			);
+		} else {
+			image = (
 				<ImageContainer containerColor={this.state.containerColor}>
 					<figure>
-						<img className={classes.Image} src={this.props.src} alt={this.props.caption[0]} />
+						<img
+							onClick={this.ImageClickedHandler}
+							className={classes.Image}
+							src={this.props.src}
+							alt={this.props.caption[0]}
+						/>
 						<figcaption className={classes.Image__title}>{this.props.caption[0]}</figcaption>
 					</figure>
 					{!this.props.isAdminLogin ? (
@@ -126,8 +186,10 @@ class Image extends Component {
 						</div>
 					) : null}
 				</ImageContainer>
-			</React.Fragment>
-		);
+			);
+		}
+
+		return <React.Fragment>{image}</React.Fragment>;
 	}
 }
 

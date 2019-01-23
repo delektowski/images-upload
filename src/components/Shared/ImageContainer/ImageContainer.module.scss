@@ -10,6 +10,15 @@
 	padding-bottom: 2%;
 }
 
+.ImageContainer__large {
+	width: 750px;
+	position: absolute;
+	z-index: 400;
+	top: 50%;
+	transform: translateY(-50%);
+	background-color: rgb(207, 197, 197);
+}
+
 .ImageContainer__green {
 	background: rgba(83, 146, 83, 0.562);
 }

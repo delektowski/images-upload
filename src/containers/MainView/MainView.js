@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
 import Button from '../../components/Shared/Button/Button';
-import Layout from '../../Layout/Layout';
+import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
+import Backdrop from '../../components/Shared/Backdrop/Backdrop';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/storage';
@@ -26,7 +27,8 @@ class MainView extends Component {
 		buttonIsDisabled: true,
 		filterButtonsState: false,
 		isAdminLogin: false,
-		picturePrice: 5
+		picturePrice: 5,
+		isEnabledBackdrop: false
 	};
 
 	onLoginHandler = (e) => {
@@ -178,6 +180,14 @@ class MainView extends Component {
 		});
 	};
 
+	backdropHandler = () => {
+		this.setState((prevState) => {
+			return {
+				isEnabledBackdrop: !prevState.isEnabledBackdrop
+			};
+		});
+	};
+
 	render() {
 		let adminPanel = null;
 		let userPanel = null;
@@ -250,6 +260,7 @@ class MainView extends Component {
 			<Layout>
 				<div className={classes.MainView}>
 					<h4>User name: {this.state.userName}</h4>
+					{/* <Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} /> */}
 					{login}
 					{adminPanel}
 					{userPanel}
@@ -262,6 +273,7 @@ class MainView extends Component {
 							filterButtonsState={this.state.filterButtonsState}
 							reset={this.state.reset}
 							isAdminLogin={this.state.isAdminLogin}
+							onImageClick={this.backdropHandler}
 						/>
 					</div>
 				</div>
