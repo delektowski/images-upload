@@ -70,7 +70,7 @@ class MainView extends Component {
 	};
 
 	onLogoutHandler = (e) => {
-		firebase.database().ref(this.state.userName).off();
+		if (this.state.userName) firebase.database().ref(this.state.userName).off();
 		this.setState({
 			userName: '',
 			loginField: '',
@@ -79,13 +79,14 @@ class MainView extends Component {
 			isCreateClicked: false,
 			createUserLogin: '',
 			createUserPassword: '',
-			freePicturesAmount: 0,
-			discountProcent: 0,
+			freePicturesAmount: 3,
+			discountProcent: 50,
 			imagesDataObj: null,
 			selectedfiles: null,
 			buttonIsDisabled: true,
 			filterButtonsState: false,
-			isAdminLogin: false
+			isAdminLogin: false,
+			picturePrice: 5
 		});
 
 		firebase
@@ -178,8 +179,6 @@ class MainView extends Component {
 	};
 
 	render() {
-		// if (this.state.imagesDataObj) console.log('images', Object.keys(this.state.imagesDataObj).length);
-
 		let adminPanel = null;
 		let userPanel = null;
 		let login = null;
