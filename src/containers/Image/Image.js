@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classes from './Image.module.scss';
 import Button from '../../components/Shared/Button/Button';
 import Arrow from '../../components/Shared/Arrow/Arrow';
+import ImageLarge from '../ImageLarge/ImageLarge';
 import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -14,12 +15,6 @@ class Image extends Component {
 		isClickedBlue: false,
 		isClickedRed: false,
 		isImageClicked: false,
-		ImageLargeSrc: '',
-		ImageLargeId: '',
-		ImageLargeContainerColor: '',
-		isClickedGreenImgLarge: false,
-		isClickedBlueImgLarge: false,
-		isClickedRedImgLarge: false,
 		imageId: ''
 	};
 
@@ -49,6 +44,7 @@ class Image extends Component {
 					return updateImageState(color, false, !prevState.isClickedBlue, false);
 				});
 				break;
+
 			case 'red':
 				this.setState((prevState) => {
 					let color = 'red';
@@ -60,48 +56,7 @@ class Image extends Component {
 					return updateImageState(color, false, false, !prevState.isClickedRed);
 				});
 				break;
-			default:
-				break;
-		}
-	};
 
-	buttonClickImgLargeHandler = (buttonColor) => {
-		switch (buttonColor) {
-			case 'green':
-				this.setState((prevState) => {
-					let color = 'green';
-					if (prevState.isClickedGreenImgLarge === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/${this.state.ImageLargeId}`)
-						.update(updateImageState(color, !prevState.isClickedGreenImgLarge, false, false));
-
-					return updateLargeImageState(color, !prevState.isClickedGreenImgLarge, false, false);
-				});
-
-				break;
-			case 'blue':
-				this.setState((prevState) => {
-					let color = 'blue';
-					if (prevState.isClickedBlueImgLarge === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/${this.state.ImageLargeId}`)
-						.update(updateImageState(color, false, !prevState.isClickedBlueImgLarge, false));
-					return updateLargeImageState(color, false, !prevState.isClickedBlueImgLarge, false);
-				});
-				break;
-			case 'red':
-				this.setState((prevState) => {
-					let color = 'red';
-					if (prevState.isClickedRedImgLarge === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/${this.state.ImageLargeId}`)
-						.update(updateImageState(color, false, false, !prevState.isClickedRedImgLarge));
-					return updateLargeImageState(color, false, false, !prevState.isClickedRedImgLarge);
-				});
-				break;
 			default:
 				break;
 		}
@@ -147,91 +102,31 @@ class Image extends Component {
 		}
 	}
 
-	ImageClickedHandler = (e) => {
-		const ImageLargeSrc = e.target.getAttribute('src');
-		const ImageLargeId = e.target.getAttribute('alt');
-
+	ImageClickedHandler = () => {
 		this.setState((prevState) => {
 			return {
-				isImageClicked: !prevState.isImageClicked,
-				ImageLargeSrc: ImageLargeSrc,
-				ImageLargeId: ImageLargeId,
-				ImageLargeContainerColor: prevState.containerColor,
-				isClickedGreenImgLarge: prevState.isClickedGreen,
-				isClickedBlueImgLarge: prevState.isClickedBlue,
-				isClickedRedImgLarge: prevState.isClickedRed
+				isImageClicked: !prevState.isImageClicked
 			};
 		});
 		this.props.onImageClick();
-	};
-	arrowClickedHandler = (e) => {
-		const direction = e.target.getAttribute('data-direction') === 'right' ? 1 : -1;
-		const images = this.props.imagesDataObj;
-		const imagesArr = Object.keys(images);
-		let index = this.state.ImageLargeId
-			? imagesArr.indexOf(this.state.ImageLargeId)
-			: imagesArr.indexOf(this.state.imageId);
-		const lastIndex = imagesArr.length - 1;
-		if (direction === 1 && index === lastIndex) index = -1;
-		if (direction === -1 && index === 0) index = lastIndex + 1;
-		const nextImageId = imagesArr[index + direction];
-		const nextImageSrc = images[nextImageId].path;
-		const nextImageContainerColor = images[nextImageId].containerColor;
-		const nextImageButtonGreen = images[nextImageId].isClickedGreen;
-		const nextImageButtonBlue = images[nextImageId].isClickedBlue;
-		const nextImageButtonRed = images[nextImageId].isClickedRed;
-
-		this.setState({
-			ImageLargeSrc: nextImageSrc,
-			ImageLargeId: nextImageId,
-			ImageLargeContainerColor: nextImageContainerColor,
-			isClickedGreenImgLarge: nextImageButtonGreen,
-			isClickedBlueImgLarge: nextImageButtonBlue,
-			isClickedRedImgLarge: nextImageButtonRed
-		});
 	};
 
 	render() {
 		let imageLarge = null;
 		if (this.state.isImageClicked) {
 			imageLarge = (
-				<React.Fragment>
-					<Arrow clicked={this.arrowClickedHandler} direction="left" />
-					<ImageContainer
-						containerColor={this.state.ImageLargeContainerColor}
-						containerLarge={this.state.isImageClicked}
-					>
-						<figure>
-							<img
-								onClick={this.ImageClickedHandler}
-								className={[ classes.Image, classes.Image__large ].join(' ')}
-								src={this.state.ImageLargeSrc}
-								alt={this.state.ImageLargeId}
-							/>
-							<figcaption className={classes.Image__title}>{this.state.ImageLargeId}</figcaption>
-						</figure>
-						{!this.props.isAdminLogin ? (
-							<div className={classes.Image__selectionButtons}>
-								<Button
-									clicked={() => this.buttonClickImgLargeHandler('green')}
-									buttonText="Tak"
-									buttonColor="Button__green"
-								/>
-								<Button
-									clicked={() => this.buttonClickImgLargeHandler('blue')}
-									buttonText="Może"
-									buttonColor="Button__blue"
-								/>
-								<Button
-									clicked={() => this.buttonClickImgLargeHandler('red')}
-									buttonText="Nie"
-									buttonColor="Button__red"
-								/>
-							</div>
-						) : null}
-					</ImageContainer>
-					<Arrow clicked={this.arrowClickedHandler} direction="right" />
-				</React.Fragment>
+				<ImageLarge
+					imageLargeSrc={this.props.src}
+					imageLargeId={this.state.imageId}
+					imageLargeContainerColor={this.state.containerColor}
+					isClickedGreenImgLarge={this.state.isClickedGreen}
+					isClickedBlueImgLarge={this.state.isClickedBlue}
+					isClickedRedImgLarge={this.state.isClickedRed}
+					isImageClicked={this.state.isImageClicked}
+					clicked={this.ImageClickedHandler}
+					imagesDataObj={this.props.imagesDataObj}
+					userName={this.props.userName}
+				/>
 			);
 		}
 
