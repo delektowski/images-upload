@@ -14,8 +14,8 @@ import classes from './MainView.module.scss';
 class MainView extends Component {
 	state = {
 		userName: '',
-		loginField: '',
-		passwordField: '',
+		loginField: 'marcin',
+		passwordField: 'marcin',
 		isLoginClicked: false,
 		isCreateClicked: false,
 		createUserLogin: '',
@@ -46,8 +46,6 @@ class MainView extends Component {
 		}
 
 		if (this.state.loginField && this.state.passwordField) {
-			console.log('signIn');
-
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
@@ -260,7 +258,7 @@ class MainView extends Component {
 			<Layout>
 				<div className={classes.MainView}>
 					<h4>User name: {this.state.userName}</h4>
-					{/* <Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} /> */}
+					<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
 					{login}
 					{adminPanel}
 					{userPanel}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classes from './Image.module.scss';
 import Button from '../../components/Shared/Button/Button';
+import Arrow from '../../components/Shared/Arrow/Arrow';
 import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -14,7 +15,8 @@ class Image extends Component {
 		isClickedRed: false,
 		isImageClicked: false,
 		ImageClickedSrc: '',
-		ImageClickedId: ''
+		ImageClickedId: '',
+		imageId: ''
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -25,7 +27,7 @@ class Image extends Component {
 					if (prevState.isClickedGreen === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.ref(`${this.props.userName}/${this.state.imageId}`)
 						.update(updateImageState(color, !prevState.isClickedGreen, false, false));
 
 					return updateImageState(color, !prevState.isClickedGreen, false, false);
@@ -38,7 +40,7 @@ class Image extends Component {
 					if (prevState.isClickedBlue === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.ref(`${this.props.userName}/${this.state.imageId}`)
 						.update(updateImageState(color, false, !prevState.isClickedBlue, false));
 					return updateImageState(color, false, !prevState.isClickedBlue, false);
 				});
@@ -49,7 +51,7 @@ class Image extends Component {
 					if (prevState.isClickedRed === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.props.caption[0]}`)
+						.ref(`${this.props.userName}/${this.state.imageId}`)
 						.update(updateImageState(color, false, false, !prevState.isClickedRed));
 					return updateImageState(color, false, false, !prevState.isClickedRed);
 				});
@@ -67,35 +69,34 @@ class Image extends Component {
 				if (this.props.imagesDataObj[key].isClickedGreen) color = 'green';
 				if (this.props.imagesDataObj[key].isClickedBlue) color = 'blue';
 				if (this.props.imagesDataObj[key].isClickedRed) color = 'red';
-				this.setState(
-					updateImageState(
-						color,
-						this.props.imagesDataObj[key].isClickedGreen,
-						this.props.imagesDataObj[key].isClickedBlue,
-						this.props.imagesDataObj[key].isClickedRed
-					)
-				);
+				this.setState({
+					containerColor: color,
+					isClickedGreen: this.props.imagesDataObj[key].isClickedGreen,
+					isClickedBlue: this.props.imagesDataObj[key].isClickedBlue,
+					isClickedRed: this.props.imagesDataObj[key].isClickedRed,
+					imageId: this.props.caption[0]
+				});
 			}
 		}
 	}
 
 	componentDidUpdate() {
-		if (this.props.imagesDataObj[this.props.caption[0]].isClickedGreen !== this.state.isClickedGreen) {
+		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
 			this.setState({
-				isClickedGreen: this.props.imagesDataObj[this.props.caption[0]].isClickedGreen,
-				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
+				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
 			});
 		}
-		if (this.props.imagesDataObj[this.props.caption[0]].isClickedBlue !== this.state.isClickedBlue) {
+		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
 			this.setState({
-				isClickedBlue: this.props.imagesDataObj[this.props.caption[0]].isClickedBlue,
-				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
+				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
 			});
 		}
-		if (this.props.imagesDataObj[this.props.caption[0]].isClickedRed !== this.state.isClickedRed) {
+		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
 			this.setState({
-				isClickedRed: this.props.imagesDataObj[this.props.caption[0]].isClickedRed,
-				containerColor: this.props.imagesDataObj[this.props.caption[0]].containerColor
+				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
 			});
 		}
 	}
@@ -113,12 +114,29 @@ class Image extends Component {
 		});
 		this.props.onImageClick();
 	};
+	arrowClickedHandler = (e) => {
+		console.log(e.target.getAttribute('data-direction'));
+		const images = this.props.imagesDataObj;
+		const imagesArr = Object.keys(images);
+
+		const index = imagesArr.indexOf(this.state.imageId);
+		const lastIndex = imagesArr.length - 1;
+		console.log('lastIndex', lastIndex);
+		// this.setState({
+		// 	ImageClickedSrc: '',
+		// 	ImageClickedId: '',
+		// 	imageId: ''
+
+		// })
+	};
 
 	render() {
 		let image = null;
 		if (this.state.isImageClicked) {
 			image = (
 				<React.Fragment>
+					<Arrow clicked={this.arrowClickedHandler} direction="left" />
+
 					<ImageContainer
 						containerColor={this.state.containerColor}
 						containerLarge={this.state.isImageClicked}
@@ -152,6 +170,7 @@ class Image extends Component {
 							</div>
 						) : null}
 					</ImageContainer>
+					<Arrow clicked={this.arrowClickedHandler} direction="right" />
 				</React.Fragment>
 			);
 		} else {
@@ -162,9 +181,9 @@ class Image extends Component {
 							onClick={this.ImageClickedHandler}
 							className={classes.Image}
 							src={this.props.src}
-							alt={this.props.caption[0]}
+							alt={this.state.imageId}
 						/>
-						<figcaption className={classes.Image__title}>{this.props.caption[0]}</figcaption>
+						<figcaption className={classes.Image__title}>{this.state.imageId}</figcaption>
 					</figure>
 					{!this.props.isAdminLogin ? (
 						<div className={classes.Image__selectionButtons}>
