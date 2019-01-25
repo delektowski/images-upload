@@ -2,26 +2,20 @@ import React from 'react';
 import Button from '../Shared/Button/Button';
 import Uploader from './Uploader/Uploader';
 import PaymentConf from './PaymentConf/PaymentConf';
+import CreateUser from './CreateUser/CreateUser';
 
 const AdminPanel = (props) => {
 	return (
 		<React.Fragment>
 			<Button clicked={(e) => props.logout(e)} buttonText="Logout" buttonColor="Button__red" />
-			<label>Create User:</label>
-			<input
-				type="email"
-				placeholder="user name"
-				value={props.loginInputValue}
-				onChange={(e) => props.createUserLogin(e)}
+			<CreateUser
+				loginInputValue={props.loginInputValue}
+				createUserLogin={(e) => props.createUserLogin(e)}
+				passwordInputValue={props.passwordInputValue}
+				createUserPassword={(e) => props.createUserPassword(e)}
+				buttonCreate={(e) => props.buttonCreate(e)}
 			/>
-			<label>Password:</label>
-			<input
-				type="password"
-				placeholder="user password"
-				value={props.passwordInputValue}
-				onChange={(e) => props.createUserPassword(e)}
-			/>
-			<Button clicked={(e) => props.buttonCreate(e)} buttonText="Create" buttonColor="" />
+
 			<PaymentConf
 				freePicturesAmount={props.freePicturesAmount}
 				discountProcent={props.discountProcent}

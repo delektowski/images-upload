@@ -21,13 +21,13 @@ class MainView extends Component {
 		createUserLogin: '',
 		createUserPassword: '',
 		freePicturesAmount: 3,
+		picturePrice: 5,
 		discountProcent: 50,
 		imagesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
 		filterButtonsState: false,
 		isAdminLogin: false,
-		picturePrice: 5,
 		isEnabledBackdrop: false
 	};
 
@@ -224,6 +224,9 @@ class MainView extends Component {
 						imagesDataObj={this.state.imagesDataObj}
 						filterButtonsState={this.filterButtonsStateHandler}
 						userName={this.state.userName}
+						freePicturesAmount={this.state.freePicturesAmount}
+						discountProcent={this.state.discountProcent}
+						picturePrice={this.state.picturePrice}
 					/>
 				</React.Fragment>
 			);

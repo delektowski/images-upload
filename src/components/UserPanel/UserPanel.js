@@ -8,7 +8,12 @@ const UserPanel = (props) => {
 	return (
 		<React.Fragment>
 			<Button clicked={(e) => props.buttonLogout(e)} buttonText="Logout" buttonColor="Button__red" />
-			<Counter imagesDataObj={props.imagesDataObj} />
+			<Counter
+				imagesDataObj={props.imagesDataObj}
+				freePicturesAmount={props.freePicturesAmount}
+				discountProcent={props.discountProcent}
+				picturePrice={props.picturePrice}
+			/>
 			<Filter filterButtonsState={props.filterButtonsState} />
 			<Reset userName={props.userName} imagesDataObj={props.imagesDataObj} />
 		</React.Fragment>

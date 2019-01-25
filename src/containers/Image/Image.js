@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import classes from './Image.module.scss';
 import Button from '../../components/Shared/Button/Button';
-import Arrow from '../../components/Shared/Arrow/Arrow';
 import ImageLarge from '../ImageLarge/ImageLarge';
 import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { updateImageState, updateLargeImageState } from './utylity';
+import { updateImageState } from './utylity';
 
 class Image extends Component {
 	state = {

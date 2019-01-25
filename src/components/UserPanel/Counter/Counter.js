@@ -54,6 +54,9 @@ const counter = (props) => {
 			<Payment
 				selectedGreenAmount={selectedElementsAmount('green')}
 				allSelectedAmount={selectedElementsAmount('all')}
+				freePicturesAmount={props.freePicturesAmount}
+				discountProcent={props.discountProcent}
+				picturePrice={props.picturePrice}
 			/>
 		</React.Fragment>
 	);
