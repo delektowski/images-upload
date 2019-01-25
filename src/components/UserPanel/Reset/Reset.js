@@ -7,7 +7,7 @@ import 'firebase/database';
 const Reset = (props) => {
 	const resetUserSelection = () => {
 		for (let value in props.imagesDataObj) {
-			firebase.database().ref(`${props.userName}/${value}`).update({
+			firebase.database().ref(`${props.userName}/images/${value}`).update({
 				containerColor: '',
 				isClickedBlue: false,
 				isClickedGreen: false,

@@ -20,9 +20,9 @@ class MainView extends Component {
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		freePicturesAmount: 3,
-		picturePrice: 5,
-		discountProcent: 50,
+		freePicturesAmount: 2,
+		discountProcent: 2,
+		picturePrice: 2,
 		imagesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
@@ -54,14 +54,21 @@ class MainView extends Component {
 				});
 
 			firebase.auth().onAuthStateChanged((user) => {
+				console.log('KOKO1');
+
 				if (user) {
+					console.log('KOKO2');
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
 					userNameDbElement.on('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
+						console.log('freepic', imagesDataObj.paymentConfig.freePicturesAmount);
 						this.setState({
-							imagesDataObj: imagesDataObj,
-							isLoginClicked: false
+							imagesDataObj: imagesDataObj.images,
+							isLoginClicked: false,
+							freePicturesAmount: imagesDataObj.paymentConfig.freePicturesAmount,
+							picturePrice: imagesDataObj.paymentConfig.picturePrice,
+							discountProcent: imagesDataObj.paymentConfig.discountProcent
 						});
 					});
 				}
@@ -79,14 +86,11 @@ class MainView extends Component {
 			isCreateClicked: false,
 			createUserLogin: '',
 			createUserPassword: '',
-			freePicturesAmount: 3,
-			discountProcent: 50,
 			imagesDataObj: null,
 			selectedfiles: null,
 			buttonIsDisabled: true,
 			filterButtonsState: false,
-			isAdminLogin: false,
-			picturePrice: 5
+			isAdminLogin: false
 		});
 
 		firebase
@@ -115,12 +119,18 @@ class MainView extends Component {
 			});
 		firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
+				firebase.database().ref(this.state.userName + '/').child('paymentConfig').set({
+					freePicturesAmount: this.state.freePicturesAmount,
+					picturePrice: this.state.picturePrice,
+					discountProcent: this.state.discountProcent
+				});
+
 				const userNameDbElement = firebase.database().ref(this.state.loginField);
 				userNameDbElement.on('value', (snapshot) => {
 					if (!snapshot.exists()) return;
 					const imagesDataObj = snapshot.val();
 					this.setState({
-						imagesDataObj: imagesDataObj,
+						imagesDataObj: imagesDataObj.images,
 						isLoginClicked: false
 					});
 				});
@@ -148,7 +158,7 @@ class MainView extends Component {
 					if (!snapshot.exists()) return;
 					const imagesDataObj = snapshot.val();
 					this.setState({
-						imagesDataObj: imagesDataObj,
+						imagesDataObj: imagesDataObj.images,
 						isLoginClicked: false
 					});
 				});

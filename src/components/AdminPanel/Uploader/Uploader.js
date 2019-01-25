@@ -44,7 +44,7 @@ const uploader = (props) => {
 				() => {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-						firebase.database().ref(props.userName + '/').child(pictureTitle).set({
+						firebase.database().ref(props.userName + '/images/').child(pictureTitle).set({
 							containerColor: '',
 							path: downloadURL,
 							isClickedGreen: false,

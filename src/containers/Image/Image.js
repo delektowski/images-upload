@@ -25,7 +25,7 @@ class Image extends Component {
 					if (prevState.isClickedGreen === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageId}`)
 						.update(updateImageState(color, !prevState.isClickedGreen, false, false));
 
 					return updateImageState(color, !prevState.isClickedGreen, false, false);
@@ -38,7 +38,7 @@ class Image extends Component {
 					if (prevState.isClickedBlue === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageId}`)
 						.update(updateImageState(color, false, !prevState.isClickedBlue, false));
 					return updateImageState(color, false, !prevState.isClickedBlue, false);
 				});
@@ -50,7 +50,7 @@ class Image extends Component {
 					if (prevState.isClickedRed === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageId}`)
 						.update(updateImageState(color, false, false, !prevState.isClickedRed));
 					return updateImageState(color, false, false, !prevState.isClickedRed);
 				});

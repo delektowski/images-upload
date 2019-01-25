@@ -36,7 +36,7 @@ class ImageLarge extends Component {
 					if (prevState.isClickedGreenImgLarge === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageLargeId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageLargeId}`)
 						.update(updateImageState(color, !prevState.isClickedGreenImgLarge, false, false));
 
 					return updateLargeImageState(color, !prevState.isClickedGreenImgLarge, false, false);
@@ -49,7 +49,7 @@ class ImageLarge extends Component {
 					if (prevState.isClickedBlueImgLarge === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageLargeId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageLargeId}`)
 						.update(updateImageState(color, false, !prevState.isClickedBlueImgLarge, false));
 					return updateLargeImageState(color, false, !prevState.isClickedBlueImgLarge, false);
 				});
@@ -61,7 +61,7 @@ class ImageLarge extends Component {
 					if (prevState.isClickedRedImgLarge === true) color = '';
 					firebase
 						.database()
-						.ref(`${this.props.userName}/${this.state.imageLargeId}`)
+						.ref(`${this.props.userName}/images/${this.state.imageLargeId}`)
 						.update(updateImageState(color, false, false, !prevState.isClickedRedImgLarge));
 					return updateLargeImageState(color, false, false, !prevState.isClickedRedImgLarge);
 				});
