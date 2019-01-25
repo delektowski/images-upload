@@ -11,7 +11,7 @@ const SelectPayment = (props) => {
 					Koszt dodatkowy:
 					<span className={classes.SelectPayment__buttonSubTextVar}>{` ${props.allSelectedAmount *
 						props.picturePrice *
-						props.discountProcent} zł`}</span>{' '}
+						(props.discountProcent / 100)} zł`}</span>{' '}
 				</p>
 			</div>
 			<div className={classes.SelectPayment__buttonContainer}>

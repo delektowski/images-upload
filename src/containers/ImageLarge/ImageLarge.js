@@ -14,7 +14,8 @@ class ImageLarge extends Component {
 		imageLargeContainerColor: '',
 		isClickedGreenImgLarge: false,
 		isClickedBlueImgLarge: false,
-		isClickedRedImgLarge: false
+		isClickedRedImgLarge: false,
+		comment: ''
 	};
 
 	componentDidMount() {
@@ -24,7 +25,8 @@ class ImageLarge extends Component {
 			imageLargeContainerColor: this.props.imageLargeContainerColor,
 			isClickedGreenImgLarge: this.props.isClickedGreenImgLarge,
 			isClickedBlueImgLarge: this.props.isClickedBlueImgLarge,
-			isClickedRedImgLarge: this.props.isClickedRedImgLarge
+			isClickedRedImgLarge: this.props.isClickedRedImgLarge,
+			comment: this.props.comment
 		});
 	}
 
@@ -81,13 +83,22 @@ class ImageLarge extends Component {
 		if (direction === 1 && index === lastIndex) index = -1;
 		if (direction === -1 && index === 0) index = lastIndex + 1;
 		const nextImageId = imagesArr[index + direction];
+		console.log('comment', images[nextImageId].comment);
+
 		this.setState({
 			imageLargeSrc: images[nextImageId].path,
 			imageLargeId: imagesArr[index + direction],
 			imageLargeContainerColor: images[nextImageId].containerColor,
 			isClickedGreenImgLarge: images[nextImageId].isClickedGreen,
 			isClickedBlueImgLarge: images[nextImageId].isClickedBlue,
-			isClickedRedImgLarge: images[nextImageId].isClickedRed
+			isClickedRedImgLarge: images[nextImageId].isClickedRed,
+			comment: images[nextImageId].comment
+		});
+	};
+
+	onImageCommentHandler = (e) => {
+		this.setState({
+			comment: e.target.value
 		});
 	};
 
@@ -127,6 +138,25 @@ class ImageLarge extends Component {
 							/>
 						</div>
 					) : null}
+					<div className={classes.ImageLarge__comment}>
+						<textarea
+							className={[ classes.ImageLarge__comment_textArea ].join(' ')}
+							value={this.state.comment}
+							onChange={this.onImageCommentHandler}
+						/>
+						<div className={classes.Image__selectionButtons}>
+							<Button
+								clicked={() => this.props.onSaveComment(this.state.comment)}
+								buttonText="Ok"
+								buttonColor="Button__green"
+							/>
+							<Button
+								// clicked={() => this.buttonClickImgLargeHandler('red')}
+								buttonText="Anuluj"
+								buttonColor="Button__red"
+							/>
+						</div>
+					</div>
 				</ImageContainer>
 				<Arrow clicked={this.arrowClickedHandler} direction="right" />
 			</React.Fragment>

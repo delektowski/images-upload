@@ -20,9 +20,9 @@ class MainView extends Component {
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		freePicturesAmount: 2,
-		discountProcent: 2,
-		picturePrice: 2,
+		freePicturesAmount: 5,
+		discountProcent: 50,
+		picturePrice: 10,
 		imagesDataObj: null,
 		selectedfiles: null,
 		buttonIsDisabled: true,
@@ -33,7 +33,7 @@ class MainView extends Component {
 
 	onLoginHandler = (e) => {
 		if (e) e.preventDefault();
-		if (this.state.loginField === 'admin') {
+		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin') {
 			this.setState({
 				isAdminLogin: true,
 				isLoginClicked: true
@@ -45,7 +45,12 @@ class MainView extends Component {
 			});
 		}
 
-		if (this.state.loginField && this.state.passwordField) {
+		if (
+			this.state.loginField &&
+			this.state.passwordField &&
+			this.state.loginField !== 'admin' &&
+			this.state.createUserLogin === ''
+		) {
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
@@ -57,12 +62,11 @@ class MainView extends Component {
 				console.log('KOKO1');
 
 				if (user) {
-					console.log('KOKO2');
+					console.log('loginField', this.state.loginField);
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
 					userNameDbElement.on('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
-						console.log('freepic', imagesDataObj.paymentConfig.freePicturesAmount);
 						this.setState({
 							imagesDataObj: imagesDataObj.images,
 							isLoginClicked: false,
@@ -118,6 +122,8 @@ class MainView extends Component {
 				console.log('Create error: ', error);
 			});
 		firebase.auth().onAuthStateChanged((user) => {
+			console.log('create free', this.state.freePicturesAmount);
+
 			if (user) {
 				firebase.database().ref(this.state.userName + '/').child('paymentConfig').set({
 					freePicturesAmount: this.state.freePicturesAmount,

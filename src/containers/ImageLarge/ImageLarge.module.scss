@@ -23,3 +23,18 @@
 .ImageLarge {
 	width: 700px;
 }
+
+.ImageLarge__comment {
+	width: 90%;
+}
+
+.ImageLarge__comment_textArea {
+	resize: none;
+	min-height: 5em;
+	max-height: 50vh;
+	padding: 1%;
+	width: 100%;
+	box-sizing: border-box;
+	background: rgb(214, 214, 214);
+	border: none;
+}

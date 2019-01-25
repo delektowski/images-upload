@@ -49,7 +49,8 @@ const uploader = (props) => {
 							path: downloadURL,
 							isClickedGreen: false,
 							isClickedBlue: false,
-							isClickedRed: false
+							isClickedRed: false,
+							comment: ''
 						});
 					});
 				}

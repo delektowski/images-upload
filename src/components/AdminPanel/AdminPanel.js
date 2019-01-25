@@ -24,6 +24,7 @@ const AdminPanel = (props) => {
 				imagesAmount={props.imagesAmount}
 				changePicturePrice={props.changePicturePrice}
 				picturePrice={props.picturePrice}
+				userName={props.userName}
 			/>
 
 			<Uploader

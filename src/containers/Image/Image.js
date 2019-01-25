@@ -14,7 +14,8 @@ class Image extends Component {
 		isClickedBlue: false,
 		isClickedRed: false,
 		isImageClicked: false,
-		imageId: ''
+		imageId: '',
+		comment: ''
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -74,7 +75,8 @@ class Image extends Component {
 					isClickedGreen: this.props.imagesDataObj[key].isClickedGreen,
 					isClickedBlue: this.props.imagesDataObj[key].isClickedBlue,
 					isClickedRed: this.props.imagesDataObj[key].isClickedRed,
-					imageId: this.props.caption[0]
+					imageId: this.props.caption[0],
+					comment: this.props.imagesDataObj[key].comment
 				});
 			}
 		}
@@ -110,6 +112,10 @@ class Image extends Component {
 		this.props.onImageClick();
 	};
 
+	onSaveCommentHandler = (comment) => {
+		firebase.database().ref(`${this.props.userName}/images/${this.state.imageId}`).update({ comment: comment });
+	};
+
 	render() {
 		let imageLarge = null;
 		if (this.state.isImageClicked) {
@@ -125,6 +131,9 @@ class Image extends Component {
 					clicked={this.ImageClickedHandler}
 					imagesDataObj={this.props.imagesDataObj}
 					userName={this.props.userName}
+					onImageComment={this.onImageCommentHandler}
+					comment={this.state.comment}
+					onSaveComment={this.onSaveCommentHandler}
 				/>
 			);
 		}

@@ -1,7 +1,18 @@
 import React from 'react';
+import Button from '../../Shared/Button/Button';
+import firebase from 'firebase/app';
+import 'firebase/database';
 import classes from './PaymentConf.module.scss';
 
 const paymentConf = (props) => {
+	const updatePaymentConf = () => {
+		firebase.database().ref(props.userName + '/').child('paymentConfig').set({
+			freePicturesAmount: props.freePicturesAmount,
+			picturePrice: props.picturePrice,
+			discountProcent: props.discountProcent
+		});
+	};
+
 	return (
 		<div className={classes.PaymentConf}>
 			<div>
@@ -35,7 +46,7 @@ const paymentConf = (props) => {
 				/>
 				<span>zł</span>
 				<p>
-					Cena za wszystkie zdjęcia z upustem:
+					Cena za wszystkie zdjęcia z upustem:{' '}
 					{Math.round(
 						props.imagesAmount * props.picturePrice -
 							props.imagesAmount * props.picturePrice * props.discountProcent / 100
@@ -43,6 +54,7 @@ const paymentConf = (props) => {
 					<span> zł</span>
 				</p>
 			</div>
+			<Button clicked={() => updatePaymentConf()} buttonText="Update" buttonColor="Button__blue" />
 		</div>
 	);
 };
