@@ -66,7 +66,7 @@ const uploader = (props) => {
 				clicked={uploadHandler}
 				buttonText="UPLOAD"
 				buttonColor="Button__green"
-				buttonIsDisabled={props.isButtonDisabled}
+				isButtonDisabled={props.isButtonDisabled}
 			/>
 		</div>
 	);

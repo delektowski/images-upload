@@ -10,9 +10,8 @@ const AdminPanel = (props) => {
 			<Button clicked={(e) => props.logout(e)} buttonText="Logout" buttonColor="Button__red" />
 			<CreateUser
 				loginInputValue={props.loginInputValue}
-				createUserLogin={(e) => props.createUserLogin(e)}
+				onCreateUser={(e) => props.onCreateUser(e)}
 				passwordInputValue={props.passwordInputValue}
-				createUserPassword={(e) => props.createUserPassword(e)}
 				buttonCreate={(e) => props.buttonCreate(e)}
 			/>
 

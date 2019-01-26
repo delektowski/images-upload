@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
-import Button from '../../components/Shared/Button/Button';
+import Login from '../../components/Login/Login';
 import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
@@ -14,8 +14,8 @@ import classes from './MainView.module.scss';
 class MainView extends Component {
 	state = {
 		userName: '',
-		loginField: 'marcin',
-		passwordField: 'marcin',
+		loginField: '',
+		passwordField: '',
 		isLoginClicked: false,
 		isCreateClicked: false,
 		createUserLogin: '',
@@ -25,15 +25,17 @@ class MainView extends Component {
 		picturePrice: 10,
 		imagesDataObj: null,
 		selectedfiles: null,
-		buttonIsDisabled: true,
+		isButtonDisabled: true,
 		filterButtonsState: false,
 		isAdminLogin: false,
-		isEnabledBackdrop: false
+		isEnabledBackdrop: false,
+		isAuthenticated: false,
+		errorLogin: ''
 	};
 
 	onLoginHandler = (e) => {
 		if (e) e.preventDefault();
-		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin') {
+		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin78') {
 			this.setState({
 				isAdminLogin: true,
 				isLoginClicked: true
@@ -54,15 +56,13 @@ class MainView extends Component {
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
-				.catch(function(error) {
-					console.log('Login Error: ', error);
+				.then(() => this.setState({ isAuthenticated: true }))
+				.catch((error) => {
+					this.setState({ errorLogin: 'Błędne hasło lub login' });
 				});
 
 			firebase.auth().onAuthStateChanged((user) => {
-				console.log('KOKO1');
-
 				if (user) {
-					console.log('loginField', this.state.loginField);
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
 					userNameDbElement.on('value', (snapshot) => {
 						if (!snapshot.exists()) return;
@@ -92,9 +92,10 @@ class MainView extends Component {
 			createUserPassword: '',
 			imagesDataObj: null,
 			selectedfiles: null,
-			buttonIsDisabled: true,
+			isButtonDisabled: true,
 			filterButtonsState: false,
-			isAdminLogin: false
+			isAdminLogin: false,
+			isAuthenticated: false
 		});
 
 		firebase
@@ -147,7 +148,7 @@ class MainView extends Component {
 	getSelectedImagesHandler = (files) => {
 		this.setState({
 			selectedfiles: files,
-			buttonIsDisabled: false
+			isButtonDisabled: false
 		});
 	};
 
@@ -155,7 +156,7 @@ class MainView extends Component {
 		console.log('disable');
 
 		this.setState({
-			buttonIsDisabled: true
+			isButtonDisabled: true
 		});
 		firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
@@ -202,6 +203,54 @@ class MainView extends Component {
 		});
 	};
 
+	onLoginClickedHandler = (e) => {
+		switch (e.target.getAttribute('data-value')) {
+			case 'login':
+				if (e.key === 'Enter') {
+					this.onLoginHandler(e);
+					break;
+				}
+				this.setState({ loginField: e.target.value });
+				break;
+
+			case 'password':
+				if (e.key === 'Enter') {
+					this.onLoginHandler(e);
+					break;
+				}
+				this.setState({ passwordField: e.target.value });
+				break;
+
+			case 'button':
+				this.onLoginHandler(e);
+				break;
+
+			default:
+				break;
+		}
+	};
+
+	onCreateClickedHandler = (e) => {
+		console.log('fik', e);
+
+		switch (e.target.getAttribute('data-value')) {
+			case 'user':
+				this.setState({ createUserLogin: e.target.value });
+				break;
+
+			case 'password':
+				this.setState({ createUserPassword: e.target.value });
+				break;
+
+			case 'button':
+				this.onCreateUserHandler(e);
+				break;
+
+			default:
+				break;
+		}
+	};
+
 	render() {
 		let adminPanel = null;
 		let userPanel = null;
@@ -213,13 +262,12 @@ class MainView extends Component {
 						logout={(e) => this.onLogoutHandler(e)}
 						loginInputValue={this.state.createUserLogin}
 						passwordInputValue={this.state.createUserPassword}
-						createUserLogin={(e) => this.setState({ createUserLogin: e.target.value })}
-						createUserPassword={(e) => this.setState({ createUserPassword: e.target.value })}
+						onCreateUser={this.onCreateClickedHandler}
 						buttonCreate={(e) => this.onCreateUserHandler(e)}
 						userName={this.state.userName}
 						pickSelectedImages={this.getSelectedImagesHandler}
 						uploadSelectedImages={this.state.selectedfiles}
-						isButtonDisabled={this.state.buttonIsDisabled}
+						isButtonDisabled={this.state.isButtonDisabled}
 						disableButton={this.disableUploadButtonHandler}
 						freePicturesAmount={this.state.freePicturesAmount}
 						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
@@ -232,7 +280,7 @@ class MainView extends Component {
 				</React.Fragment>
 			);
 		}
-		if (this.state.userName && !this.state.isAdminLogin) {
+		if (this.state.isAuthenticated) {
 			userPanel = (
 				<React.Fragment>
 					<UserPanel
@@ -247,36 +295,20 @@ class MainView extends Component {
 				</React.Fragment>
 			);
 		}
-		if (!this.state.isAdminLogin && !this.state.userName) {
+		if (!this.state.isAdminLogin && !this.state.isAuthenticated) {
 			login = (
-				<React.Fragment>
-					<label>Login:</label>
-					<input
-						placeholder="user login"
-						value={this.state.loginField}
-						onChange={(e) => this.setState({ loginField: e.target.value })}
-						onKeyPress={(e) => {
-							if (e.key === 'Enter') this.onLoginHandler(e);
-						}}
-					/>
-					<label>Password:</label>
-					<input
-						placeholder="user password"
-						value={this.state.passwordField}
-						onChange={(e) => this.setState({ passwordField: e.target.value })}
-						onKeyPress={(e) => {
-							if (e.key === 'Enter') this.onLoginHandler(e);
-						}}
-					/>
-					<Button clicked={(e) => this.onLoginHandler(e)} buttonText="Login" buttonColor="Button__blue" />
-				</React.Fragment>
+				<Login
+					loginField={this.state.loginField}
+					passwordFiled={this.state.passwordField}
+					onLogin={this.onLoginClickedHandler}
+				/>
 			);
 		}
 
 		return (
 			<Layout>
 				<div className={classes.MainView}>
-					<h4>User name: {this.state.userName}</h4>
+					{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
 					<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
 					{login}
 					{adminPanel}

@@ -100,6 +100,12 @@ class ImageLarge extends Component {
 		this.setState({
 			comment: e.target.value
 		});
+
+		let field = e.target;
+		field.style.height = 'inherit';
+		let computed = field.scrollHeight;
+		field.style.height = computed + 'px';
+		console.log('computed', computed);
 	};
 
 	render() {

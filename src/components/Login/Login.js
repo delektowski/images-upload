@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import Button from '../../Shared/Button/Button';
+import Button from '../Shared/Button/Button';
 
-class CreateUser extends Component {
+class Login extends Component {
 	state = {
-		userValidation: false,
 		passwordValidation: false,
-		passwordFieldClicked: false,
-		userFiledClicked: false
+		loginValidation: false,
+		loginFiledClicked: false,
+		passwordFieldClicked: false
 	};
 
 	onValidationHandler = (e) => {
 		switch (e.target.getAttribute('data-value')) {
-			case 'user':
+			case 'login':
 				if (e.target.value.length >= 2) {
-					this.setState({ userValidation: true, userFiledClicked: false });
+					this.setState({ loginValidation: true, loginFiledClicked: false });
 				} else {
 					this.setState({
-						userValidation: false,
-						userFiledClicked: true
+						loginValidation: false,
+						loginFiledClicked: true
 					});
 				}
 				break;
@@ -33,44 +33,43 @@ class CreateUser extends Component {
 			default:
 				break;
 		}
-		this.props.onCreateUser(e);
+		this.props.onLogin(e);
 	};
 
 	render() {
 		return (
 			<React.Fragment>
-				<label>User:</label>
+				<label>Login:</label>
 				<input
-					type="email"
-					placeholder="user name"
-					value={this.props.loginInputValue}
+					placeholder="user login"
+					value={this.props.loginField}
 					onChange={this.onValidationHandler}
-					data-value="user"
+					data-value="login"
 				/>
-				{this.state.userFiledClicked ? (
+				{this.state.loginFiledClicked ? (
 					<p style={{ color: 'red', marginTop: '0', fontSize: '0.7rem' }}>Minimum 2 znaki</p>
 				) : null}
 				<label>Password:</label>
 				<input
-					type="password"
 					placeholder="user password"
-					value={this.props.passwordInputValue}
+					value={this.props.passwordFiled}
 					onChange={this.onValidationHandler}
+					onKeyPress={this.onValidationHandler}
 					data-value="password"
 				/>
 				{this.state.passwordFieldClicked ? (
 					<p style={{ color: 'red', marginTop: '0', fontSize: '0.7rem' }}>Minimum 6 znaków</p>
 				) : null}
 				<Button
-					clicked={(e) => this.props.buttonCreate(e)}
-					buttonText="Create"
-					buttonColor=""
-					isButtonDisabled={!(this.state.userValidation && this.state.passwordValidation)}
-					data-value="button"
+					clicked={this.props.onLogin}
+					buttonText="Login"
+					buttonColor="Button__blue"
+					dataValue="button"
+					isButtonDisabled={!(this.state.loginValidation && this.state.passwordValidation)}
 				/>
 			</React.Fragment>
 		);
 	}
 }
 
-export default CreateUser;
+export default Login;
