@@ -14,8 +14,8 @@ import classes from './MainView.module.scss';
 class MainView extends Component {
 	state = {
 		userName: '',
-		loginField: '',
-		passwordField: '',
+		loginField: 'admin',
+		passwordField: 'admin78',
 		isLoginClicked: false,
 		isCreateClicked: false,
 		createUserLogin: '',
@@ -32,6 +32,10 @@ class MainView extends Component {
 		isAuthenticated: false,
 		errorLogin: ''
 	};
+
+	componentDidMount() {
+		this.onLoginHandler();
+	}
 
 	onLoginHandler = (e) => {
 		if (e) e.preventDefault();
@@ -123,8 +127,6 @@ class MainView extends Component {
 				console.log('Create error: ', error);
 			});
 		firebase.auth().onAuthStateChanged((user) => {
-			console.log('create free', this.state.freePicturesAmount);
-
 			if (user) {
 				firebase.database().ref(this.state.userName + '/').child('paymentConfig').set({
 					freePicturesAmount: this.state.freePicturesAmount,
@@ -221,18 +223,13 @@ class MainView extends Component {
 				this.setState({ passwordField: e.target.value });
 				break;
 
-			case 'button':
-				this.onLoginHandler(e);
-				break;
-
 			default:
+				this.onLoginHandler(e);
 				break;
 		}
 	};
 
 	onCreateClickedHandler = (e) => {
-		console.log('fik', e);
-
 		switch (e.target.getAttribute('data-value')) {
 			case 'user':
 				this.setState({ createUserLogin: e.target.value });
@@ -242,11 +239,8 @@ class MainView extends Component {
 				this.setState({ createUserPassword: e.target.value });
 				break;
 
-			case 'button':
-				this.onCreateUserHandler(e);
-				break;
-
 			default:
+				this.onCreateUserHandler(e);
 				break;
 		}
 	};
