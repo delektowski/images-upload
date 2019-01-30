@@ -1,13 +1,13 @@
 import React from 'react';
-import Button from '../Shared/Button/Button';
 import Counter from '../UserPanel/Counter/Counter';
 import Filter from '../UserPanel/Filter/Filter';
 import Reset from '../UserPanel/Reset/Reset';
+import Logout from '../Logout/Logout';
 
 const UserPanel = (props) => {
 	return (
 		<React.Fragment>
-			<Button clicked={(e) => props.buttonLogout(e)} buttonText="Logout" buttonColor="Button__red" />
+			<Logout userName={props.userName} onLogoutHandler={(e) => props.buttonLogout(e)} />
 			<Counter
 				imagesDataObj={props.imagesDataObj}
 				freePicturesAmount={props.freePicturesAmount}

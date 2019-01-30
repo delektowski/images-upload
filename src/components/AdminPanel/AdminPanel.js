@@ -1,6 +1,6 @@
 import React from 'react';
 import Uploader from './Uploader/Uploader';
-import PaymentConf from './PaymentConf/PaymentConf';
+
 import CreateUser from './CreateUser/CreateUser';
 
 const AdminPanel = (props) => {
@@ -18,18 +18,8 @@ const AdminPanel = (props) => {
 				picturePrice={props.picturePrice}
 				discountProcent={props.discountProcent}
 				imagesDataObj={props.imagesDataObj}
-				LoginClicked={props.LoginClicked}
-			/>
-
-			<PaymentConf
-				freePicturesAmount={props.freePicturesAmount}
-				discountProcent={props.discountProcent}
-				changeFreePicturesAmount={props.changeFreePicturesAmount}
-				changeDiscountValue={props.changeDiscountValue}
-				imagesAmount={props.imagesAmount}
-				changePicturePrice={props.changePicturePrice}
-				picturePrice={props.picturePrice}
-				userName={props.userName}
+				loginClicked={props.loginClicked}
+				onLogoutHandler={props.onLogoutHandler}
 			/>
 
 			<Uploader
@@ -38,6 +28,8 @@ const AdminPanel = (props) => {
 				uploadSelectedImages={props.uploadSelectedImages}
 				isButtonDisabled={props.isButtonDisabled}
 				disableButton={props.disableButton}
+				imagesDataObj={props.imagesDataObj}
+				loginClicked={props.loginClicked}
 			/>
 		</React.Fragment>
 	);

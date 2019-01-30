@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Logout from '../../Logout/Logout';
+import PaymentConf from '../../AdminPanel/PaymentConf/PaymentConf';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@material-ui/core/';
 import firebase from 'firebase/app';
@@ -10,10 +12,8 @@ const styles = (theme) => ({
 		flexGrow: 1,
 		width: '100%'
 	},
-
 	bar: {
 		background: 'whitesmoke',
-
 		marginTop: 10,
 		height: '15vh',
 		display: 'flex',
@@ -45,7 +45,6 @@ const styles = (theme) => ({
 			paddingBottom: 10
 		}
 	},
-
 	input: {
 		[theme.breakpoints.down('xs')]: {
 			fontSize: '.7rem'
@@ -80,7 +79,6 @@ const styles = (theme) => ({
 			paddingBottom: 10
 		}
 	},
-
 	inputBackground: {
 		background: 'rgba(190, 190, 190, 0.227)',
 		borderRadius: '5px',
@@ -96,7 +94,10 @@ class CreateUser extends Component {
 		userFieldClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		isUserCreated: false
+		isUserCreated: false,
+		freePicturesAmount: 5,
+		discountProcent: 50,
+		picturePrice: 10
 	};
 
 	onValidationHandler = (e) => {
@@ -126,9 +127,26 @@ class CreateUser extends Component {
 		this.onCreateClickedHandler(e);
 	};
 
+	changeFreePicturesAmountHandler = (value) => {
+		this.setState({
+			freePicturesAmount: +value
+		});
+	};
+
+	changeDiscountValueHandler = (value) => {
+		this.setState({
+			discountProcent: +value
+		});
+	};
+
+	changepicturePriceHandler = (value) => {
+		this.setState({
+			picturePrice: +value
+		});
+	};
+
 	onCreateUserHandler = (e) => {
 		e.preventDefault();
-
 		this.props.adminLogin();
 		this.props.onChangeUserName(this.state.createUserLogin);
 
@@ -139,23 +157,23 @@ class CreateUser extends Component {
 			.catch(function(error) {
 				console.log('Create error: ', error);
 			});
+
 		firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
 				firebase.database().ref(this.state.createUserLogin + '/').child('paymentConfig').set({
-					freePicturesAmount: this.props.freePicturesAmount,
-					picturePrice: this.props.picturePrice,
-					discountProcent: this.props.discountProcent
+					freePicturesAmount: this.state.freePicturesAmount,
+					picturePrice: this.state.picturePrice,
+					discountProcent: this.state.discountProcent
 				});
-
 				this.setState({ isUserCreated: true });
-
 				const userNameDbElement = firebase.database().ref(this.state.createUserLogin);
 				userNameDbElement.on('value', (snapshot) => {
 					if (!snapshot.exists()) return;
 					const imagesDataObj = snapshot.val();
-
-					this.props.imagesDataObj(imagesDataObj.images);
-					this.props.LoginClicked();
+					if (imagesDataObj.images) {
+						this.props.imagesDataObj(imagesDataObj.images);
+					}
+					this.props.loginClicked();
 				});
 			}
 		});
@@ -182,25 +200,23 @@ class CreateUser extends Component {
 		let createUser = null;
 		let logout = null;
 
-		this.state.isUserCreated
-			? (logout = (
-					<Fade in={this.state.isUserCreated} timeout={2000}>
-						<AppBar position="static" className={classes.bar__logout}>
-							<Toolbar className={classes.toolBar}>
-								<Button
-									variant="contained"
-									color="secondary"
-									className={classes.submit}
-									onClick={(e) => this.props.clicked(e)}
-								>
-									Wyloguj
-								</Button>
-							</Toolbar>
-						</AppBar>
-					</Fade>
-				))
-			: (createUser = (
-					<Fade in={!this.state.isUserCreated} timeout={2000}>
+		if (this.state.isUserCreated) {
+			logout = (
+				<Fade in={this.state.isUserCreated} timeout={500}>
+					<AppBar position="static" className={classes.bar__logout}>
+						<Toolbar className={classes.toolBar}>
+							<Logout
+								userName={this.state.createUserLogin}
+								onLogoutHandler={this.props.onLogoutHandler}
+							/>
+						</Toolbar>
+					</AppBar>
+				</Fade>
+			);
+		} else {
+			createUser = (
+				<React.Fragment>
+					<Fade in={!this.state.isUserCreated} timeout={500}>
 						<AppBar position="static" className={classes.bar}>
 							<Toolbar className={classes.toolBar}>
 								<FormControl className={classes.margin}>
@@ -236,10 +252,27 @@ class CreateUser extends Component {
 								>
 									Stwórz użytkownika
 								</Button>
+								<Logout
+									userName={this.state.createUserLogin}
+									onLogoutHandler={this.props.onLogoutHandler}
+								/>
 							</Toolbar>
 						</AppBar>
 					</Fade>
-				));
+					<PaymentConf
+						freePicturesAmount={this.state.freePicturesAmount}
+						discountProcent={this.state.discountProcent}
+						imagesAmount={this.state.imagesAmount}
+						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
+						changeDiscountValue={this.changeDiscountValueHandler}
+						changePicturePrice={this.changepicturePriceHandler}
+						picturePrice={this.state.picturePrice}
+						userName={this.state.createUserLogin}
+					/>
+				</React.Fragment>
+			);
+		}
+
 		return (
 			<React.Fragment>
 				<div className={classes.root}>

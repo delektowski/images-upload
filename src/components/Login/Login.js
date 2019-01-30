@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Paper, Typography, FormControl, InputLabel, Input, Button, Fade } from '@material-ui/core/';
-// import Button from '../Shared/Button/Button';
 import { withStyles } from '@material-ui/core/styles';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/storage';
+import 'firebase/database';
 
 const styles = (theme) => ({
 	main: {
@@ -34,7 +37,10 @@ class Login extends Component {
 		passwordValidation: false,
 		loginValidation: false,
 		loginFiledClicked: false,
-		passwordFieldClicked: false
+		passwordFieldClicked: false,
+		loginField: '',
+		passwordField: '',
+		errorLogin: ''
 	};
 
 	onValidationHandler = (e) => {
@@ -61,7 +67,72 @@ class Login extends Component {
 			default:
 				break;
 		}
-		this.props.onLogin(e);
+		this.onLoginClickedHandler(e);
+	};
+
+	onLoginHandler = (e) => {
+		if (e) e.preventDefault();
+		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin78') {
+			this.props.adminLogin();
+			this.props.loginClicked();
+		} else {
+			this.props.onChangeUserName(this.state.loginField);
+		}
+
+		if (
+			this.state.loginField &&
+			this.state.passwordField &&
+			this.state.loginField !== 'admin' &&
+			this.props.isCreateUserLogin === ''
+		) {
+			firebase
+				.auth()
+				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
+				.then(() => this.props.isAuthenticated())
+				.catch((error) => {
+					this.setState({ errorLogin: 'Błędne hasło lub login' });
+				});
+
+			firebase.auth().onAuthStateChanged((user) => {
+				if (user) {
+					const userNameDbElement = firebase.database().ref(this.state.loginField);
+					userNameDbElement.on('value', (snapshot) => {
+						if (!snapshot.exists()) return;
+						const imagesDataObj = snapshot.val();
+						this.props.onLoginDataPass(
+							imagesDataObj.images,
+							imagesDataObj.paymentConfig.freePicturesAmount,
+							imagesDataObj.paymentConfig.picturePrice,
+							imagesDataObj.paymentConfig.discountProcent
+						);
+					});
+				}
+			});
+		}
+	};
+
+	onLoginClickedHandler = (e) => {
+		switch (e.target.getAttribute('data-value')) {
+			case 'login':
+				if (e.key === 'Enter') {
+					this.onLoginHandler(e);
+					break;
+				}
+				this.setState({ loginField: e.target.value });
+				break;
+
+			case 'password':
+				if (e.key === 'Enter') {
+					this.onLoginHandler(e);
+					break;
+				}
+				this.setState({ passwordField: e.target.value });
+				break;
+
+			default:
+				this.onLoginHandler(e);
+				break;
+		}
 	};
 
 	render() {
@@ -110,7 +181,6 @@ class Login extends Component {
 							{this.state.passwordFieldClicked ? (
 								<p style={{ color: 'red', marginTop: '0', fontSize: '0.7rem' }}>Minimum 6 znaków</p>
 							) : null}
-
 							<Button
 								type="submit"
 								fullWidth
@@ -118,7 +188,7 @@ class Login extends Component {
 								color="primary"
 								className={classes.submit}
 								data-value="button"
-								onClick={(e) => this.props.onLogin(e)}
+								onClick={this.onValidationHandler}
 								disabled={!(this.state.loginValidation && this.state.passwordValidation)}
 							>
 								Zaloguj

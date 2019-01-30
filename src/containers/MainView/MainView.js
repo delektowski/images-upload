@@ -5,24 +5,16 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Backdrop from '../../components/Shared/Backdrop/Backdrop';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/storage';
-import 'firebase/database';
 import classes from './MainView.module.scss';
 
 class MainView extends Component {
 	state = {
 		userName: '',
-		loginField: 'admin',
-		passwordField: 'admin78',
 		isLoginClicked: false,
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		freePicturesAmount: 5,
-		discountProcent: 50,
-		picturePrice: 10,
+
 		imagesDataObj: null,
 		selectedfiles: null,
 		isButtonDisabled: true,
@@ -33,62 +25,17 @@ class MainView extends Component {
 		errorLogin: ''
 	};
 
-	componentDidMount() {
-		this.onLoginHandler();
-	}
-
-	onLoginHandler = (e) => {
-		if (e) e.preventDefault();
-		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin78') {
-			this.setState({
-				isAdminLogin: true,
-				isLoginClicked: true
-			});
-		} else {
-			this.setState({
-				userName: this.state.loginField,
-				isLoginClicked: true
-			});
-		}
-
-		if (
-			this.state.loginField &&
-			this.state.passwordField &&
-			this.state.loginField !== 'admin' &&
-			this.state.createUserLogin === ''
-		) {
-			firebase
-				.auth()
-				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
-				.then(() => this.setState({ isAuthenticated: true }))
-				.catch((error) => {
-					this.setState({ errorLogin: 'Błędne hasło lub login' });
-				});
-
-			firebase.auth().onAuthStateChanged((user) => {
-				if (user) {
-					const userNameDbElement = firebase.database().ref(this.state.loginField);
-					userNameDbElement.on('value', (snapshot) => {
-						if (!snapshot.exists()) return;
-						const imagesDataObj = snapshot.val();
-						this.setState({
-							imagesDataObj: imagesDataObj.images,
-							isLoginClicked: false,
-							freePicturesAmount: imagesDataObj.paymentConfig.freePicturesAmount,
-							picturePrice: imagesDataObj.paymentConfig.picturePrice,
-							discountProcent: imagesDataObj.paymentConfig.discountProcent
-						});
-					});
-				}
-			});
-		}
+	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
+		this.setState({
+			imagesDataObj: imagesDataObj,
+			isLoginClicked: false,
+			freePicturesAmount: freePicturesAmount,
+			picturePrice: picturePrice,
+			discountProcent: discountProcent
+		});
 	};
 
-	onLogoutHandler = (e) => {
-		if (this.state.userName) {
-			firebase.database().ref(this.state.userName).off();
-		}
-
+	onLogoutHandler = () => {
 		this.setState({
 			userName: '',
 			loginField: '',
@@ -100,44 +47,6 @@ class MainView extends Component {
 			filterButtonsState: false,
 			isAdminLogin: false,
 			isAuthenticated: false
-		});
-
-		firebase
-			.auth()
-			.signOut()
-			.then(function() {
-				console.log('Logout');
-			})
-			.catch(function(error) {
-				console.log('Logout: ', error);
-			});
-	};
-
-	getSelectedImagesHandler = (files) => {
-		this.setState({
-			selectedfiles: files,
-			isButtonDisabled: false
-		});
-	};
-
-	disableUploadButtonHandler = () => {
-		console.log('disable');
-
-		this.setState({
-			isButtonDisabled: true
-		});
-		firebase.auth().onAuthStateChanged((user) => {
-			if (user) {
-				const userNameDbElement = firebase.database().ref(this.state.userName);
-				userNameDbElement.on('value', (snapshot) => {
-					if (!snapshot.exists()) return;
-					const imagesDataObj = snapshot.val();
-					this.setState({
-						imagesDataObj: imagesDataObj.images,
-						isLoginClicked: false
-					});
-				});
-			}
 		});
 	};
 
@@ -171,30 +80,6 @@ class MainView extends Component {
 		});
 	};
 
-	onLoginClickedHandler = (e) => {
-		switch (e.target.getAttribute('data-value')) {
-			case 'login':
-				if (e.key === 'Enter') {
-					this.onLoginHandler(e);
-					break;
-				}
-				this.setState({ loginField: e.target.value });
-				break;
-
-			case 'password':
-				if (e.key === 'Enter') {
-					this.onLoginHandler(e);
-					break;
-				}
-				this.setState({ passwordField: e.target.value });
-				break;
-
-			default:
-				this.onLoginHandler(e);
-				break;
-		}
-	};
-
 	render() {
 		let adminPanel = null;
 		let userPanel = null;
@@ -216,10 +101,12 @@ class MainView extends Component {
 						changePicturePrice={this.changepicturePriceHandler}
 						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
 						adminLogin={() => this.setState({ isAdminLogin: true })}
-						onChangeUserName={(userName) => this.setState({ userName: userName })}
+						onChangeUserName={(userName) =>
+							this.setState({ userName: userName, createUserLogin: userName })}
 						imagesDataObj={(images) => this.setState({ imagesDataObj: images })}
-						LoginClicked={() => this.setState({ isLoginClicked: false })}
+						loginClicked={() => this.setState({ isLoginClicked: false })}
 						userName={this.state.userName}
+						onLogoutHandler={this.onLogoutHandler}
 					/>
 				</React.Fragment>
 			);
@@ -235,6 +122,7 @@ class MainView extends Component {
 						freePicturesAmount={this.state.freePicturesAmount}
 						discountProcent={this.state.discountProcent}
 						picturePrice={this.state.picturePrice}
+						onLogoutHandler={this.onLogoutHandler}
 					/>
 				</React.Fragment>
 			);
@@ -242,9 +130,14 @@ class MainView extends Component {
 		if (!this.state.isAdminLogin && !this.state.isAuthenticated) {
 			login = (
 				<Login
-					loginField={this.state.loginField}
-					passwordFiled={this.state.passwordField}
 					onLogin={this.onLoginClickedHandler}
+					adminLogin={() => this.setState({ isAdminLogin: true })}
+					loginClicked={() => this.setState({ isLoginClicked: false })}
+					onChangeUserName={(userName) => this.setState({ userName: userName })}
+					isCreateUserLogin={this.state.createUserLogin}
+					isAuthenticated={() => this.setState({ isAuthenticated: true })}
+					onLoginDataPass={(imagesDataObj, freePicturesAmount, picturePrice, discountProcent) =>
+						this.onLoginDataPass(imagesDataObj, freePicturesAmount, picturePrice, discountProcent)}
 				/>
 			);
 		}

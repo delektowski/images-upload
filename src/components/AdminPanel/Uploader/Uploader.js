@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import classes from './Uploader.module.scss';
 import Button from '../../Shared/Button/Button';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
 
-const uploader = (props) => {
-	const selectImageHandler = (e) => {
-		props.pickSelectedImages(e.target.files);
+class Uploader extends Component {
+	state = {
+		selectedfiles: null,
+		isButtonDisabled: true
 	};
 
-	const uploadHandler = () => {
-		const files = props.uploadSelectedImages;
+	getSelectedImagesHandler = (files) => {
+		this.setState({
+			selectedfiles: files,
+			isButtonDisabled: false
+		});
+	};
+
+	uploadHandler = () => {
+		const files = this.state.selectedfiles;
 		const metadata = {
 			contentType: 'image/jpeg'
 		};
@@ -19,7 +27,7 @@ const uploader = (props) => {
 		const filesArr = [ ...files ];
 
 		filesArr.forEach((file, i) => {
-			const uploadTask = storageRef.child(`images/${props.userName}/${file.name}`).put(file, metadata);
+			const uploadTask = storageRef.child(`images/${this.props.userName}/${file.name}`).put(file, metadata);
 			uploadTask.on(
 				firebase.storage.TaskEvent.STATE_CHANGED,
 				(snapshot) => {
@@ -44,7 +52,7 @@ const uploader = (props) => {
 				() => {
 					const pictureTitle = uploadTask.snapshot.ref.name.replace('.jpg', '');
 					uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-						firebase.database().ref(props.userName + '/images/').child(pictureTitle).set({
+						firebase.database().ref(this.props.userName + '/images/').child(pictureTitle).set({
 							containerColor: '',
 							path: downloadURL,
 							isClickedGreen: false,
@@ -56,20 +64,50 @@ const uploader = (props) => {
 				}
 			);
 		});
-		props.disableButton();
+
+		this.disableUploadButtonHandler();
 	};
 
-	return (
-		<div className={classes.Uploader}>
-			<input type="file" multiple onChange={selectImageHandler} />
-			<Button
-				clicked={uploadHandler}
-				buttonText="UPLOAD"
-				buttonColor="Button__green"
-				isButtonDisabled={props.isButtonDisabled}
-			/>
-		</div>
-	);
-};
+	selectImageHandler = (e) => {
+		this.setState({
+			selectedfiles: e.target.files,
+			isButtonDisabled: false
+		});
+	};
 
-export default uploader;
+	disableUploadButtonHandler = () => {
+		this.setState({
+			isButtonDisabled: true
+		});
+
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				const userNameDbElement = firebase.database().ref(this.props.userName);
+				userNameDbElement.on('value', (snapshot) => {
+					if (!snapshot.exists()) return;
+					const imagesDataObj = snapshot.val();
+					if (imagesDataObj.images) {
+						this.props.imagesDataObj(imagesDataObj.images);
+					}
+					this.props.loginClicked();
+				});
+			}
+		});
+	};
+
+	render() {
+		return (
+			<div className={classes.Uploader}>
+				<input type="file" multiple onChange={this.selectImageHandler} />
+				<Button
+					clicked={this.uploadHandler}
+					buttonText="UPLOAD"
+					buttonColor="Button__green"
+					isButtonDisabled={this.state.isButtonDisabled}
+				/>
+			</div>
+		);
+	}
+}
+
+export default Uploader;
