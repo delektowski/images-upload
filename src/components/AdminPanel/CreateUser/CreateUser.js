@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@material-ui/core/';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 
 const styles = (theme) => ({
 	root: {
@@ -90,7 +93,10 @@ class CreateUser extends Component {
 		userValidation: false,
 		passwordValidation: false,
 		passwordFieldClicked: false,
-		userFieldClicked: false
+		userFieldClicked: false,
+		createUserLogin: '',
+		createUserPassword: '',
+		isUserCreated: false
 	};
 
 	onValidationHandler = (e) => {
@@ -117,7 +123,58 @@ class CreateUser extends Component {
 			default:
 				break;
 		}
-		this.props.onCreateUser(e);
+		this.onCreateClickedHandler(e);
+	};
+
+	onCreateUserHandler = (e) => {
+		e.preventDefault();
+
+		this.props.adminLogin();
+		this.props.onChangeUserName(this.state.createUserLogin);
+
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(`${this.state.createUserLogin}@aaa.aa`, this.state.createUserPassword)
+			.then((resp) => console.log(`${resp.user.email} is ${resp.operationType}`))
+			.catch(function(error) {
+				console.log('Create error: ', error);
+			});
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				firebase.database().ref(this.state.createUserLogin + '/').child('paymentConfig').set({
+					freePicturesAmount: this.props.freePicturesAmount,
+					picturePrice: this.props.picturePrice,
+					discountProcent: this.props.discountProcent
+				});
+
+				this.setState({ isUserCreated: true });
+
+				const userNameDbElement = firebase.database().ref(this.state.createUserLogin);
+				userNameDbElement.on('value', (snapshot) => {
+					if (!snapshot.exists()) return;
+					const imagesDataObj = snapshot.val();
+
+					this.props.imagesDataObj(imagesDataObj.images);
+					this.props.LoginClicked();
+				});
+			}
+		});
+	};
+
+	onCreateClickedHandler = (e) => {
+		switch (e.target.getAttribute('data-value')) {
+			case 'user':
+				this.setState({ createUserLogin: e.target.value });
+				break;
+
+			case 'password':
+				this.setState({ createUserPassword: e.target.value });
+				break;
+
+			default:
+				this.onCreateUserHandler(e);
+				break;
+		}
 	};
 
 	render() {
@@ -125,9 +182,9 @@ class CreateUser extends Component {
 		let createUser = null;
 		let logout = null;
 
-		this.props.userName
+		this.state.isUserCreated
 			? (logout = (
-					<Fade in={!!this.props.userName} timeout={2000}>
+					<Fade in={this.state.isUserCreated} timeout={2000}>
 						<AppBar position="static" className={classes.bar__logout}>
 							<Toolbar className={classes.toolBar}>
 								<Button
@@ -143,7 +200,7 @@ class CreateUser extends Component {
 					</Fade>
 				))
 			: (createUser = (
-					<Fade in={!this.props.userName} timeout={2000}>
+					<Fade in={!this.state.isUserCreated} timeout={2000}>
 						<AppBar position="static" className={classes.bar}>
 							<Toolbar className={classes.toolBar}>
 								<FormControl className={classes.margin}>
@@ -153,7 +210,7 @@ class CreateUser extends Component {
 									<Input
 										className={classes.input}
 										id="create-login-input"
-										value={this.props.loginInputValue}
+										value={this.state.createUserLogin}
 										onChange={this.onValidationHandler}
 										inputProps={{ 'data-value': 'user' }}
 									/>
@@ -165,7 +222,7 @@ class CreateUser extends Component {
 									<Input
 										className={classes.input}
 										id="create-password-input"
-										value={this.props.passwordInputValue}
+										value={this.state.createUserPassword}
 										onChange={this.onValidationHandler}
 										inputProps={{ 'data-value': 'password' }}
 									/>
@@ -174,7 +231,7 @@ class CreateUser extends Component {
 									variant="contained"
 									color="primary"
 									className={classes.submit}
-									onClick={(e) => this.props.buttonCreate(e)}
+									onClick={(e) => this.onCreateUserHandler(e)}
 									disabled={!(this.state.userValidation && this.state.passwordValidation)}
 								>
 									Stwórz użytkownika

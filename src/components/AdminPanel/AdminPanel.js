@@ -12,7 +12,13 @@ const AdminPanel = (props) => {
 				passwordInputValue={props.passwordInputValue}
 				buttonCreate={(e) => props.buttonCreate(e)}
 				clicked={props.logout}
-				userName={props.userName}
+				adminLogin={props.adminLogin}
+				onChangeUserName={props.onChangeUserName}
+				freePicturesAmount={props.freePicturesAmount}
+				picturePrice={props.picturePrice}
+				discountProcent={props.discountProcent}
+				imagesDataObj={props.imagesDataObj}
+				LoginClicked={props.LoginClicked}
 			/>
 
 			<PaymentConf

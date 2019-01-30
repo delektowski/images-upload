@@ -85,15 +85,15 @@ class MainView extends Component {
 	};
 
 	onLogoutHandler = (e) => {
-		if (this.state.userName) firebase.database().ref(this.state.userName).off();
+		if (this.state.userName) {
+			firebase.database().ref(this.state.userName).off();
+		}
+
 		this.setState({
 			userName: '',
 			loginField: '',
 			passwordField: '',
 			isLoginClicked: false,
-			isCreateClicked: false,
-			createUserLogin: '',
-			createUserPassword: '',
 			imagesDataObj: null,
 			selectedfiles: null,
 			isButtonDisabled: true,
@@ -111,40 +111,6 @@ class MainView extends Component {
 			.catch(function(error) {
 				console.log('Logout: ', error);
 			});
-	};
-
-	onCreateUserHandler = (e) => {
-		e.preventDefault();
-		this.setState({
-			isAdminLogin: true,
-			userName: this.state.createUserLogin
-		});
-		firebase
-			.auth()
-			.createUserWithEmailAndPassword(`${this.state.createUserLogin}@aaa.aa`, this.state.createUserPassword)
-			.then((resp) => console.log(`${resp.user.email} is ${resp.operationType}`))
-			.catch(function(error) {
-				console.log('Create error: ', error);
-			});
-		firebase.auth().onAuthStateChanged((user) => {
-			if (user) {
-				firebase.database().ref(this.state.userName + '/').child('paymentConfig').set({
-					freePicturesAmount: this.state.freePicturesAmount,
-					picturePrice: this.state.picturePrice,
-					discountProcent: this.state.discountProcent
-				});
-
-				const userNameDbElement = firebase.database().ref(this.state.loginField);
-				userNameDbElement.on('value', (snapshot) => {
-					if (!snapshot.exists()) return;
-					const imagesDataObj = snapshot.val();
-					this.setState({
-						imagesDataObj: imagesDataObj.images,
-						isLoginClicked: false
-					});
-				});
-			}
-		});
 	};
 
 	getSelectedImagesHandler = (files) => {
@@ -229,22 +195,6 @@ class MainView extends Component {
 		}
 	};
 
-	onCreateClickedHandler = (e) => {
-		switch (e.target.getAttribute('data-value')) {
-			case 'user':
-				this.setState({ createUserLogin: e.target.value });
-				break;
-
-			case 'password':
-				this.setState({ createUserPassword: e.target.value });
-				break;
-
-			default:
-				this.onCreateUserHandler(e);
-				break;
-		}
-	};
-
 	render() {
 		let adminPanel = null;
 		let userPanel = null;
@@ -254,11 +204,6 @@ class MainView extends Component {
 				<React.Fragment>
 					<AdminPanel
 						logout={(e) => this.onLogoutHandler(e)}
-						loginInputValue={this.state.createUserLogin}
-						passwordInputValue={this.state.createUserPassword}
-						onCreateUser={this.onCreateClickedHandler}
-						buttonCreate={(e) => this.onCreateUserHandler(e)}
-						userName={this.state.userName}
 						pickSelectedImages={this.getSelectedImagesHandler}
 						uploadSelectedImages={this.state.selectedfiles}
 						isButtonDisabled={this.state.isButtonDisabled}
@@ -270,6 +215,11 @@ class MainView extends Component {
 						picturePrice={this.state.picturePrice}
 						changePicturePrice={this.changepicturePriceHandler}
 						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
+						adminLogin={() => this.setState({ isAdminLogin: true })}
+						onChangeUserName={(userName) => this.setState({ userName: userName })}
+						imagesDataObj={(images) => this.setState({ imagesDataObj: images })}
+						LoginClicked={() => this.setState({ isLoginClicked: false })}
+						userName={this.state.userName}
 					/>
 				</React.Fragment>
 			);
