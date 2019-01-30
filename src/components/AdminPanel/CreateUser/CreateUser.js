@@ -10,6 +10,7 @@ const styles = (theme) => ({
 
 	bar: {
 		background: 'whitesmoke',
+
 		marginTop: 10,
 		height: '15vh',
 		display: 'flex',
@@ -51,6 +52,7 @@ const styles = (theme) => ({
 		fontSize: '.6rem'
 	},
 	toolBar: {
+		position: 'fixed',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'space-around',
