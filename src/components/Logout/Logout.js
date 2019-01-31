@@ -21,12 +21,7 @@ const logout = (props) => {
 		props.onLogoutHandler();
 	};
 	return (
-		<Button
-			variant="contained"
-			color="secondary"
-			// className={classes.submit}
-			onClick={onLogoutHandler}
-		>
+		<Button variant="contained" color="secondary" onClick={onLogoutHandler} size="small">
 			Wyloguj
 		</Button>
 	);

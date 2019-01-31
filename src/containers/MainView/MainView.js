@@ -14,7 +14,8 @@ class MainView extends Component {
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-
+		loginField: 'admin',
+		passwordField: 'admin78',
 		imagesDataObj: null,
 		selectedfiles: null,
 		isButtonDisabled: true,
@@ -53,22 +54,6 @@ class MainView extends Component {
 	filterButtonsStateHandler = (buttonsStateObj) => {
 		this.setState({
 			filterButtonsState: buttonsStateObj
-		});
-	};
-
-	changeDiscountValueHandler = (value) => {
-		this.setState({
-			discountProcent: value
-		});
-	};
-	changeFreePicturesAmountHandler = (value) => {
-		this.setState({
-			freePicturesAmount: value
-		});
-	};
-	changepicturePriceHandler = (value) => {
-		this.setState({
-			picturePrice: value
 		});
 	};
 

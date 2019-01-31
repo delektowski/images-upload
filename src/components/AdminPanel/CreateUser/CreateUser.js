@@ -9,23 +9,20 @@ import 'firebase/database';
 
 const styles = (theme) => ({
 	root: {
-		flexGrow: 1,
 		width: '100%'
 	},
 	bar: {
 		background: 'whitesmoke',
-		marginTop: 10,
-		height: '15vh',
+		// height: '15vh',
 		display: 'flex',
 		justifyContent: 'center',
 
 		[theme.breakpoints.down('xs')]: {
-			height: 210
+			height: 260
 		}
 	},
 	bar__logout: {
 		background: 'whitesmoke',
-		marginTop: 10,
 		height: '7vh',
 		display: 'flex',
 		justifyContent: 'center',
@@ -54,7 +51,7 @@ const styles = (theme) => ({
 		fontSize: '.6rem'
 	},
 	toolBar: {
-		position: 'fixed',
+		position: 'static',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'space-around',
@@ -64,8 +61,9 @@ const styles = (theme) => ({
 			flexDirection: 'column'
 		}
 	},
-	margin: {
-		margin: theme.spacing.unit
+	formControl: {
+		margin: theme.spacing.unit,
+		[theme.breakpoints.down('xs')]: {}
 	},
 	submit: {
 		[theme.breakpoints.down('sm')]: {
@@ -129,19 +127,19 @@ class CreateUser extends Component {
 
 	changeFreePicturesAmountHandler = (value) => {
 		this.setState({
-			freePicturesAmount: +value
+			freePicturesAmount: value
 		});
 	};
 
 	changeDiscountValueHandler = (value) => {
 		this.setState({
-			discountProcent: +value
+			discountProcent: value
 		});
 	};
 
 	changepicturePriceHandler = (value) => {
 		this.setState({
-			picturePrice: +value
+			picturePrice: value
 		});
 	};
 
@@ -219,7 +217,7 @@ class CreateUser extends Component {
 					<Fade in={!this.state.isUserCreated} timeout={500}>
 						<AppBar position="static" className={classes.bar}>
 							<Toolbar className={classes.toolBar}>
-								<FormControl className={classes.margin}>
+								<FormControl className={classes.formControl}>
 									<InputLabel className={classes.input} htmlFor="custom-css-standard-input">
 										nazwa <span className={classes.info}> (min. 2 znaki)</span>
 									</InputLabel>
@@ -243,8 +241,10 @@ class CreateUser extends Component {
 										inputProps={{ 'data-value': 'password' }}
 									/>
 								</FormControl>
+
 								<Button
 									variant="contained"
+									size="small"
 									color="primary"
 									className={classes.submit}
 									onClick={(e) => this.onCreateUserHandler(e)}
@@ -259,16 +259,6 @@ class CreateUser extends Component {
 							</Toolbar>
 						</AppBar>
 					</Fade>
-					<PaymentConf
-						freePicturesAmount={this.state.freePicturesAmount}
-						discountProcent={this.state.discountProcent}
-						imagesAmount={this.state.imagesAmount}
-						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
-						changeDiscountValue={this.changeDiscountValueHandler}
-						changePicturePrice={this.changepicturePriceHandler}
-						picturePrice={this.state.picturePrice}
-						userName={this.state.createUserLogin}
-					/>
 				</React.Fragment>
 			);
 		}
@@ -278,6 +268,18 @@ class CreateUser extends Component {
 				<div className={classes.root}>
 					{createUser}
 					{logout}
+					<Fade in={!this.state.isUserCreated} timeout={500}>
+						<PaymentConf
+							freePicturesAmount={this.state.freePicturesAmount}
+							discountProcent={this.state.discountProcent}
+							imagesAmount={this.state.imagesAmount}
+							changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
+							changeDiscountValue={this.changeDiscountValueHandler}
+							changePicturePrice={this.changepicturePriceHandler}
+							picturePrice={this.state.picturePrice}
+							userName={this.state.createUserLogin}
+						/>
+					</Fade>
 				</div>
 			</React.Fragment>
 		);

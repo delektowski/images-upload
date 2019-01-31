@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import classes from './Uploader.module.scss';
-import Button from '../../Shared/Button/Button';
+import { Button } from '@material-ui/core/';
+import { DropzoneArea } from 'material-ui-dropzone';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
@@ -69,15 +69,17 @@ class Uploader extends Component {
 	};
 
 	selectImageHandler = (e) => {
+		console.log(e);
 		this.setState({
-			selectedfiles: e.target.files,
+			selectedfiles: e,
 			isButtonDisabled: false
 		});
 	};
 
 	disableUploadButtonHandler = () => {
 		this.setState({
-			isButtonDisabled: true
+			isButtonDisabled: true,
+			selectedfiles: null
 		});
 
 		firebase.auth().onAuthStateChanged((user) => {
@@ -97,14 +99,26 @@ class Uploader extends Component {
 
 	render() {
 		return (
-			<div className={classes.Uploader}>
-				<input type="file" multiple onChange={this.selectImageHandler} />
-				<Button
-					clicked={this.uploadHandler}
-					buttonText="UPLOAD"
-					buttonColor="Button__green"
-					isButtonDisabled={this.state.isButtonDisabled}
+			<div style={{ marginTop: '2%', width: '100%' }}>
+				<DropzoneArea
+					filesLimit={999}
+					dropzoneText={'Przeciągnij i upuść zdjęcia albo kliknij aby dodać'}
+					onChange={this.selectImageHandler}
+					showAlerts={false}
+					acceptedFiles={[ 'image/jpeg', 'image/png', 'image/bmp' ]}
+					maxFileSize={5000000}
 				/>
+				<Button
+					variant="contained"
+					style={{ marginTop: '2%', marginBottom: '2%' }}
+					size="large"
+					color="primary"
+					onClick={this.uploadHandler}
+					disabled={!this.state.selectedfiles}
+					fullWidth
+				>
+					Wyślij
+				</Button>
 			</div>
 		);
 	}

@@ -38,8 +38,8 @@ class Login extends Component {
 		loginValidation: false,
 		loginFiledClicked: false,
 		passwordFieldClicked: false,
-		loginField: '',
-		passwordField: '',
+		loginField: 'admin',
+		passwordField: 'admin78',
 		errorLogin: ''
 	};
 
@@ -154,7 +154,7 @@ class Login extends Component {
 										type="text"
 										autoComplete="off"
 										autoFocus
-										value={this.props.loginField}
+										value={this.state.loginField}
 										onChange={this.onValidationHandler}
 										inputProps={{ 'data-value': 'login' }}
 									/>
@@ -170,7 +170,7 @@ class Login extends Component {
 										id="password"
 										type="password"
 										autoComplete="off"
-										value={this.props.passwordFiled}
+										value={this.state.passwordField}
 										onChange={this.onValidationHandler}
 										inputProps={{ 'data-value': 'password' }}
 										onKeyPress={this.onValidationHandler}
@@ -189,7 +189,7 @@ class Login extends Component {
 								className={classes.submit}
 								data-value="button"
 								onClick={this.onValidationHandler}
-								disabled={!(this.state.loginValidation && this.state.passwordValidation)}
+								// disabled={!(this.state.loginValidation && this.state.passwordValidation)}
 							>
 								Zaloguj
 							</Button>
