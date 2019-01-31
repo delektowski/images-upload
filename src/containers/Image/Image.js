@@ -118,6 +118,7 @@ class Image extends Component {
 
 	render() {
 		let imageLarge = null;
+		let image = null;
 		if (this.state.isImageClicked) {
 			imageLarge = (
 				<ImageLarge
@@ -137,9 +138,8 @@ class Image extends Component {
 				/>
 			);
 		}
-
-		return (
-			<React.Fragment>
+		if (!this.props.isAdminLogin) {
+			image = (
 				<ImageContainer containerColor={this.state.containerColor}>
 					<figure>
 						<img
@@ -150,26 +150,30 @@ class Image extends Component {
 						/>
 						<figcaption className={classes.Image__title}>{this.state.imageId}</figcaption>
 					</figure>
-					{!this.props.isAdminLogin ? (
-						<div className={classes.Image__selectionButtons}>
-							<Button
-								clicked={() => this.buttonClickHandler('green')}
-								buttonText="Tak"
-								buttonColor="Button__green"
-							/>
-							<Button
-								clicked={() => this.buttonClickHandler('blue')}
-								buttonText="Może"
-								buttonColor="Button__blue"
-							/>
-							<Button
-								clicked={() => this.buttonClickHandler('red')}
-								buttonText="Nie"
-								buttonColor="Button__red"
-							/>
-						</div>
-					) : null}
+					<div className={classes.Image__selectionButtons}>
+						<Button
+							clicked={() => this.buttonClickHandler('green')}
+							buttonText="Tak"
+							buttonColor="Button__green"
+						/>
+						<Button
+							clicked={() => this.buttonClickHandler('blue')}
+							buttonText="Może"
+							buttonColor="Button__blue"
+						/>
+						<Button
+							clicked={() => this.buttonClickHandler('red')}
+							buttonText="Nie"
+							buttonColor="Button__red"
+						/>
+					</div>
 				</ImageContainer>
+			);
+		}
+
+		return (
+			<React.Fragment>
+				{image}
 				{imageLarge}
 			</React.Fragment>
 		);
