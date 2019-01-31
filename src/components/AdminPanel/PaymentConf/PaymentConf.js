@@ -1,5 +1,7 @@
-import React from 'react';
-import { Fade, AppBar, Toolbar, TextField, InputAdornment } from '@material-ui/core/';
+import React, { Component } from 'react';
+import { Fade, AppBar, Toolbar, TextField, InputAdornment, Paper, Avatar, Typography } from '@material-ui/core/';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import deepPurple from '@material-ui/core/colors/deepPurple';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { withStyles } from '@material-ui/core/styles';
@@ -7,6 +9,9 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = (theme) => ({
 	bar: {
 		marginTop: '1%'
+	},
+	bar__onUserCreated: {
+		marginTop: 40
 	},
 	toolBar: {
 		display: 'flex',
@@ -27,72 +32,133 @@ const styles = (theme) => ({
 		[theme.breakpoints.down('xs')]: {
 			paddingTop: 10
 		}
+	},
+	paper: {
+		background: 'whitesmoke',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: '2%',
+		paddingBottom: '.8%',
+		paddingTop: '.8%'
+	},
+
+	orangeAvatar: {
+		width: 70,
+		height: 70,
+		margin: '0 auto',
+		fontSize: '.9rem',
+
+		color: '#fff',
+		backgroundColor: deepOrange[500]
+	},
+	purpleAvatar: {
+		width: 70,
+		height: 70,
+		margin: '0 auto',
+		fontSize: '.9rem',
+		color: '#fff',
+		backgroundColor: deepPurple[500]
+	},
+	avatarContainer: {
+		marginLeft: '5%',
+		marginRight: '5%'
 	}
 });
 
-const paymentConf = (props) => {
-	const updatePaymentConf = () => {
-		firebase.database().ref(props.userName + '/').child('paymentConfig').set({
-			freePicturesAmount: props.freePicturesAmount,
-			picturePrice: props.picturePrice,
-			discountProcent: props.discountProcent
-		});
-	};
-	const { classes } = props;
+class PaymentConf extends Component {
+	render() {
+		const { classes } = this.props;
+		let picturesAmount = this.props.amountSelectedImages ? this.props.amountSelectedImages.length : 0;
+		let price =
+			(picturesAmount - this.props.freePicturesAmount) *
+				this.props.picturePrice *
+				(this.props.discountProcent / 100) <=
+			0
+				? 0
+				: Math.round(
+						(picturesAmount - this.props.freePicturesAmount) *
+							this.props.picturePrice *
+							(this.props.discountProcent / 100)
+					);
 
-	return (
-		<Fade in={true} timeout={500}>
-			<AppBar position="static" className={classes.bar}>
-				<Toolbar className={classes.toolBar}>
-					<form className={classes.container} noValidate autoComplete="off">
-						<TextField
-							id="outlined-adornment-weight"
-							className={classes.textField}
-							variant="outlined"
-							type="text"
-							label="Darmowe zdjęcia"
-							margin="dense"
-							value={props.freePicturesAmount}
-							onChange={(e) => props.changeFreePicturesAmount(e.target.value)}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">szt.</InputAdornment>
-							}}
-						/>
-					</form>
-					<form className={classes.container} noValidate autoComplete="off">
-						<TextField
-							id="outlined-adornment-weight"
-							className={classes.textField}
-							variant="outlined"
-							type="text"
-							label="Upust za wszystko"
-							margin="dense"
-							value={props.discountProcent}
-							onChange={(e) => props.changeDiscountValue(e.target.value)}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">%</InputAdornment>
-							}}
-						/>
-					</form>
-					<form className={classes.container} noValidate autoComplete="off">
-						<TextField
-							id="outlined-adornment-weight"
-							className={classes.textField}
-							variant="outlined"
-							type="text"
-							label="Cena za zdjęcie"
-							margin="dense"
-							value={props.picturePrice}
-							onChange={(e) => props.changePicturePrice(e.target.value)}
-							InputProps={{
-								endAdornment: <InputAdornment position="end">zł</InputAdornment>
-							}}
-						/>
-					</form>
-				</Toolbar>
-			</AppBar>
-		</Fade>
-	);
-};
+		return (
+			<React.Fragment>
+				<Fade in={true} timeout={500}>
+					<AppBar
+						position="static"
+						className={this.props.isUserCreated ? classes.bar__onUserCreated : classes.bar}
+					>
+						<Toolbar className={classes.toolBar}>
+							<form className={classes.container} noValidate autoComplete="off">
+								<TextField
+									disabled={!this.props.isUserCreated}
+									className={classes.textField}
+									variant="outlined"
+									type="number"
+									label="Darmowe zdjęcia"
+									margin="dense"
+									value={this.props.freePicturesAmount}
+									onChange={(e) => this.props.changeFreePicturesAmount(e.target.value)}
+									InputProps={{
+										endAdornment: <InputAdornment position="end">szt.</InputAdornment>
+									}}
+								/>
+							</form>
+							<form className={classes.container} noValidate autoComplete="off">
+								<TextField
+									disabled={!this.props.isUserCreated}
+									className={classes.textField}
+									variant="outlined"
+									type="number"
+									label="Upust za wszystkie"
+									margin="dense"
+									value={this.props.discountProcent}
+									onChange={(e) => this.props.changeDiscountValue(e.target.value)}
+									InputProps={{
+										endAdornment: <InputAdornment position="end">%</InputAdornment>
+									}}
+								/>
+							</form>
+							<form className={classes.container} noValidate autoComplete="off">
+								<TextField
+									disabled={!this.props.isUserCreated}
+									className={classes.textField}
+									variant="outlined"
+									type="number"
+									label="Cena za zdjęcie"
+									margin="dense"
+									value={this.props.picturePrice}
+									onChange={(e) => this.props.changePicturePrice(e.target.value)}
+									InputProps={{
+										endAdornment: <InputAdornment position="end">zł</InputAdornment>
+									}}
+								/>
+							</form>
+						</Toolbar>
+					</AppBar>
+				</Fade>
+				{this.props.isUserCreated ? (
+					<Fade in={this.props.isUserCreated} timeout={500}>
+						<Paper className={classes.paper}>
+							<div className={classes.avatarContainer}>
+								<Typography gutterBottom={true} variant="caption">
+									Liczba zdjęć
+								</Typography>
+								<Avatar className={classes.orangeAvatar}>{picturesAmount}</Avatar>
+							</div>
+							<div className={classes.avatarContainer}>
+								<Typography gutterBottom={true} variant="caption">
+									Cena za wszystkie
+								</Typography>
+								<Avatar className={classes.purpleAvatar}>{price} zł</Avatar>
+							</div>
+						</Paper>
+					</Fade>
+				) : null}
+			</React.Fragment>
+		);
+	}
+}
 
-export default withStyles(styles)(paymentConf);
+export default withStyles(styles)(PaymentConf);

@@ -8,6 +8,7 @@ import 'firebase/database';
 
 const styles = (theme) => ({
 	main: {
+		marginTop: 50,
 		width: 'auto',
 		marginLeft: theme.spacing.unit * 3,
 		marginRight: theme.spacing.unit * 3,

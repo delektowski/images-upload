@@ -19,7 +19,8 @@ const AdminPanel = (props) => {
 				discountProcent={props.discountProcent}
 				imagesDataObj={props.imagesDataObj}
 				loginClicked={props.loginClicked}
-				onLogoutHandler={props.onLogoutHandler}
+				amountSelectedImages={props.uploadSelectedImages}
+				onUserCreated={props.onUserCreated}
 			/>
 
 			<Uploader
@@ -30,6 +31,8 @@ const AdminPanel = (props) => {
 				disableButton={props.disableButton}
 				imagesDataObj={props.imagesDataObj}
 				loginClicked={props.loginClicked}
+				selectedfiles={props.selectedfiles}
+				isUserCreated={props.isUserCreated}
 			/>
 		</React.Fragment>
 	);

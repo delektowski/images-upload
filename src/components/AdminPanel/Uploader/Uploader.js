@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core/';
+import { Button, Fade } from '@material-ui/core/';
 import { DropzoneArea } from 'material-ui-dropzone';
 import firebase from 'firebase/app';
 import 'firebase/storage';
@@ -9,13 +9,6 @@ class Uploader extends Component {
 	state = {
 		selectedfiles: null,
 		isButtonDisabled: true
-	};
-
-	getSelectedImagesHandler = (files) => {
-		this.setState({
-			selectedfiles: files,
-			isButtonDisabled: false
-		});
 	};
 
 	uploadHandler = () => {
@@ -69,11 +62,11 @@ class Uploader extends Component {
 	};
 
 	selectImageHandler = (e) => {
-		console.log(e);
 		this.setState({
 			selectedfiles: e,
 			isButtonDisabled: false
 		});
+		this.props.selectedfiles(e);
 	};
 
 	disableUploadButtonHandler = () => {
@@ -98,29 +91,42 @@ class Uploader extends Component {
 	};
 
 	render() {
-		return (
-			<div style={{ marginTop: '2%', width: '100%' }}>
-				<DropzoneArea
-					filesLimit={999}
-					dropzoneText={'Przeciągnij i upuść zdjęcia albo kliknij aby dodać'}
-					onChange={this.selectImageHandler}
-					showAlerts={false}
-					acceptedFiles={[ 'image/jpeg', 'image/png', 'image/bmp' ]}
-					maxFileSize={5000000}
-				/>
-				<Button
-					variant="contained"
-					style={{ marginTop: '2%', marginBottom: '2%' }}
-					size="large"
-					color="primary"
-					onClick={this.uploadHandler}
-					disabled={!this.state.selectedfiles}
-					fullWidth
-				>
-					Wyślij
-				</Button>
-			</div>
-		);
+		return this.props.isUserCreated ? (
+			<Fade in={this.props.isUserCreated} timeout={500}>
+				<div style={{ marginTop: '2%', width: '100%' }}>
+					<Button
+						variant="contained"
+						style={{ marginBottom: '2%' }}
+						size="large"
+						color="primary"
+						onClick={this.uploadHandler}
+						disabled={!this.state.selectedfiles}
+						fullWidth
+					>
+						Wyślij
+					</Button>
+					<DropzoneArea
+						filesLimit={999}
+						dropzoneText={'Przeciągnij i upuść zdjęcia albo kliknij aby dodać'}
+						onChange={this.selectImageHandler}
+						showAlerts={false}
+						acceptedFiles={[ 'image/jpeg', 'image/png', 'image/bmp' ]}
+						maxFileSize={5000000}
+					/>
+					<Button
+						variant="contained"
+						style={{ marginTop: '2%' }}
+						size="large"
+						color="primary"
+						onClick={this.uploadHandler}
+						disabled={!this.state.selectedfiles}
+						fullWidth
+					>
+						Wyślij
+					</Button>
+				</div>
+			</Fade>
+		) : null;
 	}
 }
 

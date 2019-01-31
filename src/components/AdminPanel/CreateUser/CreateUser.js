@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Logout from '../../Logout/Logout';
 import PaymentConf from '../../AdminPanel/PaymentConf/PaymentConf';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@material-ui/core/';
@@ -12,43 +11,15 @@ const styles = (theme) => ({
 		width: '100%'
 	},
 	bar: {
+		marginTop: 40,
 		background: 'whitesmoke',
-		// height: '15vh',
 		display: 'flex',
 		justifyContent: 'center',
 
 		[theme.breakpoints.down('xs')]: {
-			height: 260
+			height: 140,
+			marginTop: 15
 		}
-	},
-	bar__logout: {
-		background: 'whitesmoke',
-		height: '7vh',
-		display: 'flex',
-		justifyContent: 'center',
-		[theme.breakpoints.down('xs')]: {
-			height: 60
-		}
-	},
-	logout__button: {
-		[theme.breakpoints.down('sm')]: {
-			fontSize: '.8rem'
-		},
-		[theme.breakpoints.down('xs')]: {
-			fontSize: '.6rem',
-			marginTop: 10,
-			marginBottom: 10,
-			paddingTop: 10,
-			paddingBottom: 10
-		}
-	},
-	input: {
-		[theme.breakpoints.down('xs')]: {
-			fontSize: '.7rem'
-		}
-	},
-	info: {
-		fontSize: '.6rem'
 	},
 	toolBar: {
 		position: 'static',
@@ -61,26 +32,38 @@ const styles = (theme) => ({
 			flexDirection: 'column'
 		}
 	},
-	formControl: {
-		margin: theme.spacing.unit,
-		[theme.breakpoints.down('xs')]: {}
+	bar__logout: {
+		background: 'whitesmoke',
+		height: '7vh',
+		display: 'flex',
+		justifyContent: 'center',
+		[theme.breakpoints.down('xs')]: {
+			height: 60
+		}
 	},
-	submit: {
+	logout__button: {
+		marginTop: '1%',
+		paddingTop: 13,
+		paddingBottom: 13,
+
 		[theme.breakpoints.down('sm')]: {
 			fontSize: '.8rem'
 		},
 		[theme.breakpoints.down('xs')]: {
 			fontSize: '.6rem',
-			marginTop: 30,
-			marginBottom: 20,
-			paddingTop: 10,
-			paddingBottom: 10
+			marginTop: '3%',
+			marginBottom: '2%',
+			paddingTop: 15,
+			paddingBottom: 15
 		}
 	},
-	inputBackground: {
-		background: 'rgba(190, 190, 190, 0.227)',
-		borderRadius: '5px',
-		border: '1px solid rgba(190, 190, 190, 0.827)'
+	input: {
+		[theme.breakpoints.down('xs')]: {
+			fontSize: '.7rem'
+		}
+	},
+	info: {
+		fontSize: '.6rem'
 	}
 });
 
@@ -92,7 +75,7 @@ class CreateUser extends Component {
 		userFieldClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		isUserCreated: false,
+		onUserCreated: false,
 		freePicturesAmount: 5,
 		discountProcent: 50,
 		picturePrice: 10
@@ -126,20 +109,33 @@ class CreateUser extends Component {
 	};
 
 	changeFreePicturesAmountHandler = (value) => {
+		if (value < 0) value = '';
 		this.setState({
 			freePicturesAmount: value
 		});
+
+		this.updatePaymentConfOnFirebase('freePicturesAmount', value);
 	};
 
 	changeDiscountValueHandler = (value) => {
+		if (value < 0) value = '';
 		this.setState({
 			discountProcent: value
 		});
+		this.updatePaymentConfOnFirebase('discountProcent', value);
 	};
 
 	changepicturePriceHandler = (value) => {
+		if (value < 0) value = '';
 		this.setState({
 			picturePrice: value
+		});
+		this.updatePaymentConfOnFirebase('picturePrice', value);
+	};
+
+	updatePaymentConfOnFirebase = (key, value) => {
+		firebase.database().ref(this.state.createUserLogin + '/').child('paymentConfig').update({
+			[key]: value
 		});
 	};
 
@@ -151,30 +147,20 @@ class CreateUser extends Component {
 		firebase
 			.auth()
 			.createUserWithEmailAndPassword(`${this.state.createUserLogin}@aaa.aa`, this.state.createUserPassword)
-			.then((resp) => console.log(`${resp.user.email} is ${resp.operationType}`))
-			.catch(function(error) {
-				console.log('Create error: ', error);
-			});
-
-		firebase.auth().onAuthStateChanged((user) => {
-			if (user) {
+			.then((resp) => {
+				console.log(`${resp.user.email} is ${resp.operationType}`);
 				firebase.database().ref(this.state.createUserLogin + '/').child('paymentConfig').set({
 					freePicturesAmount: this.state.freePicturesAmount,
 					picturePrice: this.state.picturePrice,
 					discountProcent: this.state.discountProcent
 				});
-				this.setState({ isUserCreated: true });
-				const userNameDbElement = firebase.database().ref(this.state.createUserLogin);
-				userNameDbElement.on('value', (snapshot) => {
-					if (!snapshot.exists()) return;
-					const imagesDataObj = snapshot.val();
-					if (imagesDataObj.images) {
-						this.props.imagesDataObj(imagesDataObj.images);
-					}
-					this.props.loginClicked();
-				});
-			}
-		});
+				this.setState({ onUserCreated: true });
+				this.props.onUserCreated();
+				this.props.loginClicked();
+			})
+			.catch(function(error) {
+				console.log('Create error: ', error);
+			});
 	};
 
 	onCreateClickedHandler = (e) => {
@@ -184,6 +170,10 @@ class CreateUser extends Component {
 				break;
 
 			case 'password':
+				if (e.key === 'Enter') {
+					this.onCreateUserHandler(e);
+					break;
+				}
 				this.setState({ createUserPassword: e.target.value });
 				break;
 
@@ -196,25 +186,11 @@ class CreateUser extends Component {
 	render() {
 		const { classes } = this.props;
 		let createUser = null;
-		let logout = null;
 
-		if (this.state.isUserCreated) {
-			logout = (
-				<Fade in={this.state.isUserCreated} timeout={500}>
-					<AppBar position="static" className={classes.bar__logout}>
-						<Toolbar className={classes.toolBar}>
-							<Logout
-								userName={this.state.createUserLogin}
-								onLogoutHandler={this.props.onLogoutHandler}
-							/>
-						</Toolbar>
-					</AppBar>
-				</Fade>
-			);
-		} else {
+		if (!this.state.onUserCreated) {
 			createUser = (
 				<React.Fragment>
-					<Fade in={!this.state.isUserCreated} timeout={500}>
+					<Fade in={!this.state.onUserCreated} timeout={500}>
 						<AppBar position="static" className={classes.bar}>
 							<Toolbar className={classes.toolBar}>
 								<FormControl className={classes.formControl}>
@@ -238,26 +214,25 @@ class CreateUser extends Component {
 										id="create-password-input"
 										value={this.state.createUserPassword}
 										onChange={this.onValidationHandler}
+										onKeyPress={(e) => this.onCreateClickedHandler(e)}
 										inputProps={{ 'data-value': 'password' }}
 									/>
 								</FormControl>
-
-								<Button
-									variant="contained"
-									size="small"
-									color="primary"
-									className={classes.submit}
-									onClick={(e) => this.onCreateUserHandler(e)}
-									disabled={!(this.state.userValidation && this.state.passwordValidation)}
-								>
-									Stwórz użytkownika
-								</Button>
-								<Logout
-									userName={this.state.createUserLogin}
-									onLogoutHandler={this.props.onLogoutHandler}
-								/>
 							</Toolbar>
 						</AppBar>
+					</Fade>
+					<Fade in={!this.state.onUserCreated} timeout={500}>
+						<Button
+							variant="contained"
+							size="small"
+							color="primary"
+							fullWidth
+							className={classes.logout__button}
+							onClick={(e) => this.onCreateUserHandler(e)}
+							disabled={!(this.state.userValidation && this.state.passwordValidation)}
+						>
+							Stwórz użytkownika
+						</Button>
 					</Fade>
 				</React.Fragment>
 			);
@@ -267,19 +242,17 @@ class CreateUser extends Component {
 			<React.Fragment>
 				<div className={classes.root}>
 					{createUser}
-					{logout}
-					<Fade in={!this.state.isUserCreated} timeout={500}>
-						<PaymentConf
-							freePicturesAmount={this.state.freePicturesAmount}
-							discountProcent={this.state.discountProcent}
-							imagesAmount={this.state.imagesAmount}
-							changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
-							changeDiscountValue={this.changeDiscountValueHandler}
-							changePicturePrice={this.changepicturePriceHandler}
-							picturePrice={this.state.picturePrice}
-							userName={this.state.createUserLogin}
-						/>
-					</Fade>
+					<PaymentConf
+						freePicturesAmount={this.state.freePicturesAmount}
+						discountProcent={this.state.discountProcent}
+						amountSelectedImages={this.props.amountSelectedImages}
+						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
+						changeDiscountValue={this.changeDiscountValueHandler}
+						changePicturePrice={this.changepicturePriceHandler}
+						picturePrice={this.state.picturePrice}
+						userName={this.state.createUserLogin}
+						isUserCreated={this.state.onUserCreated}
+					/>
 				</div>
 			</React.Fragment>
 		);

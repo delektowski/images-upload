@@ -5,9 +5,46 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Backdrop from '../../components/Shared/Backdrop/Backdrop';
-import classes from './MainView.module.scss';
+import Logout from '../../components/Logout/Logout';
+import { AppBar, Toolbar, Typography } from '@material-ui/core/';
+import { withStyles } from '@material-ui/core/styles';
 
-class MainView extends Component {
+const styles = {
+	header: {
+		background: 'whitesmoke',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'fixed'
+	},
+	toolbar__header: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		width: '98%'
+	},
+	footer: {
+		background: 'whitesmoke',
+		height: 20,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'fixed',
+		bottom: 0
+	},
+	toolbar__footer: {
+		textAlign: 'center'
+	},
+	mainView: {
+		textAlign: 'center',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		flexDirection: 'column',
+		paddingTop: '2%'
+	}
+};
+
+class mainView extends Component {
 	state = {
 		userName: '',
 		isLoginClicked: false,
@@ -17,13 +54,14 @@ class MainView extends Component {
 		loginField: 'admin',
 		passwordField: 'admin78',
 		imagesDataObj: null,
-		selectedfiles: null,
+		selectedfiles: 0,
 		isButtonDisabled: true,
 		filterButtonsState: false,
 		isAdminLogin: false,
 		isEnabledBackdrop: false,
 		isAuthenticated: false,
-		errorLogin: ''
+		errorLogin: '',
+		onUserCreated: false
 	};
 
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
@@ -39,15 +77,21 @@ class MainView extends Component {
 	onLogoutHandler = () => {
 		this.setState({
 			userName: '',
-			loginField: '',
-			passwordField: '',
 			isLoginClicked: false,
+			isCreateClicked: false,
+			createUserLogin: '',
+			createUserPassword: '',
+			loginField: 'admin',
+			passwordField: 'admin78',
 			imagesDataObj: null,
-			selectedfiles: null,
+			selectedfiles: 0,
 			isButtonDisabled: true,
 			filterButtonsState: false,
 			isAdminLogin: false,
-			isAuthenticated: false
+			isEnabledBackdrop: false,
+			isAuthenticated: false,
+			errorLogin: '',
+			isUserCreated: false
 		});
 	};
 
@@ -66,15 +110,17 @@ class MainView extends Component {
 	};
 
 	render() {
+		const { classes } = this.props;
 		let adminPanel = null;
 		let userPanel = null;
 		let login = null;
+
 		if (this.state.isAdminLogin) {
 			adminPanel = (
 				<React.Fragment>
 					<AdminPanel
 						logout={(e) => this.onLogoutHandler(e)}
-						pickSelectedImages={this.getSelectedImagesHandler}
+						selectedfiles={(e) => this.setState({ selectedfiles: e })}
 						uploadSelectedImages={this.state.selectedfiles}
 						isButtonDisabled={this.state.isButtonDisabled}
 						disableButton={this.disableUploadButtonHandler}
@@ -91,7 +137,8 @@ class MainView extends Component {
 						imagesDataObj={(images) => this.setState({ imagesDataObj: images })}
 						loginClicked={() => this.setState({ isLoginClicked: false })}
 						userName={this.state.userName}
-						onLogoutHandler={this.onLogoutHandler}
+						onUserCreated={() => this.setState({ isUserCreated: true })}
+						isUserCreated={this.state.isUserCreated}
 					/>
 				</React.Fragment>
 			);
@@ -128,29 +175,54 @@ class MainView extends Component {
 		}
 
 		return (
-			<Layout>
-				<div className={classes.MainView}>
-					{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
-					<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
-					{login}
-					{adminPanel}
-					{userPanel}
-					<div className={classes.MainView__imagesContainer}>
-						<ImagesGenerator
-							images={this.state.picturesPaths}
-							titles={this.state.picturesTitles}
-							imagesDataObj={this.state.imagesDataObj}
-							userName={this.state.userName}
-							filterButtonsState={this.state.filterButtonsState}
-							reset={this.state.reset}
-							isAdminLogin={this.state.isAdminLogin}
-							onImageClick={this.backdropHandler}
-						/>
-					</div>
-				</div>
-			</Layout>
+			<React.Fragment>
+				<header>
+					<AppBar className={classes.header} position="static" color="default">
+						<Toolbar className={classes.toolbar__header}>
+							<Typography variant="overline" color="inherit">
+								Peek Pick Pic
+							</Typography>
+							{this.state.isAdminLogin ? (
+								<Logout userName={this.state.userName} onLogoutHandler={this.onLogoutHandler} />
+							) : null}
+						</Toolbar>
+					</AppBar>
+				</header>
+				<section>
+					<Layout>
+						<div className={classes.mainView}>
+							{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
+							<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
+							{login}
+							{adminPanel}
+							{userPanel}
+							<div className={classes.mainView__imagesContainer}>
+								<ImagesGenerator
+									images={this.state.picturesPaths}
+									titles={this.state.picturesTitles}
+									imagesDataObj={this.state.imagesDataObj}
+									userName={this.state.userName}
+									filterButtonsState={this.state.filterButtonsState}
+									reset={this.state.reset}
+									isAdminLogin={this.state.isAdminLogin}
+									onImageClick={this.backdropHandler}
+								/>
+							</div>
+						</div>
+					</Layout>
+				</section>
+				<footer>
+					<AppBar className={classes.footer} position="static" color="default">
+						<Toolbar className={classes.toolbar__footer}>
+							<Typography variant="caption" color="inherit">
+								Created by Marcin Delektowski
+							</Typography>
+						</Toolbar>
+					</AppBar>
+				</footer>
+			</React.Fragment>
 		);
 	}
 }
 
-export default MainView;
+export default withStyles(styles)(mainView);
