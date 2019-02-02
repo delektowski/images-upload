@@ -76,9 +76,9 @@ class CreateUser extends Component {
 		createUserLogin: '',
 		createUserPassword: '',
 		onUserCreated: false,
-		freePicturesAmount: 5,
-		discountProcent: 50,
-		picturePrice: 10
+		freePicturesAmount: 0,
+		discountProcent: 60,
+		picturePrice: 5
 	};
 
 	onValidationHandler = (e) => {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Fade, AppBar, Toolbar, TextField, InputAdornment, Paper, Avatar, Typography } from '@material-ui/core/';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
-import firebase from 'firebase/app';
 import 'firebase/database';
 import { withStyles } from '@material-ui/core/styles';
 

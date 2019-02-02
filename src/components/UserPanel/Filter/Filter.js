@@ -1,76 +1,73 @@
-import React, { Component } from 'react';
-import Button from '../../Shared/Button/Button';
-import classes from './Filter.module.scss';
+import React from 'react';
+import Checkbox from '@material-ui/core/Checkbox';
+import { withStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 
-class Filter extends Component {
-	state = {
-		greenClicked: false,
-		blueClicked: false,
-		redClicked: false,
-		allClicked: false,
-		notSelectedClicked: false,
-		anyButtonClicked: false
-	};
+const styles = (theme) => ({
+	container: {
+		position: 'relative'
+	},
+	caption: {
+		position: 'absolute',
+		top: '50%',
+		transform: 'translate(-110%, -50%)',
+		fontSize: '.8rem',
+		[theme.breakpoints.down('xs')]: {
+			transform: 'translate(-80%, -50%)',
+			fontSize: '.6rem'
+		},
+		[theme.breakpoints.down(400)]: {
+			transform: 'translate(-60%, -50%)',
+			fontSize: '.5rem'
+		}
+	},
+	greenClicked: {
+		color: 'green',
+		'&$checked': {
+			color: 'green'
+		}
+	},
+	blueClicked: {
+		color: 'rgb(63, 81, 181)',
+		'&$checked': {
+			color: 'rgb(63, 81, 181)'
+		}
+	},
+	redClicked: {
+		color: 'rgb(245, 0, 87)',
+		'&$checked': {
+			color: 'rgb(245, 0, 87)'
+		}
+	},
+	allClicked: {
+		color: 'black',
+		'&$checked': {
+			color: 'black'
+		}
+	},
+	checked: {}
+});
 
-	buttonClickHandler = (whichButton) => {
+const filter = (props) => {
+	const { classes } = props;
+	const buttonClickHandler = (whichButton) => {
 		switch (whichButton) {
 			case 'greenClicked':
-				this.setState((prevState) => {
-					return {
-						greenClicked: !prevState.greenClicked,
-						allClicked: false,
-						notSelectedClicked: false,
-						anyButtonClicked: true
-					};
-				});
+				props.onFilterButtonsState('greenClicked');
+
 				break;
 
 			case 'blueClicked':
-				this.setState((prevState) => {
-					return {
-						blueClicked: !prevState.blueClicked,
-						allClicked: false,
-						notSelectedClicked: false,
-						anyButtonClicked: true
-					};
-				});
+				props.onFilterButtonsState('blueClicked');
+
 				break;
 
 			case 'redClicked':
-				this.setState((prevState) => {
-					return {
-						redClicked: !prevState.redClicked,
-						allClicked: false,
-						notSelectedClicked: false,
-						anyButtonClicked: true
-					};
-				});
+				props.onFilterButtonsState('redClicked');
 				break;
 
 			case 'allClicked':
-				this.setState((prevState) => {
-					return {
-						greenClicked: false,
-						blueClicked: false,
-						redClicked: false,
-						allClicked: true,
-						notSelectedClicked: false,
-						anyButtonClicked: true
-					};
-				});
-				break;
-
-			case 'notSelectedClicked':
-				this.setState((prevState) => {
-					return {
-						greenClicked: false,
-						blueClicked: false,
-						redClicked: false,
-						allClicked: false,
-						notSelectedClicked: true,
-						anyButtonClicked: true
-					};
-				});
+				props.onFilterButtonsState('allClicked');
 				break;
 
 			default:
@@ -78,40 +75,23 @@ class Filter extends Component {
 		}
 	};
 
-	componentDidUpdate() {
-		if (this.state.anyButtonClicked) {
-			this.props.filterButtonsState(this.state);
-			this.setState({ anyButtonClicked: false });
-		}
-	}
+	return (
+		<div className={classes.container}>
+			{props.filterClicked === 'greenClicked' ? (
+				<Typography className={classes.caption} variant="caption">
+					POKAŻ:{' '}
+				</Typography>
+			) : null}
+			<Checkbox
+				checked={props.filterButtonsState[props.filterClicked]}
+				onChange={() => buttonClickHandler(props.filterClicked)}
+				classes={{
+					root: classes[props.filterClicked],
+					checked: classes.checked
+				}}
+			/>
+		</div>
+	);
+};
 
-	render() {
-		return (
-			<div className={classes.Filter}>
-				<Button
-					clicked={() => this.buttonClickHandler('greenClicked')}
-					buttonText="tak"
-					buttonColor="Button__green"
-				/>
-				<Button
-					clicked={() => this.buttonClickHandler('blueClicked')}
-					buttonText="może"
-					buttonColor="Button__blue"
-				/>
-				<Button
-					clicked={() => this.buttonClickHandler('redClicked')}
-					buttonText="nie"
-					buttonColor="Button__red"
-				/>
-				<Button clicked={() => this.buttonClickHandler('allClicked')} buttonText="wszystkie" buttonColor="" />
-				<Button
-					clicked={() => this.buttonClickHandler('notSelectedClicked')}
-					buttonText="niezaznaczone"
-					buttonColor=""
-				/>
-			</div>
-		);
-	}
-}
-
-export default Filter;
+export default withStyles(styles)(filter);

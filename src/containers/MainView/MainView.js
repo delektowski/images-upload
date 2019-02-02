@@ -8,6 +8,8 @@ import Backdrop from '../../components/Shared/Backdrop/Backdrop';
 import Logout from '../../components/Logout/Logout';
 import { AppBar, Toolbar, Typography } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Copyright from '@material-ui/icons/Copyright';
 
 const styles = {
 	header: {
@@ -17,6 +19,11 @@ const styles = {
 		justifyContent: 'center',
 		position: 'fixed'
 	},
+	icon: {
+		fontSize: '1rem',
+		marginRight: '2%'
+	},
+
 	toolbar__header: {
 		display: 'flex',
 		justifyContent: 'space-between',
@@ -32,7 +39,19 @@ const styles = {
 		bottom: 0
 	},
 	toolbar__footer: {
-		textAlign: 'center'
+		display: 'flex',
+		width: 300,
+
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	icon__loginContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	icon__login: {
+		marginLeft: '5%'
 	},
 	mainView: {
 		textAlign: 'center',
@@ -51,12 +70,16 @@ class mainView extends Component {
 		isCreateClicked: false,
 		createUserLogin: '',
 		createUserPassword: '',
-		loginField: 'admin',
-		passwordField: 'admin78',
 		imagesDataObj: null,
 		selectedfiles: 0,
 		isButtonDisabled: true,
-		filterButtonsState: false,
+		filterButtonsState: {
+			greenClicked: false,
+			blueClicked: false,
+			redClicked: false,
+			allClicked: true,
+			anyButtonClicked: false
+		},
 		isAdminLogin: false,
 		isEnabledBackdrop: false,
 		isAuthenticated: false,
@@ -81,8 +104,6 @@ class mainView extends Component {
 			isCreateClicked: false,
 			createUserLogin: '',
 			createUserPassword: '',
-			loginField: 'admin',
-			passwordField: 'admin78',
 			imagesDataObj: null,
 			selectedfiles: 0,
 			isButtonDisabled: true,
@@ -91,13 +112,33 @@ class mainView extends Component {
 			isEnabledBackdrop: false,
 			isAuthenticated: false,
 			errorLogin: '',
-			isUserCreated: false
+			onUserCreated: false
 		});
 	};
 
-	filterButtonsStateHandler = (buttonsStateObj) => {
-		this.setState({
-			filterButtonsState: buttonsStateObj
+	onFilterButtonsStateHandler = (buttonsStateObj) => {
+		if (buttonsStateObj === 'allClicked') {
+			this.setState({
+				filterButtonsState: {
+					greenClicked: false,
+					blueClicked: false,
+					redClicked: false,
+					allClicked: true
+				}
+			});
+			return;
+		}
+
+		if (buttonsStateObj.allClicked) {
+			console.log('kokos');
+		}
+		this.setState((prevState) => {
+			const copyfilterButtonsState = { ...this.state.filterButtonsState };
+			copyfilterButtonsState[buttonsStateObj] = !prevState.filterButtonsState[buttonsStateObj];
+			copyfilterButtonsState.allClicked = false;
+			return {
+				filterButtonsState: copyfilterButtonsState
+			};
 		});
 	};
 
@@ -149,7 +190,8 @@ class mainView extends Component {
 					<UserPanel
 						buttonLogout={(e) => this.onLogoutHandler(e)}
 						imagesDataObj={this.state.imagesDataObj}
-						filterButtonsState={this.filterButtonsStateHandler}
+						onFilterButtonsState={this.onFilterButtonsStateHandler}
+						filterButtonsState={this.state.filterButtonsState}
 						userName={this.state.userName}
 						freePicturesAmount={this.state.freePicturesAmount}
 						discountProcent={this.state.discountProcent}
@@ -182,7 +224,12 @@ class mainView extends Component {
 							<Typography variant="overline" color="inherit">
 								Peek Pick Pic
 							</Typography>
-							{this.state.isAdminLogin ? (
+							<div className={classes.icon__loginContainer}>
+								<Typography variant="caption">{this.state.userName}</Typography>
+								<AccountCircle className={classes.icon__login} />
+							</div>
+
+							{this.state.isAdminLogin || this.state.isAuthenticated ? (
 								<Logout userName={this.state.userName} onLogoutHandler={this.onLogoutHandler} />
 							) : null}
 						</Toolbar>
@@ -214,8 +261,9 @@ class mainView extends Component {
 				<footer>
 					<AppBar className={classes.footer} position="static" color="default">
 						<Toolbar className={classes.toolbar__footer}>
+							<Copyright className={classes.icon} />
 							<Typography variant="caption" color="inherit">
-								Created by Marcin Delektowski
+								2019 by Marcin Delektowski
 							</Typography>
 						</Toolbar>
 					</AppBar>

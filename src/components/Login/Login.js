@@ -39,8 +39,8 @@ class Login extends Component {
 		loginValidation: false,
 		loginFiledClicked: false,
 		passwordFieldClicked: false,
-		loginField: 'admin',
-		passwordField: 'admin78',
+		loginField: 'kotek',
+		passwordField: 'kotek1',
 		errorLogin: ''
 	};
 
