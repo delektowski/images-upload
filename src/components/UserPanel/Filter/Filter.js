@@ -54,12 +54,10 @@ const filter = (props) => {
 		switch (whichButton) {
 			case 'greenClicked':
 				props.onFilterButtonsState('greenClicked');
-
 				break;
 
 			case 'blueClicked':
 				props.onFilterButtonsState('blueClicked');
-
 				break;
 
 			case 'redClicked':
@@ -79,7 +77,7 @@ const filter = (props) => {
 		<div className={classes.container}>
 			{props.filterClicked === 'greenClicked' ? (
 				<Typography className={classes.caption} variant="caption">
-					POKAŻ:{' '}
+					POKAŻ{' '}
 				</Typography>
 			) : null}
 			<Checkbox

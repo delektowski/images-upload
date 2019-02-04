@@ -11,7 +11,7 @@ import AllInclusive from '@material-ui/icons/AllInclusive';
 const styles = {
 	paper: {
 		background: 'whitesmoke',
-		marginTop: 30,
+		marginTop: 65,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',

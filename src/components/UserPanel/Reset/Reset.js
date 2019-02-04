@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '../../Shared/Button/Button';
-import classes from './Reset.module.scss';
+import { Button } from '@material-ui/core/';
+// import Button from '../../Shared/Button/Button';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
@@ -16,9 +16,9 @@ const Reset = (props) => {
 		}
 	};
 	return (
-		<div className={classes.Reset}>
-			<Button clicked={resetUserSelection} buttonText="Reset" />
-		</div>
+		<Button variant="contained" color="primary" onClick={resetUserSelection} size="small">
+			Reset
+		</Button>
 	);
 };
 

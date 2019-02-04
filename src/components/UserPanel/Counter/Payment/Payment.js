@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = (theme) => ({
 	paper: {
 		background: 'whitesmoke',
-		marginTop: 30,
+		// marginTop: '1%',
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -119,7 +119,6 @@ const Payment = (props) => {
 					</Avatar>
 				</div>
 			</Paper>
-			<Paper className={classes.paper} />
 		</React.Fragment>
 	);
 };

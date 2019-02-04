@@ -6,18 +6,26 @@ import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Backdrop from '../../components/Shared/Backdrop/Backdrop';
 import Logout from '../../components/Logout/Logout';
-import { AppBar, Toolbar, Typography } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography, Paper } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
+import Reset from '../../components/UserPanel/Reset/Reset';
+import Fab from '@material-ui/core/Fab';
+import Drawer from '@material-ui/core/Drawer';
 
 const styles = {
 	header: {
 		background: 'whitesmoke',
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'fixed'
+		justifyContent: 'space-between',
+		position: 'fixed',
+		height: 60,
+		paddingLeft: '13%',
+		zIndex: 10000000
 	},
 	icon: {
 		fontSize: '1rem',
@@ -27,7 +35,7 @@ const styles = {
 	toolbar__header: {
 		display: 'flex',
 		justifyContent: 'space-between',
-		width: '98%'
+		width: '100%'
 	},
 	footer: {
 		background: 'whitesmoke',
@@ -60,6 +68,37 @@ const styles = {
 		justifyContent: 'flex-start',
 		flexDirection: 'column',
 		paddingTop: '2%'
+	},
+	appTitle: {
+		lineHeight: 1.2,
+		letterSpacing: 3,
+		fontSize: '.5rem'
+	},
+	fab: {
+		position: 'fixed',
+		left: '2%',
+		zIndex: 10000,
+		top: '1%'
+	},
+	drawerPaper: {
+		width: '100%',
+		height: 60,
+		overflow: 'visible',
+		border: 0,
+		background: 'rgba(0, 0, 0, 0)',
+		zIndex: 1000
+	},
+	drawerPaperMenu: {
+		width: '100%',
+		height: 60,
+		overflow: 'visible',
+		border: 0,
+		background: 'rgba(0, 0, 0, 0)'
+	},
+	paperNonDrawer: {
+		position: 'fixed',
+		width: '100%',
+		top: 50
 	}
 };
 
@@ -84,8 +123,28 @@ class mainView extends Component {
 		isEnabledBackdrop: false,
 		isAuthenticated: false,
 		errorLogin: '',
-		onUserCreated: false
+		onUserCreated: false,
+		isDrawerOpen: true
 	};
+
+	componentDidUpdate() {
+		if (
+			this.state.filterButtonsState.greenClicked === false &&
+			this.state.filterButtonsState.blueClicked === false &&
+			this.state.filterButtonsState.redClicked === false &&
+			this.state.filterButtonsState.allClicked === false
+		) {
+			this.setState({
+				filterButtonsState: {
+					greenClicked: false,
+					blueClicked: false,
+					redClicked: false,
+					allClicked: true,
+					anyButtonClicked: false
+				}
+			});
+		}
+	}
 
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
 		this.setState({
@@ -150,6 +209,13 @@ class mainView extends Component {
 		});
 	};
 
+	isDrawerOpenHandler = () => {
+		this.setState((prevState) => {
+			return {
+				isDrawerOpen: !prevState.isDrawerOpen
+			};
+		});
+	};
 	render() {
 		const { classes } = this.props;
 		let adminPanel = null;
@@ -197,6 +263,7 @@ class mainView extends Component {
 						discountProcent={this.state.discountProcent}
 						picturePrice={this.state.picturePrice}
 						onLogoutHandler={this.onLogoutHandler}
+						isDrawerOpen={this.state.isDrawerOpen}
 					/>
 				</React.Fragment>
 			);
@@ -219,21 +286,50 @@ class mainView extends Component {
 		return (
 			<React.Fragment>
 				<header>
-					<AppBar className={classes.header} position="static" color="default">
-						<Toolbar className={classes.toolbar__header}>
-							<Typography variant="overline" color="inherit">
-								Peek Pick Pic
-							</Typography>
-							<div className={classes.icon__loginContainer}>
-								<Typography variant="caption">{this.state.userName}</Typography>
-								<AccountCircle className={classes.icon__login} />
-							</div>
+					{this.state.isAdminLogin || this.state.isAuthenticated ? (
+						<Fab onClick={this.isDrawerOpenHandler} size="small" className={classes.fab}>
+							{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
+						</Fab>
+					) : null}
+					<Drawer
+						transitionDuration={500}
+						variant="persistent"
+						anchor="left"
+						open={this.state.isDrawerOpen}
+						classes={{
+							paper: classes.drawerPaperMenu
+						}}
+					>
+						<AppBar className={classes.header} position="static" color="default">
+							<Toolbar className={classes.toolbar__header}>
+								<div>
+									<Typography className={classes.appTitle} variant="overline" color="inherit">
+										Peek
+									</Typography>
+									<Typography className={classes.appTitle} variant="overline" color="inherit">
+										Pick
+									</Typography>
+									<Typography className={classes.appTitle} variant="overline" color="inherit">
+										Pic
+									</Typography>
+								</div>
 
-							{this.state.isAdminLogin || this.state.isAuthenticated ? (
-								<Logout userName={this.state.userName} onLogoutHandler={this.onLogoutHandler} />
-							) : null}
-						</Toolbar>
-					</AppBar>
+								{this.state.isAdminLogin || this.state.isAuthenticated ? (
+									<React.Fragment>
+										<Reset
+											userName={this.state.userName}
+											imagesDataObj={this.state.imagesDataObj}
+										/>
+										<Logout userName={this.state.userName} onLogoutHandler={this.onLogoutHandler} />
+									</React.Fragment>
+								) : null}
+								<div className={classes.icon__loginContainer}>
+									<Typography variant="caption">{this.state.userName}</Typography>
+									<AccountCircle className={classes.icon__login} />
+								</div>
+							</Toolbar>
+						</AppBar>
+					</Drawer>
 				</header>
 				<section>
 					<Layout>
@@ -242,7 +338,18 @@ class mainView extends Component {
 							<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
 							{login}
 							{adminPanel}
-							{userPanel}
+							<Drawer
+								transitionDuration={500}
+								variant="persistent"
+								anchor="left"
+								open={this.state.isDrawerOpen}
+								classes={{
+									paper: classes.drawerPaper
+								}}
+							>
+								<Paper>{userPanel}</Paper>
+							</Drawer>
+
 							<div className={classes.mainView__imagesContainer}>
 								<ImagesGenerator
 									images={this.state.picturesPaths}

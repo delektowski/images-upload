@@ -1,7 +1,5 @@
 import React from 'react';
 import Counter from '../UserPanel/Counter/Counter';
-import Filter from '../UserPanel/Filter/Filter';
-import Reset from '../UserPanel/Reset/Reset';
 
 const UserPanel = (props) => {
 	return (
@@ -14,7 +12,6 @@ const UserPanel = (props) => {
 				onFilterButtonsState={props.onFilterButtonsState}
 				filterButtonsState={props.filterButtonsState}
 			/>
-			<Reset userName={props.userName} imagesDataObj={props.imagesDataObj} />
 		</React.Fragment>
 	);
 };
