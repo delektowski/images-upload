@@ -25,7 +25,7 @@ const styles = {
 		position: 'fixed',
 		height: 60,
 		paddingLeft: '13%',
-		zIndex: 10000000
+		zIndex: 100000
 	},
 	icon: {
 		fontSize: '1rem',
@@ -62,11 +62,12 @@ const styles = {
 		marginLeft: '5%'
 	},
 	mainView: {
-		textAlign: 'center',
+		marginTop: '200px',
 		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		flexDirection: 'column',
+		alignItems: 'flex-start',
+		justifyContent: 'center',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
 		paddingTop: '2%'
 	},
 	appTitle: {
@@ -113,11 +114,9 @@ class mainView extends Component {
 		selectedfiles: 0,
 		isButtonDisabled: true,
 		filterButtonsState: {
-			greenClicked: false,
-			blueClicked: false,
-			redClicked: false,
-			allClicked: true,
-			anyButtonClicked: false
+			greenClicked: true,
+			blueClicked: true,
+			redClicked: true
 		},
 		isAdminLogin: false,
 		isEnabledBackdrop: false,
@@ -131,16 +130,13 @@ class mainView extends Component {
 		if (
 			this.state.filterButtonsState.greenClicked === false &&
 			this.state.filterButtonsState.blueClicked === false &&
-			this.state.filterButtonsState.redClicked === false &&
-			this.state.filterButtonsState.allClicked === false
+			this.state.filterButtonsState.redClicked === false
 		) {
 			this.setState({
 				filterButtonsState: {
 					greenClicked: false,
 					blueClicked: false,
-					redClicked: false,
-					allClicked: true,
-					anyButtonClicked: false
+					redClicked: true
 				}
 			});
 		}
@@ -166,35 +162,35 @@ class mainView extends Component {
 			imagesDataObj: null,
 			selectedfiles: 0,
 			isButtonDisabled: true,
-			filterButtonsState: false,
+			filterButtonsState: {
+				greenClicked: true,
+				blueClicked: true,
+				redClicked: true
+			},
 			isAdminLogin: false,
 			isEnabledBackdrop: false,
 			isAuthenticated: false,
 			errorLogin: '',
-			onUserCreated: false
+			onUserCreated: false,
+			isDrawerOpen: true
 		});
 	};
 
 	onFilterButtonsStateHandler = (buttonsStateObj) => {
-		if (buttonsStateObj === 'allClicked') {
-			this.setState({
-				filterButtonsState: {
-					greenClicked: false,
-					blueClicked: false,
-					redClicked: false,
-					allClicked: true
-				}
-			});
-			return;
-		}
+		// if (buttonsStateObj === 'redClicked') {
+		// 	this.setState({
+		// 		filterButtonsState: {
+		// 			greenClicked: false,
+		// 			blueClicked: false,
+		// 			redClicked: true
+		// 		}
+		// 	});
+		// 	return;
+		// }
 
-		if (buttonsStateObj.allClicked) {
-			console.log('kokos');
-		}
 		this.setState((prevState) => {
 			const copyfilterButtonsState = { ...this.state.filterButtonsState };
 			copyfilterButtonsState[buttonsStateObj] = !prevState.filterButtonsState[buttonsStateObj];
-			copyfilterButtonsState.allClicked = false;
 			return {
 				filterButtonsState: copyfilterButtonsState
 			};
@@ -285,54 +281,57 @@ class mainView extends Component {
 
 		return (
 			<React.Fragment>
-				<header>
-					{this.state.isAdminLogin || this.state.isAuthenticated ? (
-						<Fab onClick={this.isDrawerOpenHandler} size="small" className={classes.fab}>
-							{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
-						</Fab>
-					) : null}
-					<Drawer
-						transitionDuration={500}
-						variant="persistent"
-						anchor="left"
-						open={this.state.isDrawerOpen}
-						classes={{
-							paper: classes.drawerPaperMenu
-						}}
-					>
-						<AppBar className={classes.header} position="static" color="default">
-							<Toolbar className={classes.toolbar__header}>
-								<div>
-									<Typography className={classes.appTitle} variant="overline" color="inherit">
-										Peek
-									</Typography>
-									<Typography className={classes.appTitle} variant="overline" color="inherit">
-										Pick
-									</Typography>
-									<Typography className={classes.appTitle} variant="overline" color="inherit">
-										Pic
-									</Typography>
-								</div>
+				<Layout>
+					<header>
+						{this.state.isAdminLogin || this.state.isAuthenticated ? (
+							<Fab onClick={this.isDrawerOpenHandler} size="small" className={classes.fab}>
+								{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
+							</Fab>
+						) : null}
+						<Drawer
+							transitionDuration={500}
+							variant="persistent"
+							anchor="left"
+							open={this.state.isDrawerOpen}
+							classes={{
+								paper: classes.drawerPaperMenu
+							}}
+						>
+							<AppBar className={classes.header} position="static" color="default">
+								<Toolbar className={classes.toolbar__header}>
+									<div>
+										<Typography className={classes.appTitle} variant="overline" color="inherit">
+											Peek
+										</Typography>
+										<Typography className={classes.appTitle} variant="overline" color="inherit">
+											Pick
+										</Typography>
+										<Typography className={classes.appTitle} variant="overline" color="inherit">
+											Pic
+										</Typography>
+									</div>
 
-								{this.state.isAdminLogin || this.state.isAuthenticated ? (
-									<React.Fragment>
-										<Reset
-											userName={this.state.userName}
-											imagesDataObj={this.state.imagesDataObj}
-										/>
-										<Logout userName={this.state.userName} onLogoutHandler={this.onLogoutHandler} />
-									</React.Fragment>
-								) : null}
-								<div className={classes.icon__loginContainer}>
-									<Typography variant="caption">{this.state.userName}</Typography>
-									<AccountCircle className={classes.icon__login} />
-								</div>
-							</Toolbar>
-						</AppBar>
-					</Drawer>
-				</header>
-				<section>
-					<Layout>
+									{this.state.isAdminLogin || this.state.isAuthenticated ? (
+										<React.Fragment>
+											<Reset
+												userName={this.state.userName}
+												imagesDataObj={this.state.imagesDataObj}
+											/>
+											<Logout
+												userName={this.state.userName}
+												onLogoutHandler={this.onLogoutHandler}
+											/>
+										</React.Fragment>
+									) : null}
+									<div className={classes.icon__loginContainer}>
+										<Typography variant="caption">{this.state.userName}</Typography>
+										<AccountCircle className={classes.icon__login} />
+									</div>
+								</Toolbar>
+							</AppBar>
+						</Drawer>
+					</header>
+					<section>
 						<div className={classes.mainView}>
 							{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
 							<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
@@ -350,31 +349,29 @@ class mainView extends Component {
 								<Paper>{userPanel}</Paper>
 							</Drawer>
 
-							<div className={classes.mainView__imagesContainer}>
-								<ImagesGenerator
-									images={this.state.picturesPaths}
-									titles={this.state.picturesTitles}
-									imagesDataObj={this.state.imagesDataObj}
-									userName={this.state.userName}
-									filterButtonsState={this.state.filterButtonsState}
-									reset={this.state.reset}
-									isAdminLogin={this.state.isAdminLogin}
-									onImageClick={this.backdropHandler}
-								/>
-							</div>
+							<ImagesGenerator
+								images={this.state.picturesPaths}
+								titles={this.state.picturesTitles}
+								imagesDataObj={this.state.imagesDataObj}
+								userName={this.state.userName}
+								filterButtonsState={this.state.filterButtonsState}
+								reset={this.state.reset}
+								isAdminLogin={this.state.isAdminLogin}
+								onImageClick={this.backdropHandler}
+							/>
 						</div>
-					</Layout>
-				</section>
-				<footer>
-					<AppBar className={classes.footer} position="static" color="default">
-						<Toolbar className={classes.toolbar__footer}>
-							<Copyright className={classes.icon} />
-							<Typography variant="caption" color="inherit">
-								2019 by Marcin Delektowski
-							</Typography>
-						</Toolbar>
-					</AppBar>
-				</footer>
+					</section>
+					<footer>
+						<AppBar className={classes.footer} position="static" color="default">
+							<Toolbar className={classes.toolbar__footer}>
+								<Copyright className={classes.icon} />
+								<Typography variant="caption" color="inherit">
+									2019 by Marcin Delektowski
+								</Typography>
+							</Toolbar>
+						</AppBar>
+					</footer>
+				</Layout>
 			</React.Fragment>
 		);
 	}

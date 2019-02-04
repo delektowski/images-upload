@@ -9,42 +9,24 @@ const imagesGenerator = (props) => {
 	if (imagesDataObj !== null) {
 		//Filter pictures based on filter button state
 		const imagesDataObjArr = [];
-		const notSelectedClicked = props.filterButtonsState.notSelectedClicked;
-		const allClicked = props.filterButtonsState.allClicked;
 		const greenClicked = props.filterButtonsState.greenClicked;
 		const blueClicked = props.filterButtonsState.blueClicked;
 		const redClicked = props.filterButtonsState.redClicked;
-		let nothingClicked;
 		for (const prop in imagesDataObj) {
 			imagesDataObjArr.push({ [prop]: imagesDataObj[prop] });
-		}
-
-		if (!allClicked & !notSelectedClicked & !greenClicked & !blueClicked & !redClicked) {
-			nothingClicked = true;
-		} else {
-			nothingClicked = false;
 		}
 
 		const imagesDataObjFiltered = imagesDataObjArr
 			.filter((element) => {
 				const isFilterGreenClicked = greenClicked ? element[Object.keys(element)].isClickedGreen : null;
 				const isFilterBlueClicked = blueClicked ? element[Object.keys(element)].isClickedBlue : null;
-				const isFilterRedClicked = redClicked ? element[Object.keys(element)].isClickedred : null;
-				const isFilteRedAllClicked = allClicked ? true : null;
-				const isFilteRedNotSelectedClicked = notSelectedClicked
-					? !element[Object.keys(element)].isClickedGreen &&
-						!element[Object.keys(element)].isClickedBlue &&
-						!element[Object.keys(element)].isClickedred
+				let isFilterRedClicked = redClicked
+					? true &&
+						!element[Object.keys(element)].isClickedGreen &&
+						!element[Object.keys(element)].isClickedBlue
 					: null;
 
-				return (
-					isFilteRedNotSelectedClicked ||
-					isFilterGreenClicked ||
-					isFilterBlueClicked ||
-					isFilterRedClicked ||
-					nothingClicked ||
-					isFilteRedAllClicked
-				);
+				return isFilterGreenClicked || isFilterBlueClicked || isFilterRedClicked;
 			})
 			.map((e) => Object.keys(e)[0]);
 

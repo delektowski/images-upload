@@ -1,11 +1,90 @@
 import React, { Component } from 'react';
-import classes from './Image.module.scss';
-import Button from '../../components/Shared/Button/Button';
+
 import ImageLarge from '../ImageLarge/ImageLarge';
-import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateImageState } from './utylity';
+import { withStyles } from '@material-ui/core/styles';
+import {
+	Card,
+	CardMedia,
+	CardContent,
+	CardActions,
+	TextField,
+	Collapse,
+	IconButton,
+	CardHeader
+} from '@material-ui/core/';
+import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
+import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
+import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
+
+const styles = {
+	cardRed: {
+		width: 400,
+		margin: '1%',
+		background: 'rgba(98, 95, 90, 0.1)',
+		transition: 'all .3s ease-in-out'
+	},
+	cardGreen: {
+		width: 400,
+		margin: '1%',
+		background: 'rgba(0, 128, 0, 0.1)',
+		transition: 'all .3s ease-in-out'
+	},
+	cardBlue: {
+		width: 400,
+		margin: '1%',
+		background: 'rgba(63, 81, 181, 0.2)',
+		transition: 'all .3s ease-in-out'
+	},
+	media: {
+		width: 'auto',
+		maxWidth: '100%',
+		padding: '0 1%',
+		objectFit: 'contain',
+		height: 250,
+		margin: '0 auto'
+	},
+	actions: {
+		display: 'flex',
+		justifyContent: 'space-around'
+	},
+
+	borderRed: {
+		border: '4px solid rgba(98, 95, 90, 0.707)',
+		transition: 'all .3s ease-in-out'
+	},
+	borderGreen: {
+		border: '4px solid rgba(0, 128, 0)',
+		transition: 'all .3s ease-in-out'
+	},
+	borderBlue: {
+		border: '4px solid rgba(63, 81, 181)',
+		transition: 'all .3s ease-in-out'
+	},
+	imageTitle: {
+		textAlign: 'center',
+		padding: '2%'
+	},
+	textField: {
+		width: '100%'
+	},
+	thumbUpAlt: {
+		color: 'rgba(0, 128, 0)',
+		transition: 'all .3s ease-in-out'
+	},
+	thumbsUpDown: {
+		color: 'rgba(63, 81, 181)',
+		transition: 'all .3s ease-in-out'
+	},
+	thumbDownAlt: {
+		color: 'rgba(98, 95, 90, 0.307)',
+		transition: 'all .3s ease-in-out'
+	}
+};
 
 class Image extends Component {
 	state = {
@@ -15,7 +94,12 @@ class Image extends Component {
 		isClickedRed: false,
 		isImageClicked: false,
 		imageId: '',
-		comment: ''
+		expanded: false,
+		comment: 'Brak komentarza'
+	};
+
+	handleExpandClick = () => {
+		this.setState((state) => ({ expanded: !state.expanded }));
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -117,8 +201,24 @@ class Image extends Component {
 	};
 
 	render() {
+		const { classes } = this.props;
 		let imageLarge = null;
 		let image = null;
+		let borderColor = 'borderRed';
+		let cardColor = 'cardRed';
+		if (this.state.isClickedRed) {
+			borderColor = 'borderRed';
+			cardColor = 'cardRed';
+		}
+		if (this.state.isClickedGreen) {
+			borderColor = 'borderGreen';
+			cardColor = 'cardGreen';
+		}
+		if (this.state.isClickedBlue) {
+			borderColor = 'borderBlue';
+			cardColor = 'cardBlue';
+		}
+
 		if (this.state.isImageClicked) {
 			imageLarge = (
 				<ImageLarge
@@ -140,8 +240,8 @@ class Image extends Component {
 		}
 		if (!this.props.isAdminLogin) {
 			image = (
-				<ImageContainer containerColor={this.state.containerColor}>
-					<figure>
+				<React.Fragment>
+					{/* <figure>
 						<img
 							onClick={this.ImageClickedHandler}
 							className={classes.Image}
@@ -166,18 +266,66 @@ class Image extends Component {
 							buttonText="Nie"
 							buttonColor="Button__red"
 						/>
-					</div>
-				</ImageContainer>
+					</div> */}
+
+					<Card className={classes[cardColor]}>
+						<div className={classes[borderColor]}>
+							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
+							<CardMedia
+								component="img"
+								onClick={() => console.log('kokos')}
+								className={classes.media}
+								src={this.props.src[0]}
+								title={this.state.imageId}
+							/>
+							<CardActions className={classes.actions}>
+								<IconButton onClick={() => this.buttonClickHandler('green')}>
+									<ThumbUpAlt className={this.state.isClickedGreen ? classes.thumbUpAlt : null} />
+								</IconButton>
+								<IconButton onClick={() => this.buttonClickHandler('blue')}>
+									<ThumbsUpDown className={this.state.isClickedBlue ? classes.thumbsUpDown : null} />
+								</IconButton>
+								<IconButton onClick={() => this.buttonClickHandler('red')}>
+									<ThumbDownAlt className={this.state.borderRed ? classes.thumbDownAlt : null} />
+								</IconButton>
+								<IconButton
+									onClick={this.handleExpandClick}
+									aria-expanded={this.state.expanded}
+									aria-label="Show more"
+								>
+									{this.state.expanded ? <ExpandLess /> : <ChatBubbleOutline />}
+								</IconButton>
+							</CardActions>
+							<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+								<CardContent>
+									<TextField
+										id="outlined-textarea"
+										label="Komentarz"
+										placeholder="Placeholder"
+										multiline
+										value={this.state.comment}
+										className={classes.textField}
+										margin="normal"
+										variant="outlined"
+									/>
+								</CardContent>
+								<IconButton>
+									<ThumbDownAlt />
+								</IconButton>
+							</Collapse>
+						</div>
+					</Card>
+				</React.Fragment>
 			);
 		}
 
 		return (
 			<React.Fragment>
 				{image}
-				{imageLarge}
+				{/* {imageLarge} */}
 			</React.Fragment>
 		);
 	}
 }
 
-export default Image;
+export default withStyles(styles)(Image);

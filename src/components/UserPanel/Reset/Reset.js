@@ -11,7 +11,7 @@ const Reset = (props) => {
 				containerColor: '',
 				isClickedBlue: false,
 				isClickedGreen: false,
-				isClickedRed: false
+				isClickedRed: true
 			});
 		}
 	};

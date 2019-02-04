@@ -39,12 +39,7 @@ const styles = (theme) => ({
 			color: 'rgb(98, 95, 90)'
 		}
 	},
-	allClicked: {
-		color: 'black',
-		'&$checked': {
-			color: 'black'
-		}
-	},
+
 	checked: {}
 });
 
@@ -64,10 +59,6 @@ const filter = (props) => {
 				props.onFilterButtonsState('redClicked');
 				break;
 
-			case 'allClicked':
-				props.onFilterButtonsState('allClicked');
-				break;
-
 			default:
 				break;
 		}
@@ -77,7 +68,7 @@ const filter = (props) => {
 		<div className={classes.container}>
 			{props.filterClicked === 'greenClicked' ? (
 				<Typography className={classes.caption} variant="caption">
-					POKAŻ{' '}
+					POKAŻ
 				</Typography>
 			) : null}
 			<Checkbox

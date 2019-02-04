@@ -1,7 +1,7 @@
 import React from 'react';
 import Payment from './Payment/Payment';
 import Filter from '../Filter/Filter';
-import { Fade, Paper, Typography, Avatar } from '@material-ui/core/';
+import { Paper, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
@@ -76,19 +76,25 @@ const counter = (props) => {
 
 		switch (elementColor) {
 			case 'green':
-				for (let isClickedGreen in props.imagesDataObj) {
-					if (props.imagesDataObj[isClickedGreen].isClickedGreen === true) amountOfElement++;
+				for (let imageTitle in props.imagesDataObj) {
+					if (props.imagesDataObj[imageTitle].isClickedGreen === true) amountOfElement++;
 				}
 				return amountOfElement;
 			case 'blue':
-				for (let isClickedBlue in props.imagesDataObj) {
-					if (props.imagesDataObj[isClickedBlue].isClickedBlue === true) amountOfElement++;
+				for (let imageTitle in props.imagesDataObj) {
+					if (props.imagesDataObj[imageTitle].isClickedBlue === true) amountOfElement++;
 				}
 				return amountOfElement;
 
 			case 'red':
-				for (let isClickedRed in props.imagesDataObj) {
-					if (props.imagesDataObj[isClickedRed].isClickedRed === true) amountOfElement++;
+				for (let imageTitle in props.imagesDataObj) {
+					if (
+						(props.imagesDataObj[imageTitle].isClickedRed === false ||
+							props.imagesDataObj[imageTitle].isClickedRed === true) &&
+						props.imagesDataObj[imageTitle].isClickedGreen === false &&
+						props.imagesDataObj[imageTitle].isClickedBlue === false
+					)
+						amountOfElement++;
 				}
 				return amountOfElement;
 
