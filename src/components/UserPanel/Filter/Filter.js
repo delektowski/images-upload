@@ -34,9 +34,9 @@ const styles = (theme) => ({
 		}
 	},
 	redClicked: {
-		color: 'rgb(245, 0, 87)',
+		color: 'rgb(98, 95, 90)',
 		'&$checked': {
-			color: 'rgb(245, 0, 87)'
+			color: 'rgb(98, 95, 90)'
 		}
 	},
 	allClicked: {

@@ -50,10 +50,10 @@ const styles = {
 		background: 'green'
 	},
 	red: {
-		color: 'rgb(245, 0, 87)'
+		color: 'rgb(98, 95, 90)'
 	},
 	bgRed: {
-		background: 'rgb(245, 0, 87)'
+		background: 'rgb(98, 95, 90)'
 	},
 	bgBlack: {
 		background: 'black'

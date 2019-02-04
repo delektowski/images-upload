@@ -29,21 +29,21 @@ const imagesGenerator = (props) => {
 			.filter((element) => {
 				const isFilterGreenClicked = greenClicked ? element[Object.keys(element)].isClickedGreen : null;
 				const isFilterBlueClicked = blueClicked ? element[Object.keys(element)].isClickedBlue : null;
-				const isFilterRedClicked = redClicked ? element[Object.keys(element)].isClickedRed : null;
-				const isFilteredAllClicked = allClicked ? true : null;
-				const isFilteredNotSelectedClicked = notSelectedClicked
+				const isFilterRedClicked = redClicked ? element[Object.keys(element)].isClickedred : null;
+				const isFilteRedAllClicked = allClicked ? true : null;
+				const isFilteRedNotSelectedClicked = notSelectedClicked
 					? !element[Object.keys(element)].isClickedGreen &&
 						!element[Object.keys(element)].isClickedBlue &&
-						!element[Object.keys(element)].isClickedRed
+						!element[Object.keys(element)].isClickedred
 					: null;
 
 				return (
-					isFilteredNotSelectedClicked ||
+					isFilteRedNotSelectedClicked ||
 					isFilterGreenClicked ||
 					isFilterBlueClicked ||
 					isFilterRedClicked ||
 					nothingClicked ||
-					isFilteredAllClicked
+					isFilteRedAllClicked
 				);
 			})
 			.map((e) => Object.keys(e)[0]);
