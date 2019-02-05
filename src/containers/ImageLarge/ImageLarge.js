@@ -1,11 +1,31 @@
 import React, { Component } from 'react';
-import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
-import Button from '../../components/Shared/Button/Button';
-import Arrow from '../../components/Shared/Arrow/Arrow';
-import classes from './ImageLarge.module.scss';
+// import ImageContainer from '../../components/Shared/ImageContainer/ImageContainer';
+// import Button from '../../components/Shared/Button/Button';
+// import Arrow from '../../components/Shared/Arrow/Arrow';
+// import classes from './ImageLarge.module.scss';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import { withStyles } from '@material-ui/core/styles';
+import CardImage from './CardImage';
+
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateImageState, updateLargeImageState } from './utylity';
+
+const styles = {
+	widtha: {
+		width: 'auto',
+		display: 'flex',
+		justifyContent: 'center',
+		padding: 0
+	},
+	outside: {},
+	paper: {
+		background: 'blue'
+	}
+};
 
 class ImageLarge extends Component {
 	state = {
@@ -15,7 +35,8 @@ class ImageLarge extends Component {
 		isClickedGreenImgLarge: false,
 		isClickedBlueImgLarge: false,
 		isClickedRedImgLarge: false,
-		comment: ''
+		comment: '',
+		open: false
 	};
 
 	componentDidMount() {
@@ -108,7 +129,17 @@ class ImageLarge extends Component {
 		console.log('computed', computed);
 	};
 
+	handleClickOpen = () => {
+		this.setState({ open: true });
+	};
+
+	handleClose = () => {
+		this.setState({ open: false });
+	};
+
 	render() {
+		const { classes } = this.props;
+
 		return (
 			<React.Fragment>
 				<Arrow clicked={this.arrowClickedHandler} direction="left" />
@@ -170,4 +201,21 @@ class ImageLarge extends Component {
 	}
 }
 
-export default ImageLarge;
+withStyles(styles)(ImageLarge);
+
+<div>
+	<Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+		Open alert dialog
+	</Button>
+	<Dialog
+		maxWidth={'lg'}
+		open={this.state.open}
+		onClose={this.handleClose}
+		aria-labelledby="alert-dialog-title"
+		aria-describedby="alert-dialog-description"
+	>
+		<DialogContent className={classes.widtha}>
+			<CardImage />
+		</DialogContent>
+	</Dialog>
+</div>;

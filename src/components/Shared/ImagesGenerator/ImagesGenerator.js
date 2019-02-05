@@ -1,7 +1,30 @@
 import React from 'react';
 import Image from '../../../containers/Image/Image';
+import { withStyles } from '@material-ui/core/styles';
+import ModalImage from '../../../containers/ModalImage/ModalImage';
+// import classes from '*.module.css';
+
+const styles = (theme) => ({
+	imagesContainer: {
+		display: 'flex',
+		alignItems: 'flex-start',
+		justifyContent: 'center',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		margin: '0 auto',
+		[theme.breakpoints.down('xs')]: {
+			width: '70%',
+			minWidth: 350
+		},
+		transition: 'all .3s'
+	},
+	marginTop: {
+		transform: 'translateY(190px)'
+	}
+});
 
 const imagesGenerator = (props) => {
+	const { classes } = props;
 	let imagesPaths = [];
 	let imagesTitlesPaths;
 	const imagesDataObj = props.imagesDataObj;
@@ -54,12 +77,19 @@ const imagesGenerator = (props) => {
 					imagesDataObj={imagesDataObj}
 					userName={props.userName}
 					isAdminLogin={props.isAdminLogin}
+					onHideMenu={props.onHideMenu}
 				/>
 			);
 		});
 	}
 
-	return <React.Fragment>{imagesTitlesPaths}</React.Fragment>;
+	return (
+		<React.Fragment>
+			<div className={[ classes.imagesContainer, props.isDrawerOpen ? classes.marginTop : null ].join(' ')}>
+				{imagesTitlesPaths}
+				{/* <ModalImage /> */}
+			</div>
+		</React.Fragment>
+	);
 };
-
-export default imagesGenerator;
+export default withStyles(styles)(imagesGenerator);

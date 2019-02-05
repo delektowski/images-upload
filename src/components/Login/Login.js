@@ -8,7 +8,7 @@ import 'firebase/database';
 
 const styles = (theme) => ({
 	main: {
-		marginTop: 50,
+		marginTop: 100,
 		width: 'auto',
 		marginLeft: theme.spacing.unit * 3,
 		marginRight: theme.spacing.unit * 3,
@@ -22,14 +22,23 @@ const styles = (theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
+		justifyContent: 'center',
+
 		padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
 	},
 
 	form: {
-		marginTop: theme.spacing.unit
+		marginTop: theme.spacing.unit,
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	submit: {
-		marginTop: theme.spacing.unit * 3
+		marginTop: theme.spacing.unit * 3,
+		[theme.breakpoints.down('xs')]: {
+			width: '90%'
+		}
 	}
 });
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ImageLarge from '../ImageLarge/ImageLarge';
+// import ImageLarge from '../ImageLarge/ImageLarge';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateImageState } from './utylity';
@@ -20,10 +20,13 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import Cancel from '@material-ui/icons/Cancel';
 
 const styles = {
 	cardRed: {
 		width: 400,
+		minWidth: 350,
 		margin: '1%',
 		background: 'rgba(98, 95, 90, 0.1)',
 		transition: 'all .3s ease-in-out'
@@ -41,11 +44,10 @@ const styles = {
 		transition: 'all .3s ease-in-out'
 	},
 	media: {
-		width: 'auto',
 		maxWidth: '100%',
-		padding: '0 1%',
+		padding: '0 3%',
 		objectFit: 'contain',
-		height: 250,
+		maxHeight: 250,
 		margin: '0 auto'
 	},
 	actions: {
@@ -83,6 +85,10 @@ const styles = {
 	thumbDownAlt: {
 		color: 'rgba(98, 95, 90, 0.307)',
 		transition: 'all .3s ease-in-out'
+	},
+	buttonsContainer: {
+		display: 'flex',
+		justifyContent: 'space-around'
 	}
 };
 
@@ -95,11 +101,14 @@ class Image extends Component {
 		isImageClicked: false,
 		imageId: '',
 		expanded: false,
-		comment: 'Brak komentarza'
+		comment: ''
 	};
 
 	handleExpandClick = () => {
 		this.setState((state) => ({ expanded: !state.expanded }));
+		if (window.innerWidth <= 600) {
+			this.props.onHideMenu();
+		}
 	};
 
 	buttonClickHandler = (buttonColor) => {
@@ -196,10 +205,26 @@ class Image extends Component {
 		this.props.onImageClick();
 	};
 
-	onSaveCommentHandler = (comment) => {
-		firebase.database().ref(`${this.props.userName}/images/${this.state.imageId}`).update({ comment: comment });
+	// onSaveCommentHandler = (comment) => {
+	// 	firebase.database().ref(`${this.props.userName}/images/${this.state.imageId}`).update({ comment: comment });
+	// };
+
+	onCommentHandler = (e) => {
+		const comment = e.target.value;
+		this.setState({ comment: comment });
 	};
 
+	onCancelCommentHandler = () => {
+		this.handleExpandClick();
+	};
+
+	onConfirmCommentHandler = () => {
+		firebase
+			.database()
+			.ref(`${this.props.userName}/images/${this.state.imageId}`)
+			.update({ comment: this.state.comment });
+		this.handleExpandClick();
+	};
 	render() {
 		const { classes } = this.props;
 		let imageLarge = null;
@@ -219,55 +244,28 @@ class Image extends Component {
 			cardColor = 'cardBlue';
 		}
 
-		if (this.state.isImageClicked) {
-			imageLarge = (
-				<ImageLarge
-					imageLargeSrc={this.props.src}
-					imageLargeId={this.state.imageId}
-					imageLargeContainerColor={this.state.containerColor}
-					isClickedGreenImgLarge={this.state.isClickedGreen}
-					isClickedBlueImgLarge={this.state.isClickedBlue}
-					isClickedRedImgLarge={this.state.isClickedRed}
-					isImageClicked={this.state.isImageClicked}
-					clicked={this.ImageClickedHandler}
-					imagesDataObj={this.props.imagesDataObj}
-					userName={this.props.userName}
-					onImageComment={this.onImageCommentHandler}
-					comment={this.state.comment}
-					onSaveComment={this.onSaveCommentHandler}
-				/>
-			);
-		}
+		// if (this.state.isImageClicked) {
+		// 	imageLarge = (
+		// 		<ImageLarge
+		// 			imageLargeSrc={this.props.src}
+		// 			imageLargeId={this.state.imageId}
+		// 			imageLargeContainerColor={this.state.containerColor}
+		// 			isClickedGreenImgLarge={this.state.isClickedGreen}
+		// 			isClickedBlueImgLarge={this.state.isClickedBlue}
+		// 			isClickedRedImgLarge={this.state.isClickedRed}
+		// 			isImageClicked={this.state.isImageClicked}
+		// 			clicked={this.ImageClickedHandler}
+		// 			imagesDataObj={this.props.imagesDataObj}
+		// 			userName={this.props.userName}
+		// 			onImageComment={this.onImageCommentHandler}
+		// 			comment={this.state.comment}
+		// 			onSaveComment={this.onSaveCommentHandler}
+		// 		/>
+		// 	);
+		// }
 		if (!this.props.isAdminLogin) {
 			image = (
 				<React.Fragment>
-					{/* <figure>
-						<img
-							onClick={this.ImageClickedHandler}
-							className={classes.Image}
-							src={this.props.src}
-							alt={this.state.imageId}
-						/>
-						<figcaption className={classes.Image__title}>{this.state.imageId}</figcaption>
-					</figure>
-					<div className={classes.Image__selectionButtons}>
-						<Button
-							clicked={() => this.buttonClickHandler('green')}
-							buttonText="Tak"
-							buttonColor="Button__green"
-						/>
-						<Button
-							clicked={() => this.buttonClickHandler('blue')}
-							buttonText="Może"
-							buttonColor="Button__blue"
-						/>
-						<Button
-							clicked={() => this.buttonClickHandler('red')}
-							buttonText="Nie"
-							buttonColor="Button__red"
-						/>
-					</div> */}
-
 					<Card className={classes[cardColor]}>
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
@@ -301,17 +299,23 @@ class Image extends Component {
 									<TextField
 										id="outlined-textarea"
 										label="Komentarz"
-										placeholder="Placeholder"
+										placeholder="Komentarz"
 										multiline
+										onChange={this.onCommentHandler}
 										value={this.state.comment}
 										className={classes.textField}
 										margin="normal"
 										variant="outlined"
 									/>
+									<div className={classes.buttonsContainer}>
+										<IconButton onClick={this.onCancelCommentHandler}>
+											<Cancel />
+										</IconButton>
+										<IconButton onClick={this.onConfirmCommentHandler}>
+											<CheckCircle />
+										</IconButton>
+									</div>
 								</CardContent>
-								<IconButton>
-									<ThumbDownAlt />
-								</IconButton>
 							</Collapse>
 						</div>
 					</Card>

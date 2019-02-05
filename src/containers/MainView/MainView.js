@@ -17,6 +17,7 @@ import Fab from '@material-ui/core/Fab';
 import Drawer from '@material-ui/core/Drawer';
 
 const styles = {
+	mainView: {},
 	header: {
 		background: 'whitesmoke',
 		display: 'flex',
@@ -61,15 +62,7 @@ const styles = {
 	icon__login: {
 		marginLeft: '5%'
 	},
-	mainView: {
-		marginTop: '200px',
-		display: 'flex',
-		alignItems: 'flex-start',
-		justifyContent: 'center',
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		paddingTop: '2%'
-	},
+
 	appTitle: {
 		lineHeight: 1.2,
 		letterSpacing: 3,
@@ -123,7 +116,8 @@ class mainView extends Component {
 		isAuthenticated: false,
 		errorLogin: '',
 		onUserCreated: false,
-		isDrawerOpen: true
+		isDrawerOpen: true,
+		isFooterHidden: false
 	};
 
 	componentDidUpdate() {
@@ -177,17 +171,6 @@ class mainView extends Component {
 	};
 
 	onFilterButtonsStateHandler = (buttonsStateObj) => {
-		// if (buttonsStateObj === 'redClicked') {
-		// 	this.setState({
-		// 		filterButtonsState: {
-		// 			greenClicked: false,
-		// 			blueClicked: false,
-		// 			redClicked: true
-		// 		}
-		// 	});
-		// 	return;
-		// }
-
 		this.setState((prevState) => {
 			const copyfilterButtonsState = { ...this.state.filterButtonsState };
 			copyfilterButtonsState[buttonsStateObj] = !prevState.filterButtonsState[buttonsStateObj];
@@ -205,7 +188,7 @@ class mainView extends Component {
 		});
 	};
 
-	isDrawerOpenHandler = () => {
+	onDrawerOpenHandler = () => {
 		this.setState((prevState) => {
 			return {
 				isDrawerOpen: !prevState.isDrawerOpen
@@ -284,7 +267,7 @@ class mainView extends Component {
 				<Layout>
 					<header>
 						{this.state.isAdminLogin || this.state.isAuthenticated ? (
-							<Fab onClick={this.isDrawerOpenHandler} size="small" className={classes.fab}>
+							<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
 								{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
 							</Fab>
 						) : null}
@@ -358,6 +341,8 @@ class mainView extends Component {
 								reset={this.state.reset}
 								isAdminLogin={this.state.isAdminLogin}
 								onImageClick={this.backdropHandler}
+								onHideMenu={this.onDrawerOpenHandler}
+								isDrawerOpen={this.state.isDrawerOpen}
 							/>
 						</div>
 					</section>
@@ -366,7 +351,7 @@ class mainView extends Component {
 							<Toolbar className={classes.toolbar__footer}>
 								<Copyright className={classes.icon} />
 								<Typography variant="caption" color="inherit">
-									2019 by Marcin Delektowski
+									2019 Marcin Delektowski
 								</Typography>
 							</Toolbar>
 						</AppBar>
