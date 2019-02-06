@@ -175,26 +175,26 @@ class Image extends Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
-			this.setState({
-				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
-			this.setState({
-				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
-			this.setState({
-				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-	}
+	// componentDidUpdate() {
+	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
+	// 		this.setState({
+	// 			isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
+	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+	// 		});
+	// 	}
+	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
+	// 		this.setState({
+	// 			isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
+	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+	// 		});
+	// 	}
+	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
+	// 		this.setState({
+	// 			isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
+	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+	// 		});
+	// 	}
+	// }
 
 	ImageClickedHandler = () => {
 		this.setState((prevState) => {

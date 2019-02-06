@@ -82,12 +82,33 @@ const imagesGenerator = (props) => {
 			);
 		});
 	}
+	console.log('imagesDataObj', imagesDataObj);
 
 	return (
 		<React.Fragment>
 			<div className={[ classes.imagesContainer, props.isDrawerOpen ? classes.marginTop : null ].join(' ')}>
 				{imagesTitlesPaths}
-				{/* <ModalImage /> */}
+				<ModalImage
+					isDrawerOpen={props.isDrawerOpen}
+					onImageClick={props.onImageClick}
+					imagesDataObj={imagesDataObj}
+					userName={props.userName}
+					isAdminLogin={props.isAdminLogin}
+					onHideMenu={props.onHideMenu}
+				>
+					<Image
+						onImageClick={props.onImageClick}
+						// key={Object.keys(element)}
+						src={[
+							'https://firebasestorage.googleapis.com/v0/b/hooks-b96d6.appspot.com/o/images%2Ffikacz3%2Fwiara_i_swiatlo_szczecin_010.jpg?alt=media&token=bf0b1c63-1209-4e12-97f5-59385f74edf0'
+						]}
+						caption="kokos"
+						imagesDataObj={props.imagesDataObj}
+						userName={props.userName}
+						isAdminLogin={props.isAdminLogin}
+						onHideMenu={props.onHideMenu}
+					/>
+				</ModalImage>
 			</div>
 		</React.Fragment>
 	);

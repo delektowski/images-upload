@@ -142,7 +142,7 @@ class ImageLarge extends Component {
 
 		return (
 			<React.Fragment>
-				<Arrow clicked={this.arrowClickedHandler} direction="left" />
+				{/* <Arrow clicked={this.arrowClickedHandler} direction="left" />
 				<ImageContainer
 					containerColor={this.state.imageLargeContainerColor}
 					containerLarge={this.props.isImageClicked}
@@ -195,7 +195,7 @@ class ImageLarge extends Component {
 						</div>
 					</div>
 				</ImageContainer>
-				<Arrow clicked={this.arrowClickedHandler} direction="right" />
+				<Arrow clicked={this.arrowClickedHandler} direction="right" /> */}
 			</React.Fragment>
 		);
 	}
@@ -203,7 +203,8 @@ class ImageLarge extends Component {
 
 withStyles(styles)(ImageLarge);
 
-<div>
+{
+	/* <div>
 	<Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
 		Open alert dialog
 	</Button>
@@ -218,4 +219,5 @@ withStyles(styles)(ImageLarge);
 			<CardImage />
 		</DialogContent>
 	</Dialog>
-</div>;
+</div>; */
+}

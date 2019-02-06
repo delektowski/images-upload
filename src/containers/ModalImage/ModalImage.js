@@ -39,15 +39,13 @@ class ModalImage extends React.Component {
 			<div>
 				<Dialog
 					maxWidth={'lg'}
-					open={this.state.open}
+					open={!this.props.isDrawerOpen}
 					onClose={this.handleClose}
 					aria-labelledby="alert-dialog-title"
 					aria-describedby="alert-dialog-description"
 				>
 					<DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-					<DialogContent className={classes.widtha}>
-						<h1>Kokos</h1>
-					</DialogContent>
+					<DialogContent className={classes.widtha}>{this.props.children}</DialogContent>
 				</Dialog>
 			</div>
 		);
