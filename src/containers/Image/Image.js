@@ -21,6 +21,7 @@ import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
+import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 
 const styles = {
 	cardRed: {
@@ -93,6 +94,9 @@ const styles = {
 	biggerCard: {
 		width: 750,
 		margin: 0
+	},
+	fab: {
+		// position: 'absolute'
 	}
 };
 
@@ -255,6 +259,7 @@ class Image extends Component {
 						)}
 						onClick={this.props.fik}
 					>
+						{this.props.imageClickedTitle ? <Fab className={classes.fab} /> : null}
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
 							<CardMedia
