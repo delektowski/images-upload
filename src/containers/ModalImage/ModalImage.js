@@ -1,22 +1,15 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Image from '../Image/Image';
+import { Dialog, DialogContent, Fab } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
 	widtha: {
 		width: 'auto',
+		height: 'auto',
 		display: 'flex',
 		justifyContent: 'center',
-		padding: 0
-	},
-	outside: {},
-	paper: {
-		background: 'blue'
+		padding: 0,
+		overflow: 'hidden'
 	}
 };
 
@@ -35,17 +28,24 @@ class ModalImage extends React.Component {
 
 	render() {
 		const { classes } = this.props;
+		const mediaQuery =
+			window.innerWidth <= 600
+				? { width: 350, margin: '0 auto', marginTop: 100 }
+				: { width: 750, marginTop: 100 };
+
 		return (
 			<div>
 				<Dialog
-					maxWidth={'lg'}
-					open={!this.props.isDrawerOpen}
-					onClose={this.handleClose}
-					aria-labelledby="alert-dialog-title"
-					aria-describedby="alert-dialog-description"
+					maxWidth={'md'}
+					scroll="body"
+					open={this.props.isImageLarge === this.props.caption}
+					onClose={this.props.onImageLargeClose}
+					PaperProps={{ style: mediaQuery }}
+					PaperComponent="div"
 				>
-					<DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-					<DialogContent className={classes.widtha}>{this.props.children}</DialogContent>
+					<DialogContent style={{ padding: 0 }} className={classes.widtha}>
+						{this.props.children}
+					</DialogContent>
 				</Dialog>
 			</div>
 		);

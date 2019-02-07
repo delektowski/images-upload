@@ -2,7 +2,6 @@ import React from 'react';
 import Image from '../../../containers/Image/Image';
 import { withStyles } from '@material-ui/core/styles';
 import ModalImage from '../../../containers/ModalImage/ModalImage';
-// import classes from '*.module.css';
 
 const styles = (theme) => ({
 	imagesContainer: {
@@ -69,46 +68,48 @@ const imagesGenerator = (props) => {
 
 		imagesTitlesPaths = imageTitleArr.map((element) => {
 			return (
-				<Image
-					onImageClick={props.onImageClick}
-					key={Object.keys(element)}
-					src={Object.values(element)}
-					caption={Object.keys(element)}
-					imagesDataObj={imagesDataObj}
-					userName={props.userName}
-					isAdminLogin={props.isAdminLogin}
-					onHideMenu={props.onHideMenu}
-				/>
+				<React.Fragment key={Object.keys(element)}>
+					<Image
+						onImageClick={props.onImageClick}
+						src={Object.values(element)}
+						caption={Object.keys(element)}
+						imagesDataObj={imagesDataObj}
+						userName={props.userName}
+						isAdminLogin={props.isAdminLogin}
+						onHideMenu={props.onHideMenu}
+					/>
+					<ModalImage
+						isImageLarge={props.isImageLarge}
+						onImageClick={props.onImageClick}
+						imagesDataObj={imagesDataObj}
+						userName={props.userName}
+						isAdminLogin={props.isAdminLogin}
+						onHideMenu={props.onHideMenu}
+						onImageLargeClose={props.onImageLargeClose}
+						caption={Object.keys(element)[0]}
+					>
+						<Image
+							onImageClick={props.onImageClick}
+							key={Object.keys(element)}
+							src={Object.values(element)}
+							caption={Object.keys(element)}
+							imagesDataObj={imagesDataObj}
+							userName={props.userName}
+							isAdminLogin={props.isAdminLogin}
+							onHideMenu={props.onHideMenu}
+							isBiggerSize={true}
+							fik={props.fik}
+						/>
+					</ModalImage>
+				</React.Fragment>
 			);
 		});
 	}
-	console.log('imagesDataObj', imagesDataObj);
 
 	return (
 		<React.Fragment>
 			<div className={[ classes.imagesContainer, props.isDrawerOpen ? classes.marginTop : null ].join(' ')}>
 				{imagesTitlesPaths}
-				<ModalImage
-					isDrawerOpen={props.isDrawerOpen}
-					onImageClick={props.onImageClick}
-					imagesDataObj={imagesDataObj}
-					userName={props.userName}
-					isAdminLogin={props.isAdminLogin}
-					onHideMenu={props.onHideMenu}
-				>
-					<Image
-						onImageClick={props.onImageClick}
-						// key={Object.keys(element)}
-						src={[
-							'https://firebasestorage.googleapis.com/v0/b/hooks-b96d6.appspot.com/o/images%2Ffikacz3%2Fwiara_i_swiatlo_szczecin_010.jpg?alt=media&token=bf0b1c63-1209-4e12-97f5-59385f74edf0'
-						]}
-						caption="kokos"
-						imagesDataObj={props.imagesDataObj}
-						userName={props.userName}
-						isAdminLogin={props.isAdminLogin}
-						onHideMenu={props.onHideMenu}
-					/>
-				</ModalImage>
 			</div>
 		</React.Fragment>
 	);

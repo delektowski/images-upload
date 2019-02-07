@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-// import ImageLarge from '../ImageLarge/ImageLarge';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { updateImageState } from './utylity';
@@ -13,7 +11,8 @@ import {
 	TextField,
 	Collapse,
 	IconButton,
-	CardHeader
+	CardHeader,
+	Fab
 } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -26,21 +25,20 @@ import Cancel from '@material-ui/icons/Cancel';
 const styles = {
 	cardRed: {
 		width: 400,
-		minWidth: 350,
 		margin: '1%',
-		background: 'rgba(98, 95, 90, 0.1)',
+		background: 'rgb(235, 235, 234)',
 		transition: 'all .3s ease-in-out'
 	},
 	cardGreen: {
 		width: 400,
 		margin: '1%',
-		background: 'rgba(0, 128, 0, 0.1)',
+		background: 'rgb(229, 242, 229)',
 		transition: 'all .3s ease-in-out'
 	},
 	cardBlue: {
 		width: 400,
 		margin: '1%',
-		background: 'rgba(63, 81, 181, 0.2)',
+		background: 'rgb(212, 216, 236)',
 		transition: 'all .3s ease-in-out'
 	},
 	media: {
@@ -54,7 +52,6 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'space-around'
 	},
-
 	borderRed: {
 		border: '4px solid rgba(98, 95, 90, 0.707)',
 		transition: 'all .3s ease-in-out'
@@ -89,6 +86,13 @@ const styles = {
 	buttonsContainer: {
 		display: 'flex',
 		justifyContent: 'space-around'
+	},
+	biggerMedia: {
+		maxHeight: 450
+	},
+	biggerCard: {
+		width: 750,
+		margin: 0
 	}
 };
 
@@ -101,7 +105,8 @@ class Image extends Component {
 		isImageClicked: false,
 		imageId: '',
 		expanded: false,
-		comment: ''
+		comment: '',
+		confirmedComment: false
 	};
 
 	handleExpandClick = () => {
@@ -124,8 +129,8 @@ class Image extends Component {
 
 					return updateImageState(color, !prevState.isClickedGreen, false, false);
 				});
-
 				break;
+
 			case 'blue':
 				this.setState((prevState) => {
 					let color = 'blue';
@@ -175,39 +180,35 @@ class Image extends Component {
 		}
 	}
 
-	// componentDidUpdate() {
-	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
-	// 		this.setState({
-	// 			isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
-	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-	// 		});
-	// 	}
-	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
-	// 		this.setState({
-	// 			isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
-	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-	// 		});
-	// 	}
-	// 	if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
-	// 		this.setState({
-	// 			isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
-	// 			containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-	// 		});
-	// 	}
-	// }
-
-	ImageClickedHandler = () => {
-		this.setState((prevState) => {
-			return {
-				isImageClicked: !prevState.isImageClicked
-			};
-		});
-		this.props.onImageClick();
-	};
-
-	// onSaveCommentHandler = (comment) => {
-	// 	firebase.database().ref(`${this.props.userName}/images/${this.state.imageId}`).update({ comment: comment });
-	// };
+	componentDidUpdate() {
+		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
+			this.setState({
+				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
+			this.setState({
+				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
+			this.setState({
+				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (
+			(this.state.confirmedComment || !this.state.expanded) &&
+			this.props.imagesDataObj[this.state.imageId].comment !== this.state.comment
+		) {
+			this.setState({
+				comment: this.props.imagesDataObj[this.state.imageId].comment,
+				confirmedComment: false
+			});
+		}
+	}
 
 	onCommentHandler = (e) => {
 		const comment = e.target.value;
@@ -223,14 +224,16 @@ class Image extends Component {
 			.database()
 			.ref(`${this.props.userName}/images/${this.state.imageId}`)
 			.update({ comment: this.state.comment });
+		this.setState({ confirmedComment: true });
 		this.handleExpandClick();
 	};
+
 	render() {
 		const { classes } = this.props;
-		let imageLarge = null;
 		let image = null;
 		let borderColor = 'borderRed';
 		let cardColor = 'cardRed';
+
 		if (this.state.isClickedRed) {
 			borderColor = 'borderRed';
 			cardColor = 'cardRed';
@@ -243,36 +246,23 @@ class Image extends Component {
 			borderColor = 'borderBlue';
 			cardColor = 'cardBlue';
 		}
-
-		// if (this.state.isImageClicked) {
-		// 	imageLarge = (
-		// 		<ImageLarge
-		// 			imageLargeSrc={this.props.src}
-		// 			imageLargeId={this.state.imageId}
-		// 			imageLargeContainerColor={this.state.containerColor}
-		// 			isClickedGreenImgLarge={this.state.isClickedGreen}
-		// 			isClickedBlueImgLarge={this.state.isClickedBlue}
-		// 			isClickedRedImgLarge={this.state.isClickedRed}
-		// 			isImageClicked={this.state.isImageClicked}
-		// 			clicked={this.ImageClickedHandler}
-		// 			imagesDataObj={this.props.imagesDataObj}
-		// 			userName={this.props.userName}
-		// 			onImageComment={this.onImageCommentHandler}
-		// 			comment={this.state.comment}
-		// 			onSaveComment={this.onSaveCommentHandler}
-		// 		/>
-		// 	);
-		// }
 		if (!this.props.isAdminLogin) {
 			image = (
 				<React.Fragment>
-					<Card className={classes[cardColor]}>
+					<Card
+						className={[ classes[cardColor], this.props.isBiggerSize ? classes.biggerCard : null ].join(
+							' '
+						)}
+						onClick={this.props.fik}
+					>
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
 							<CardMedia
 								component="img"
-								onClick={() => console.log('kokos')}
-								className={classes.media}
+								onClick={() => this.props.onImageClick(this.state.imageId)}
+								className={[ classes.media, this.props.isBiggerSize ? classes.biggerMedia : null ].join(
+									' '
+								)}
 								src={this.props.src[0]}
 								title={this.state.imageId}
 							/>
@@ -301,6 +291,7 @@ class Image extends Component {
 										label="Komentarz"
 										placeholder="Komentarz"
 										multiline
+										rowsMax="4"
 										onChange={this.onCommentHandler}
 										value={this.state.comment}
 										className={classes.textField}
@@ -323,12 +314,7 @@ class Image extends Component {
 			);
 		}
 
-		return (
-			<React.Fragment>
-				{image}
-				{/* {imageLarge} */}
-			</React.Fragment>
-		);
+		return <React.Fragment>{image}</React.Fragment>;
 	}
 }
 

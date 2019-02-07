@@ -6,15 +6,13 @@ import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Backdrop from '../../components/Shared/Backdrop/Backdrop';
 import Logout from '../../components/Logout/Logout';
-import { AppBar, Toolbar, Typography, Paper } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography, Paper, Fab, Drawer } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
 import Reset from '../../components/UserPanel/Reset/Reset';
-import Fab from '@material-ui/core/Fab';
-import Drawer from '@material-ui/core/Drawer';
 
 const styles = {
 	mainView: {},
@@ -112,12 +110,12 @@ class mainView extends Component {
 			redClicked: true
 		},
 		isAdminLogin: false,
-		isEnabledBackdrop: false,
 		isAuthenticated: false,
 		errorLogin: '',
 		onUserCreated: false,
 		isDrawerOpen: true,
-		isFooterHidden: false
+		isFooterHidden: false,
+		imageClickedTitle: ''
 	};
 
 	componentDidUpdate() {
@@ -189,12 +187,27 @@ class mainView extends Component {
 	};
 
 	onDrawerOpenHandler = () => {
-		this.setState((prevState) => {
-			return {
-				isDrawerOpen: !prevState.isDrawerOpen
-			};
+		if (!this.state.imageClickedTitle) {
+			this.setState((prevState) => {
+				return {
+					isDrawerOpen: !prevState.isDrawerOpen
+				};
+			});
+		}
+	};
+
+	onImageClickedTitleHandler = (title) => {
+		this.setState({
+			imageClickedTitle: title
 		});
 	};
+
+	imageLargeCloseHandler = () => {
+		this.setState({
+			imageClickedTitle: ''
+		});
+	};
+
 	render() {
 		const { classes } = this.props;
 		let adminPanel = null;
@@ -266,7 +279,7 @@ class mainView extends Component {
 			<React.Fragment>
 				<Layout>
 					<header>
-						{this.state.isAdminLogin || this.state.isAuthenticated ? (
+						{(this.state.isAdminLogin || this.state.isAuthenticated) && !this.state.imageClickedTitle ? (
 							<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
 								{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
 							</Fab>
@@ -340,9 +353,13 @@ class mainView extends Component {
 								filterButtonsState={this.state.filterButtonsState}
 								reset={this.state.reset}
 								isAdminLogin={this.state.isAdminLogin}
-								onImageClick={this.backdropHandler}
+								onImageClick={this.onImageClickedTitleHandler}
 								onHideMenu={this.onDrawerOpenHandler}
 								isDrawerOpen={this.state.isDrawerOpen}
+								isImageLarge={this.state.imageClickedTitle}
+								ImageClickedTitle={this.state.imageClickedTitle}
+								onImageLargeClose={this.imageLargeCloseHandler}
+								fik={() => this.setState({ fik: 'fikam' })}
 							/>
 						</div>
 					</section>
