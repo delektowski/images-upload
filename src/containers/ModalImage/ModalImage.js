@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, Fab } from '@material-ui/core/';
+import { Dialog, DialogContent } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {

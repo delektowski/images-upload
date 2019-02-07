@@ -120,10 +120,62 @@ class Image extends Component {
 		isClickedRed: false,
 		isImageClicked: false,
 		imageId: '',
+		src: 'no-scr',
 		expanded: false,
 		comment: '',
 		confirmedComment: false
 	};
+
+	componentDidMount() {
+		// Recognize state of the element based on Firebase data
+		for (let key in this.props.imagesDataObj) {
+			if (key === this.props.caption[0]) {
+				let color = '';
+				if (this.props.imagesDataObj[key].isClickedGreen) color = 'green';
+				if (this.props.imagesDataObj[key].isClickedBlue) color = 'blue';
+				if (this.props.imagesDataObj[key].isClickedRed) color = 'red';
+				this.setState({
+					containerColor: color,
+					isClickedGreen: this.props.imagesDataObj[key].isClickedGreen,
+					isClickedBlue: this.props.imagesDataObj[key].isClickedBlue,
+					isClickedRed: this.props.imagesDataObj[key].isClickedRed,
+					imageId: this.props.caption[0],
+					src: this.props.src[0],
+					comment: this.props.imagesDataObj[key].comment
+				});
+			}
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
+			this.setState({
+				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
+			this.setState({
+				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
+			this.setState({
+				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
+				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+			});
+		}
+		if (
+			(this.state.confirmedComment || !this.state.expanded) &&
+			this.props.imagesDataObj[this.state.imageId].comment !== this.state.comment
+		) {
+			this.setState({
+				comment: this.props.imagesDataObj[this.state.imageId].comment,
+				confirmedComment: false
+			});
+		}
+	}
 
 	handleExpandClick = () => {
 		this.setState((state) => ({ expanded: !state.expanded }));
@@ -176,56 +228,6 @@ class Image extends Component {
 		}
 	};
 
-	componentDidMount() {
-		// Recognize state of the element based on Firebase data
-		for (let key in this.props.imagesDataObj) {
-			if (key === this.props.caption[0]) {
-				let color = '';
-				if (this.props.imagesDataObj[key].isClickedGreen) color = 'green';
-				if (this.props.imagesDataObj[key].isClickedBlue) color = 'blue';
-				if (this.props.imagesDataObj[key].isClickedRed) color = 'red';
-				this.setState({
-					containerColor: color,
-					isClickedGreen: this.props.imagesDataObj[key].isClickedGreen,
-					isClickedBlue: this.props.imagesDataObj[key].isClickedBlue,
-					isClickedRed: this.props.imagesDataObj[key].isClickedRed,
-					imageId: this.props.caption[0],
-					comment: this.props.imagesDataObj[key].comment
-				});
-			}
-		}
-	}
-
-	componentDidUpdate() {
-		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
-			this.setState({
-				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
-			this.setState({
-				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
-			this.setState({
-				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (
-			(this.state.confirmedComment || !this.state.expanded) &&
-			this.props.imagesDataObj[this.state.imageId].comment !== this.state.comment
-		) {
-			this.setState({
-				comment: this.props.imagesDataObj[this.state.imageId].comment,
-				confirmedComment: false
-			});
-		}
-	}
-
 	onCommentHandler = (e) => {
 		const comment = e.target.value;
 		this.setState({ comment: comment });
@@ -242,6 +244,38 @@ class Image extends Component {
 			.update({ comment: this.state.comment });
 		this.setState({ confirmedComment: true });
 		this.handleExpandClick();
+	};
+
+	OnModalImageSelection = (direction) => {
+		const imagesArr = Object.keys(this.props.imagesDataObj);
+		const index = imagesArr.indexOf(this.state.imageId);
+
+		switch (direction) {
+			case 'forward':
+				const nextImageTitle = imagesArr[index + 1];
+				const nextImageSrc = this.props.imagesDataObj[nextImageTitle].path;
+				this.setState({ imageId: nextImageTitle, src: nextImageSrc });
+				break;
+
+			case 'back':
+				const previousImageTitle = imagesArr[index - 1];
+				const previousImageSrc = this.props.imagesDataObj[previousImageTitle].path;
+				this.setState({ imageId: previousImageTitle, src: previousImageSrc });
+				break;
+
+			default:
+				break;
+		}
+		// console.log('title', this.state.imageId);
+		// console.log('OBJ', this.props.imagesDataObj);
+
+		// const nextImageTitle = imagesArr[index + 1];
+		// const nextImageSrc = this.props.imagesDataObj[nextImageTitle].path;
+		// console.log('target', direction);
+		// console.log('imagesArr', imagesArr);
+		// console.log('index', index);
+		// console.log('previousImageTitle', previousImageTitle);
+		// console.log('previousImageSrc', previousImageSrc);
 	};
 
 	render() {
@@ -273,16 +307,10 @@ class Image extends Component {
 					>
 						{this.props.ImageClickedTitle ? (
 							<React.Fragment>
-								<Fab
-									className={classes.fabLeft}
-									onClick={() => {
-										console.log('title', this.state.imageId);
-										console.log('OBJ', this.props.imagesDataObj);
-									}}
-								>
+								<Fab className={classes.fabLeft} onClick={() => this.OnModalImageSelection('back')}>
 									<ArrowBackIos />
 								</Fab>
-								<Fab className={classes.fabRight}>
+								<Fab className={classes.fabRight} onClick={() => this.OnModalImageSelection('forward')}>
 									<ArrowForwardIos />
 								</Fab>
 							</React.Fragment>
@@ -295,7 +323,7 @@ class Image extends Component {
 								className={[ classes.media, this.props.isBiggerSize ? classes.biggerMedia : null ].join(
 									' '
 								)}
-								src={this.props.src[0]}
+								src={this.state.src}
 								title={this.state.imageId}
 							/>
 							<CardActions className={classes.actions}>
