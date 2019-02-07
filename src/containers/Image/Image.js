@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase/app';
+import Swipe from 'react-easy-swipe';
 import 'firebase/database';
 import { updateImageState } from './utylity';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,7 +13,8 @@ import {
 	Collapse,
 	IconButton,
 	CardHeader,
-	Fab
+	Fab,
+	Fade
 } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -123,7 +125,9 @@ class Image extends Component {
 		src: 'no-scr',
 		expanded: false,
 		comment: '',
-		confirmedComment: false
+		confirmedComment: false,
+		isHover: false,
+		swipeXPosition: 0
 	};
 
 	componentDidMount() {
@@ -145,6 +149,13 @@ class Image extends Component {
 				});
 			}
 		}
+		if (this.props.isBiggerSize) {
+			window.addEventListener('keydown', this.keyDownEvent, false);
+		}
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('keydown', this.keyDownEvent, null);
 	}
 
 	componentDidUpdate() {
@@ -176,6 +187,21 @@ class Image extends Component {
 			});
 		}
 	}
+
+	keyDownEvent = (keyDownEvent) => {
+		switch (keyDownEvent.key) {
+			case 'ArrowRight':
+				this.OnModalImageSelection('forward');
+				break;
+
+			case 'ArrowLeft':
+				this.OnModalImageSelection('back');
+				break;
+
+			default:
+				break;
+		}
+	};
 
 	handleExpandClick = () => {
 		this.setState((state) => ({ expanded: !state.expanded }));
@@ -248,7 +274,16 @@ class Image extends Component {
 
 	OnModalImageSelection = (direction) => {
 		const imagesArr = Object.keys(this.props.imagesDataObj);
-		const index = imagesArr.indexOf(this.state.imageId);
+		const lastIndex = imagesArr.length - 1;
+		let index = imagesArr.indexOf(this.state.imageId);
+
+		if (direction === 'forward' && index === lastIndex) {
+			index = -1;
+		}
+
+		if (direction === 'back' && index === 0) {
+			index = lastIndex + 1;
+		}
 
 		switch (direction) {
 			case 'forward':
@@ -266,16 +301,36 @@ class Image extends Component {
 			default:
 				break;
 		}
-		// console.log('title', this.state.imageId);
-		// console.log('OBJ', this.props.imagesDataObj);
+	};
 
-		// const nextImageTitle = imagesArr[index + 1];
-		// const nextImageSrc = this.props.imagesDataObj[nextImageTitle].path;
-		// console.log('target', direction);
-		// console.log('imagesArr', imagesArr);
-		// console.log('index', index);
-		// console.log('previousImageTitle', previousImageTitle);
-		// console.log('previousImageSrc', previousImageSrc);
+	onHoverHandler = (event) => {
+		switch (event.type) {
+			case 'mouseenter':
+				this.setState({ isHover: true });
+				break;
+
+			case 'mouseleave':
+				this.setState({ isHover: false });
+				break;
+
+			default:
+				this.setState({ isHover: true });
+				break;
+		}
+	};
+
+	onSwipeMove = (position) => {
+		this.setState({ swipeXPosition: position.x });
+	};
+
+	onSwipeEnd = () => {
+		if (this.state.swipeXPosition < 0) {
+			this.OnModalImageSelection('back');
+		}
+
+		if (this.state.swipeXPosition > 0) {
+			this.OnModalImageSelection('forward');
+		}
 	};
 
 	render() {
@@ -305,27 +360,54 @@ class Image extends Component {
 						)}
 						onClick={this.props.fik}
 					>
-						{this.props.ImageClickedTitle ? (
+						{this.props.ImageClickedTitle && !this.state.expanded ? (
 							<React.Fragment>
-								<Fab className={classes.fabLeft} onClick={() => this.OnModalImageSelection('back')}>
-									<ArrowBackIos />
-								</Fab>
-								<Fab className={classes.fabRight} onClick={() => this.OnModalImageSelection('forward')}>
-									<ArrowForwardIos />
-								</Fab>
+								<Fade
+									in={this.state.isHover}
+									timeout={500}
+									onMouseEnter={this.onHoverHandler}
+									onMouseLeave={this.onHoverHandler}
+								>
+									<Fab className={classes.fabLeft} onClick={() => this.OnModalImageSelection('back')}>
+										<ArrowBackIos />
+									</Fab>
+								</Fade>
+								<Fade
+									in={this.state.isHover}
+									timeout={500}
+									onMouseEnter={this.onHoverHandler}
+									onMouseLeave={this.onHoverHandler}
+								>
+									<Fab
+										className={classes.fabRight}
+										onClick={() => this.OnModalImageSelection('forward')}
+									>
+										<ArrowForwardIos />
+									</Fab>
+								</Fade>
 							</React.Fragment>
 						) : null}
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
-							<CardMedia
-								component="img"
-								onClick={() => this.props.onImageClick(this.state.imageId)}
-								className={[ classes.media, this.props.isBiggerSize ? classes.biggerMedia : null ].join(
-									' '
-								)}
-								src={this.state.src}
-								title={this.state.imageId}
-							/>
+							<Swipe
+								onSwipeStart={this.onSwipeStart}
+								onSwipeMove={this.onSwipeMove}
+								onSwipeEnd={this.onSwipeEnd}
+							>
+								<CardMedia
+									onMouseEnter={this.onHoverHandler}
+									onMouseLeave={this.onHoverHandler}
+									component="img"
+									onClick={() => this.props.onImageClick(this.state.imageId)}
+									className={[
+										classes.media,
+										this.props.isBiggerSize ? classes.biggerMedia : null
+									].join(' ')}
+									src={this.state.src}
+									title={this.state.imageId}
+								/>
+							</Swipe>
+
 							<CardActions className={classes.actions}>
 								<IconButton onClick={() => this.buttonClickHandler('green')}>
 									<ThumbUpAlt className={this.state.isClickedGreen ? classes.thumbUpAlt : null} />
