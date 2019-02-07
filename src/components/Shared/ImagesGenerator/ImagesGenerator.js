@@ -99,6 +99,7 @@ const imagesGenerator = (props) => {
 							onHideMenu={props.onHideMenu}
 							isBiggerSize={true}
 							fik={props.fik}
+							ImageClickedTitle={props.ImageClickedTitle}
 						/>
 					</ModalImage>
 				</React.Fragment>

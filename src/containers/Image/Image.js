@@ -22,6 +22,7 @@ import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 
 const styles = {
 	cardRed: {
@@ -95,8 +96,19 @@ const styles = {
 		width: 750,
 		margin: 0
 	},
-	fab: {
-		// position: 'absolute'
+	fabLeft: {
+		position: 'absolute',
+		top: '48%',
+		transform: 'translateY(-50%)',
+		left: 70,
+		background: 'rgba(213, 213, 213, 0.5)'
+	},
+	fabRight: {
+		position: 'absolute',
+		top: '48%',
+		transform: 'translateY(-50%)',
+		right: 70,
+		background: 'rgba(213, 213, 213, 0.5)'
 	}
 };
 
@@ -259,7 +271,22 @@ class Image extends Component {
 						)}
 						onClick={this.props.fik}
 					>
-						{this.props.imageClickedTitle ? <Fab className={classes.fab} /> : null}
+						{this.props.ImageClickedTitle ? (
+							<React.Fragment>
+								<Fab
+									className={classes.fabLeft}
+									onClick={() => {
+										console.log('title', this.state.imageId);
+										console.log('OBJ', this.props.imagesDataObj);
+									}}
+								>
+									<ArrowBackIos />
+								</Fab>
+								<Fab className={classes.fabRight}>
+									<ArrowForwardIos />
+								</Fab>
+							</React.Fragment>
+						) : null}
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
 							<CardMedia
