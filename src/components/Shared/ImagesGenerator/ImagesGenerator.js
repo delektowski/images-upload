@@ -34,6 +34,7 @@ const imagesGenerator = (props) => {
 		const greenClicked = props.filterButtonsState.greenClicked;
 		const blueClicked = props.filterButtonsState.blueClicked;
 		const redClicked = props.filterButtonsState.redClicked;
+		const orangeClicked = props.filterButtonsState.orangeClicked;
 		for (const prop in imagesDataObj) {
 			imagesDataObjArr.push({ [prop]: imagesDataObj[prop] });
 		}
@@ -42,13 +43,14 @@ const imagesGenerator = (props) => {
 			.filter((element) => {
 				const isFilterGreenClicked = greenClicked ? element[Object.keys(element)].isClickedGreen : null;
 				const isFilterBlueClicked = blueClicked ? element[Object.keys(element)].isClickedBlue : null;
+				const isFilterOrangeClicked = orangeClicked ? element[Object.keys(element)].comment : null;
 				let isFilterRedClicked = redClicked
 					? true &&
 						!element[Object.keys(element)].isClickedGreen &&
 						!element[Object.keys(element)].isClickedBlue
 					: null;
 
-				return isFilterGreenClicked || isFilterBlueClicked || isFilterRedClicked;
+				return isFilterGreenClicked || isFilterBlueClicked || isFilterRedClicked || isFilterOrangeClicked;
 			})
 			.map((e) => Object.keys(e)[0]);
 

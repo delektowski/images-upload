@@ -118,7 +118,14 @@ class CreateUser extends Component {
 	};
 
 	changeDiscountValueHandler = (value) => {
-		if (value < 0) value = '';
+		if (value < 0) {
+			value = '';
+		}
+
+		if (value > 100) {
+			value = 100;
+		}
+
 		this.setState({
 			discountProcent: value
 		});

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from '@material-ui/core/';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import { Typography } from '@material-ui/core/';
 
 const logout = (props) => {
 	const onLogoutHandler = () => {
@@ -21,9 +21,9 @@ const logout = (props) => {
 		props.onLogoutHandler();
 	};
 	return (
-		<Button variant="contained" color="secondary" onClick={onLogoutHandler} size="small">
-			Wyloguj
-		</Button>
+		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={onLogoutHandler}>
+			wyloguj
+		</Typography>
 	);
 };
 

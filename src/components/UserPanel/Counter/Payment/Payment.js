@@ -80,7 +80,7 @@ const Payment = (props) => {
 				<div className={[ classes.iconCaptionContainer, classes.green ].join(' ')}>
 					<div>
 						<Typography className={[ classes.iconCaption, classes.green ].join(' ')} variant="caption">
-							darmowe zdjęcia
+							DARMOWE ZDJĘCIA
 						</Typography>
 					</div>
 					<Avatar className={[ classes.avatar, classes.bgGreen ].join(' ')}>
@@ -96,7 +96,7 @@ const Payment = (props) => {
 				<div className={[ classes.iconCaptionContainer, classes.black ].join(' ')}>
 					<div>
 						<Typography className={[ classes.iconCaption, classes.black ].join(' ')} variant="caption">
-							cena zdjęcia
+							CENA ZDJĘCIA
 						</Typography>
 					</div>
 					<Avatar className={[ classes.avatar, classes.bgBlack ].join(' ')}>
@@ -109,7 +109,7 @@ const Payment = (props) => {
 					className={[ classes.iconCaptionContainer, classes.iconCaptionContainerBig, classes.red ].join(' ')}
 				>
 					<Typography className={[ classes.iconCaption, classes.red ].join(' ')} variant="caption">
-						koszt dodatkowych zdjęć
+						KOSZT DODATKOWYCH ZDJĘĆ
 					</Typography>
 
 					<Avatar className={[ classes.avatar, classes.bgRed ].join(' ')}>

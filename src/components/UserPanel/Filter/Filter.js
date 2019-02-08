@@ -40,11 +40,18 @@ const styles = (theme) => ({
 		}
 	},
 
+	orangeClicked: {
+		color: 'rgb(255,87,34)',
+		'&$checked': {
+			color: 'rgb(255,87,34)'
+		}
+	},
 	checked: {}
 });
 
 const filter = (props) => {
 	const { classes } = props;
+
 	const buttonClickHandler = (whichButton) => {
 		switch (whichButton) {
 			case 'greenClicked':
@@ -57,6 +64,10 @@ const filter = (props) => {
 
 			case 'redClicked':
 				props.onFilterButtonsState('redClicked');
+				break;
+
+			case 'orangeClicked':
+				props.onFilterButtonsState('orangeClicked');
 				break;
 
 			default:

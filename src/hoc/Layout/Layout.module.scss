@@ -5,3 +5,10 @@
 	min-width: 350px;
 	margin: 0 auto;
 }
+
+body {
+	-ms-overflow-style: none; // IE 10+
+}
+body::-webkit-scrollbar {
+	display: none; // Safari and Chrome
+}

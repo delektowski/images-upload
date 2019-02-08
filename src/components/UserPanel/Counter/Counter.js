@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
-import AllInclusive from '@material-ui/icons/AllInclusive';
+import ChatBubble from '@material-ui/icons/ChatBubble';
 
 const styles = {
 	paper: {
@@ -39,12 +39,19 @@ const styles = {
 	iconCaptionContainerBig: {
 		width: 80
 	},
+	captionContainer: {
+		display: 'flex',
+		flexDirection: 'column'
+	},
 	avatar: {
 		height: 30,
 		width: 30
 	},
 	green: {
 		color: 'green'
+	},
+	orange: {
+		color: 'rgb(255,87,34)'
 	},
 	bgGreen: {
 		background: 'green'
@@ -55,8 +62,8 @@ const styles = {
 	bgRed: {
 		background: 'rgb(98, 95, 90)'
 	},
-	bgBlack: {
-		background: 'black'
+	bgOrange: {
+		background: 'rgb(255,87,34)'
 	},
 	blue: {
 		color: 'rgb(63, 81, 181)'
@@ -71,6 +78,7 @@ const styles = {
 
 const counter = (props) => {
 	const { classes } = props;
+
 	const selectedElementsAmount = (elementColor) => {
 		let amountOfElement = 0;
 
@@ -98,10 +106,17 @@ const counter = (props) => {
 				}
 				return amountOfElement;
 
+			case 'orange':
+				for (let imageTitle in props.imagesDataObj) {
+					if (props.imagesDataObj[imageTitle].comment !== '') amountOfElement++;
+				}
+				return amountOfElement;
+
 			case 'all':
 				for (let everyPicture in props.imagesDataObj) {
 					if (everyPicture) amountOfElement++;
 				}
+				props.amountAll(amountOfElement);
 				return amountOfElement;
 
 			default:
@@ -176,23 +191,29 @@ const counter = (props) => {
 				</div>
 
 				<div className={classes.iconCaptionFilterContainer}>
-					<div className={[ classes.iconCaptionContainer, classes.iconCaptionContainerBig ].join(' ')}>
-						<div>
-							<AllInclusive />
-							<Typography className={classes.iconCaption} variant="caption">
-								WSZYSTKIE
+					<div
+						className={[
+							classes.iconCaptionContainer,
+							classes.iconCaptionContainerBig,
+							classes.orange
+						].join(' ')}
+					>
+						<div className={classes.captionContainer}>
+							<ChatBubble style={{ margin: '0 auto' }} />
+							<Typography className={[ classes.iconCaption, classes.orange ].join(' ')} variant="caption">
+								KOMENTARZ
 							</Typography>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgBlack ].join(' ')}>
+						<Avatar className={[ classes.avatar, classes.bgOrange ].join(' ')}>
 							<Typography className={classes.white} variant="caption">
-								{selectedElementsAmount('all')}
+								{selectedElementsAmount('orange')}
 							</Typography>
 						</Avatar>
 					</div>
 					<Filter
 						onFilterButtonsState={props.onFilterButtonsState}
 						filterButtonsState={props.filterButtonsState}
-						filterClicked="allClicked"
+						filterClicked="orangeClicked"
 					/>
 				</div>
 			</Paper>

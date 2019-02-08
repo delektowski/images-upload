@@ -5,14 +5,14 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Backdrop from '../../components/Shared/Backdrop/Backdrop';
-import Logout from '../../components/Logout/Logout';
-import { AppBar, Toolbar, Typography, Paper, Fab, Drawer } from '@material-ui/core/';
+import Menu from '../../components/Shared/Menu/Menu';
+import { AppBar, Toolbar, Typography, Paper, Fab, Drawer, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
-import Reset from '../../components/UserPanel/Reset/Reset';
+import BurstMode from '@material-ui/icons/BurstMode';
 
 const styles = {
 	mainView: {},
@@ -34,6 +34,7 @@ const styles = {
 	toolbar__header: {
 		display: 'flex',
 		justifyContent: 'space-between',
+		alignItems: 'center',
 		width: '100%'
 	},
 	footer: {
@@ -54,7 +55,7 @@ const styles = {
 	},
 	icon__loginContainer: {
 		display: 'flex',
-		flexDirection: 'row',
+		flexDirection: 'column',
 		alignItems: 'center'
 	},
 	icon__login: {
@@ -91,6 +92,36 @@ const styles = {
 		position: 'fixed',
 		width: '100%',
 		top: 50
+	},
+	menuLoginContainer: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	iconCaptionFilterContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	iconCaptionContainer: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 40
+	},
+	avatar: {
+		height: 30,
+		width: 30
+	},
+	bgBlack: {
+		background: 'black'
+	},
+	white: {
+		color: 'white'
+	},
+	iconCaption: {
+		fontSize: '.56rem'
 	}
 };
 
@@ -107,7 +138,8 @@ class mainView extends Component {
 		filterButtonsState: {
 			greenClicked: true,
 			blueClicked: true,
-			redClicked: true
+			redClicked: true,
+			orangeClicked: true
 		},
 		isAdminLogin: false,
 		isAuthenticated: false,
@@ -115,20 +147,24 @@ class mainView extends Component {
 		onUserCreated: false,
 		isDrawerOpen: true,
 		isFooterHidden: false,
-		imageClickedTitle: ''
+		imageClickedTitle: '',
+		anchorEl: null,
+		amountAll: 0
 	};
 
 	componentDidUpdate() {
 		if (
 			this.state.filterButtonsState.greenClicked === false &&
 			this.state.filterButtonsState.blueClicked === false &&
-			this.state.filterButtonsState.redClicked === false
+			this.state.filterButtonsState.redClicked === false &&
+			this.state.filterButtonsState.orangeClicked === false
 		) {
 			this.setState({
 				filterButtonsState: {
 					greenClicked: false,
 					blueClicked: false,
-					redClicked: true
+					redClicked: true,
+					orangeClicked: false
 				}
 			});
 		}
@@ -157,14 +193,18 @@ class mainView extends Component {
 			filterButtonsState: {
 				greenClicked: true,
 				blueClicked: true,
-				redClicked: true
+				redClicked: true,
+				orangeClicked: true
 			},
 			isAdminLogin: false,
-			isEnabledBackdrop: false,
 			isAuthenticated: false,
 			errorLogin: '',
 			onUserCreated: false,
-			isDrawerOpen: true
+			isDrawerOpen: true,
+			isFooterHidden: false,
+			imageClickedTitle: '',
+			anchorEl: null,
+			amountAll: 0
 		});
 	};
 
@@ -208,11 +248,30 @@ class mainView extends Component {
 		});
 	};
 
+	onMenuClickHandler = (event) => {
+		this.setState({ anchorEl: event });
+	};
+
+	onMenuCloseHandler = () => {
+		console.log('close');
+
+		this.setState({ anchorEl: null });
+	};
+
+	amountAllHandler = (amount) => {
+		if (this.state.amountAll !== amount) {
+			this.setState({ amountAll: amount });
+		}
+	};
+
 	render() {
 		const { classes } = this.props;
 		let adminPanel = null;
 		let userPanel = null;
 		let login = null;
+		let menu = null;
+		let reset = null;
+		let amountAll = null;
 
 		if (this.state.isAdminLogin) {
 			adminPanel = (
@@ -242,6 +301,7 @@ class mainView extends Component {
 				</React.Fragment>
 			);
 		}
+
 		if (this.state.isAuthenticated) {
 			userPanel = (
 				<React.Fragment>
@@ -256,10 +316,12 @@ class mainView extends Component {
 						picturePrice={this.state.picturePrice}
 						onLogoutHandler={this.onLogoutHandler}
 						isDrawerOpen={this.state.isDrawerOpen}
+						amountAll={(amount) => this.amountAllHandler(amount)}
 					/>
 				</React.Fragment>
 			);
 		}
+
 		if (!this.state.isAdminLogin && !this.state.isAuthenticated) {
 			login = (
 				<Login
@@ -272,6 +334,40 @@ class mainView extends Component {
 					onLoginDataPass={(imagesDataObj, freePicturesAmount, picturePrice, discountProcent) =>
 						this.onLoginDataPass(imagesDataObj, freePicturesAmount, picturePrice, discountProcent)}
 				/>
+			);
+		}
+
+		if (this.state.isAdminLogin || this.state.isAuthenticated) {
+			menu = (
+				<Menu
+					onMenuOpen={(e) => this.onMenuClickHandler(e)}
+					onMenuClose={() => this.onMenuCloseHandler()}
+					isMenuOpen={this.state.anchorEl}
+					userName={this.state.userName}
+					imagesDataObj={this.state.imagesDataObj}
+					onLogoutHandler={this.onLogoutHandler}
+					isAdminLogin={this.state.isAdminLogin}
+				/>
+			);
+		}
+
+		if (this.state.isAuthenticated) {
+			amountAll = (
+				<React.Fragment>
+					<div className={classes.iconCaptionFilterContainer}>
+						<div className={classes.iconCaptionContainer}>
+							<BurstMode />
+							<Typography className={classes.iconCaption} variant="caption">
+								ZDJĘCIA
+							</Typography>
+						</div>
+						<Avatar className={[ classes.avatar, classes.bgBlack ].join(' ')}>
+							<Typography className={classes.white} variant="caption">
+								{this.state.amountAll}
+							</Typography>
+						</Avatar>
+					</div>
+				</React.Fragment>
 			);
 		}
 
@@ -306,22 +402,14 @@ class mainView extends Component {
 											Pic
 										</Typography>
 									</div>
-
-									{this.state.isAdminLogin || this.state.isAuthenticated ? (
-										<React.Fragment>
-											<Reset
-												userName={this.state.userName}
-												imagesDataObj={this.state.imagesDataObj}
-											/>
-											<Logout
-												userName={this.state.userName}
-												onLogoutHandler={this.onLogoutHandler}
-											/>
-										</React.Fragment>
-									) : null}
-									<div className={classes.icon__loginContainer}>
-										<Typography variant="caption">{this.state.userName}</Typography>
-										<AccountCircle className={classes.icon__login} />
+									{amountAll}
+									{reset}
+									<div className={classes.menuLoginContainer}>
+										<div className={classes.icon__loginContainer}>
+											<AccountCircle className={classes.icon__login} />
+											<Typography variant="caption">{this.state.userName}</Typography>
+										</div>
+										{menu}
 									</div>
 								</Toolbar>
 							</AppBar>

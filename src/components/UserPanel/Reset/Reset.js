@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button } from '@material-ui/core/';
-// import Button from '../../Shared/Button/Button';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import { Typography } from '@material-ui/core/';
 
 const Reset = (props) => {
 	const resetUserSelection = () => {
@@ -16,9 +15,9 @@ const Reset = (props) => {
 		}
 	};
 	return (
-		<Button variant="contained" color="primary" onClick={resetUserSelection} size="small">
-			Reset
-		</Button>
+		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={resetUserSelection}>
+			RESET
+		</Typography>
 	);
 };
 

@@ -17,6 +17,7 @@ import {
 	Fade
 } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
+import ChatBubble from '@material-ui/icons/ChatBubble';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
@@ -26,7 +27,7 @@ import Cancel from '@material-ui/icons/Cancel';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 
-const styles = {
+const styles = (theme) => ({
 	cardRed: {
 		width: 400,
 		margin: '1%',
@@ -92,7 +93,10 @@ const styles = {
 		justifyContent: 'space-around'
 	},
 	biggerMedia: {
-		maxHeight: 450
+		maxHeight: 450,
+		[theme.breakpoints.down('xs')]: {
+			maxHeight: 200
+		}
 	},
 	biggerCard: {
 		width: 750,
@@ -111,8 +115,11 @@ const styles = {
 		transform: 'translateY(-50%)',
 		right: 70,
 		background: 'rgba(213, 213, 213, 0.5)'
+	},
+	orange: {
+		color: 'rgb(255,87,34)'
 	}
-};
+});
 
 class Image extends Component {
 	state = {
@@ -127,7 +134,8 @@ class Image extends Component {
 		comment: '',
 		confirmedComment: false,
 		isHover: false,
-		swipeXPosition: 0
+		touchStart: 0,
+		touchEnd: 0
 	};
 
 	componentDidMount() {
@@ -184,6 +192,23 @@ class Image extends Component {
 			this.setState({
 				comment: this.props.imagesDataObj[this.state.imageId].comment,
 				confirmedComment: false
+			});
+		}
+
+		if (this.state.touchStart > 0 && this.state.touchEnd > 0) {
+			const touchLength = this.state.touchStart - this.state.touchEnd;
+
+			if (touchLength < 0) {
+				this.OnModalImageSelection('back');
+			}
+
+			if (touchLength > 0) {
+				this.OnModalImageSelection('forward');
+			}
+
+			this.setState({
+				touchStart: 0,
+				touchEnd: 0
 			});
 		}
 	}
@@ -319,17 +344,15 @@ class Image extends Component {
 		}
 	};
 
-	onSwipeMove = (position) => {
-		this.setState({ swipeXPosition: position.x });
+	onSwipeStart = (e) => {
+		if (this.props.ImageClickedTitle) {
+			this.setState({ touchStart: e.changedTouches[0].clientX });
+		}
 	};
 
-	onSwipeEnd = () => {
-		if (this.state.swipeXPosition < 0) {
-			this.OnModalImageSelection('back');
-		}
-
-		if (this.state.swipeXPosition > 0) {
-			this.OnModalImageSelection('forward');
+	onSwipeEnd = (e) => {
+		if (this.props.ImageClickedTitle) {
+			this.setState({ touchEnd: e.changedTouches[0].clientX });
 		}
 	};
 
@@ -338,6 +361,11 @@ class Image extends Component {
 		let image = null;
 		let borderColor = 'borderRed';
 		let cardColor = 'cardRed';
+		let commentIcon = <ChatBubbleOutline />;
+
+		if (this.state.comment) {
+			commentIcon = <ChatBubble className={classes.orange} />;
+		}
 
 		if (this.state.isClickedRed) {
 			borderColor = 'borderRed';
@@ -423,7 +451,7 @@ class Image extends Component {
 									aria-expanded={this.state.expanded}
 									aria-label="Show more"
 								>
-									{this.state.expanded ? <ExpandLess /> : <ChatBubbleOutline />}
+									{this.state.expanded ? <ExpandLess /> : commentIcon}
 								</IconButton>
 							</CardActions>
 							<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>

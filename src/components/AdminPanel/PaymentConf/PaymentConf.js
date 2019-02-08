@@ -69,17 +69,16 @@ class PaymentConf extends Component {
 	render() {
 		const { classes } = this.props;
 		let picturesAmount = this.props.amountSelectedImages ? this.props.amountSelectedImages.length : 0;
-		let price =
+		let discount =
 			(picturesAmount - this.props.freePicturesAmount) *
-				this.props.picturePrice *
-				(this.props.discountProcent / 100) <=
-			0
-				? 0
-				: Math.round(
-						(picturesAmount - this.props.freePicturesAmount) *
-							this.props.picturePrice *
-							(this.props.discountProcent / 100)
-					);
+			this.props.picturePrice *
+			(this.props.discountProcent / 100);
+
+		// if (this.props.discountProcent === '0') {
+		// 	discount = 1;
+		// }
+
+		let price = Math.round((picturesAmount - this.props.freePicturesAmount) * this.props.picturePrice - discount);
 
 		return (
 			<React.Fragment>

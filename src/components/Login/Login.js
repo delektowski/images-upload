@@ -26,7 +26,6 @@ const styles = (theme) => ({
 
 		padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
 	},
-
 	form: {
 		marginTop: theme.spacing.unit,
 		display: 'flex',
@@ -39,67 +38,36 @@ const styles = (theme) => ({
 		[theme.breakpoints.down('xs')]: {
 			width: '90%'
 		}
+	},
+	info: {
+		fontSize: '.6rem'
 	}
 });
 
 class Login extends Component {
 	state = {
-		passwordValidation: false,
-		loginValidation: false,
-		loginFiledClicked: false,
-		passwordFieldClicked: false,
-		loginField: 'fikacz3',
-		passwordField: 'fikacz3',
+		loginField: '',
+		passwordField: '',
 		errorLogin: ''
-	};
-
-	onValidationHandler = (e) => {
-		switch (e.target.getAttribute('data-value')) {
-			case 'login':
-				if (e.target.value.length >= 2) {
-					this.setState({ loginValidation: true, loginFiledClicked: false });
-				} else {
-					this.setState({
-						loginValidation: false,
-						loginFiledClicked: true
-					});
-				}
-				break;
-
-			case 'password':
-				if (e.target.value.length >= 6) {
-					this.setState({ passwordValidation: true, passwordFieldClicked: false });
-				} else {
-					this.setState({ passwordValidation: false, passwordFieldClicked: true });
-				}
-				break;
-
-			default:
-				break;
-		}
-		this.onLoginClickedHandler(e);
 	};
 
 	onLoginHandler = (e) => {
 		if (e) e.preventDefault();
-		if (this.state.loginField === 'admin' && this.state.passwordField === 'admin78') {
-			this.props.adminLogin();
-			this.props.loginClicked();
-		} else {
-			this.props.onChangeUserName(this.state.loginField);
-		}
 
-		if (
-			this.state.loginField &&
-			this.state.passwordField &&
-			this.state.loginField !== 'admin' &&
-			this.props.isCreateUserLogin === ''
-		) {
+		if (this.state.loginField && this.state.passwordField && this.props.isCreateUserLogin === '') {
 			firebase
 				.auth()
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
-				.then(() => this.props.isAuthenticated())
-				.catch((error) => {
+				.then(() => {
+					if (this.state.loginField === 'admin') {
+						this.props.adminLogin();
+						this.props.loginClicked();
+					} else {
+						this.props.isAuthenticated();
+						this.props.onChangeUserName(this.state.loginField);
+					}
+				})
+				.catch(() => {
 					this.setState({ errorLogin: 'Błędne hasło lub login' });
 				});
 
@@ -140,6 +108,10 @@ class Login extends Component {
 				break;
 
 			default:
+				if (!(this.state.loginField && this.state.passwordField)) {
+					this.setState({ errorLogin: 'Nie został podany login lub hasło' });
+				}
+
 				this.onLoginHandler(e);
 				break;
 		}
@@ -156,41 +128,37 @@ class Login extends Component {
 							<Typography component="h1" variant="h5">
 								Logowanie
 							</Typography>
+							<Typography color="secondary" variant="overline">
+								{this.state.errorLogin}
+							</Typography>
 							<form className={classes.form}>
-								<FormControl margin="normal" required>
-									<InputLabel htmlFor="login">Nazwa użytkownika</InputLabel>
+								<FormControl error={Boolean(this.state.errorLogin)} margin="normal" required>
+									<InputLabel htmlFor="login">Użytkownik</InputLabel>
 									<Input
 										id="login"
 										type="text"
 										autoComplete="off"
 										autoFocus
 										value={this.state.loginField}
-										onChange={this.onValidationHandler}
+										onChange={(e) => this.onLoginClickedHandler(e)}
 										inputProps={{ 'data-value': 'login' }}
 									/>
 								</FormControl>
 
-								{this.state.loginFiledClicked ? (
-									<p style={{ color: 'red', marginTop: '0', fontSize: '0.7rem' }}>Minimum 2 znaki</p>
-								) : null}
-
-								<FormControl margin="normal" required>
+								<FormControl error={Boolean(this.state.errorLogin)} margin="normal" required>
 									<InputLabel htmlFor="password">Hasło</InputLabel>
 									<Input
 										id="password"
 										type="password"
 										autoComplete="off"
 										value={this.state.passwordField}
-										onChange={this.onValidationHandler}
+										onChange={(e) => this.onLoginClickedHandler(e)}
 										inputProps={{ 'data-value': 'password' }}
-										onKeyPress={this.onValidationHandler}
+										onKeyPress={(e) => this.onLoginClickedHandler(e)}
 									/>
 								</FormControl>
 							</form>
 
-							{this.state.passwordFieldClicked ? (
-								<p style={{ color: 'red', marginTop: '0', fontSize: '0.7rem' }}>Minimum 6 znaków</p>
-							) : null}
 							<Button
 								type="submit"
 								fullWidth
@@ -198,8 +166,7 @@ class Login extends Component {
 								color="primary"
 								className={classes.submit}
 								data-value="button"
-								onClick={this.onValidationHandler}
-								// disabled={!(this.state.loginValidation && this.state.passwordValidation)}
+								onClick={(e) => this.onLoginClickedHandler(e)}
 							>
 								Zaloguj
 							</Button>
