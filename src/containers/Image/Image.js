@@ -386,7 +386,6 @@ class Image extends Component {
 						className={[ classes[cardColor], this.props.isBiggerSize ? classes.biggerCard : null ].join(
 							' '
 						)}
-						onClick={this.props.fik}
 					>
 						{this.props.ImageClickedTitle && !this.state.expanded ? (
 							<React.Fragment>

@@ -100,7 +100,6 @@ const imagesGenerator = (props) => {
 							isAdminLogin={props.isAdminLogin}
 							onHideMenu={props.onHideMenu}
 							isBiggerSize={true}
-							fik={props.fik}
 							ImageClickedTitle={props.ImageClickedTitle}
 						/>
 					</ModalImage>

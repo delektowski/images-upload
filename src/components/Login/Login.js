@@ -77,6 +77,7 @@ class Login extends Component {
 					userNameDbElement.on('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
+
 						this.props.onLoginDataPass(
 							imagesDataObj.images,
 							imagesDataObj.paymentConfig.freePicturesAmount,

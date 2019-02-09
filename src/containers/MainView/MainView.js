@@ -4,8 +4,9 @@ import Login from '../../components/Login/Login';
 import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
-import Backdrop from '../../components/Shared/Backdrop/Backdrop';
 import Menu from '../../components/Shared/Menu/Menu';
+import Checkout from '../../components/UserPanel/Checkout/Checkout';
+
 import { AppBar, Toolbar, Typography, Paper, Fab, Drawer, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -130,6 +131,7 @@ class mainView extends Component {
 		userName: '',
 		isLoginClicked: false,
 		isCreateClicked: false,
+		isCheckout: false,
 		createUserLogin: '',
 		createUserPassword: '',
 		imagesDataObj: null,
@@ -168,6 +170,14 @@ class mainView extends Component {
 				}
 			});
 		}
+
+		if (this.state.imagesDataObj && this.state.imagesDataObj !== null) {
+			const amountAll = Object.keys(this.state.imagesDataObj).length;
+
+			if (amountAll !== this.state.amountAll) {
+				this.setState({ amountAll });
+			}
+		}
 	}
 
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
@@ -185,6 +195,7 @@ class mainView extends Component {
 			userName: '',
 			isLoginClicked: false,
 			isCreateClicked: false,
+			isCheckout: false,
 			createUserLogin: '',
 			createUserPassword: '',
 			imagesDataObj: null,
@@ -218,14 +229,6 @@ class mainView extends Component {
 		});
 	};
 
-	backdropHandler = () => {
-		this.setState((prevState) => {
-			return {
-				isEnabledBackdrop: !prevState.isEnabledBackdrop
-			};
-		});
-	};
-
 	onDrawerOpenHandler = () => {
 		if (!this.state.imageClickedTitle) {
 			this.setState((prevState) => {
@@ -253,15 +256,11 @@ class mainView extends Component {
 	};
 
 	onMenuCloseHandler = () => {
-		console.log('close');
-
 		this.setState({ anchorEl: null });
 	};
 
-	amountAllHandler = (amount) => {
-		if (this.state.amountAll !== amount) {
-			this.setState({ amountAll: amount });
-		}
+	onCheckoutReleaseHandler = () => {
+		this.setState({ isCheckout: true });
 	};
 
 	render() {
@@ -270,8 +269,11 @@ class mainView extends Component {
 		let userPanel = null;
 		let login = null;
 		let menu = null;
+		let menuHideButton = null;
 		let reset = null;
-		let amountAll = null;
+		let amountAllIcon = null;
+		let checkout = null;
+		let imagesGenerator = null;
 
 		if (this.state.isAdminLogin) {
 			adminPanel = (
@@ -302,7 +304,7 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isAuthenticated) {
+		if (this.state.isAuthenticated && !this.state.isCheckout) {
 			userPanel = (
 				<React.Fragment>
 					<UserPanel
@@ -316,7 +318,6 @@ class mainView extends Component {
 						picturePrice={this.state.picturePrice}
 						onLogoutHandler={this.onLogoutHandler}
 						isDrawerOpen={this.state.isDrawerOpen}
-						amountAll={(amount) => this.amountAllHandler(amount)}
 					/>
 				</React.Fragment>
 			);
@@ -347,12 +348,13 @@ class mainView extends Component {
 					imagesDataObj={this.state.imagesDataObj}
 					onLogoutHandler={this.onLogoutHandler}
 					isAdminLogin={this.state.isAdminLogin}
+					onCheckoutRelease={this.onCheckoutReleaseHandler}
 				/>
 			);
 		}
 
 		if (this.state.isAuthenticated) {
-			amountAll = (
+			amountAllIcon = (
 				<React.Fragment>
 					<div className={classes.iconCaptionFilterContainer}>
 						<div className={classes.iconCaptionContainer}>
@@ -371,15 +373,43 @@ class mainView extends Component {
 			);
 		}
 
+		if (this.state.isCheckout && !this.state.isAdminLogin) {
+			checkout = <Checkout />;
+		}
+
+		if (!this.state.isCheckout) {
+			imagesGenerator = (
+				<ImagesGenerator
+					images={this.state.picturesPaths}
+					titles={this.state.picturesTitles}
+					imagesDataObj={this.state.imagesDataObj}
+					userName={this.state.userName}
+					filterButtonsState={this.state.filterButtonsState}
+					reset={this.state.reset}
+					isAdminLogin={this.state.isAdminLogin}
+					onImageClick={this.onImageClickedTitleHandler}
+					onHideMenu={this.onDrawerOpenHandler}
+					isDrawerOpen={this.state.isDrawerOpen}
+					isImageLarge={this.state.imageClickedTitle}
+					ImageClickedTitle={this.state.imageClickedTitle}
+					onImageLargeClose={this.imageLargeCloseHandler}
+				/>
+			);
+		}
+
+		if (this.state.isAuthenticated && !this.state.imageClickedTitle) {
+			menuHideButton = (
+				<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
+					{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
+				</Fab>
+			);
+		}
+
 		return (
 			<React.Fragment>
 				<Layout>
 					<header>
-						{(this.state.isAdminLogin || this.state.isAuthenticated) && !this.state.imageClickedTitle ? (
-							<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
-								{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
-							</Fab>
-						) : null}
+						{menuHideButton}
 						<Drawer
 							transitionDuration={500}
 							variant="persistent"
@@ -402,7 +432,7 @@ class mainView extends Component {
 											Pic
 										</Typography>
 									</div>
-									{amountAll}
+									{amountAllIcon}
 									{reset}
 									<div className={classes.menuLoginContainer}>
 										<div className={classes.icon__loginContainer}>
@@ -415,42 +445,36 @@ class mainView extends Component {
 							</AppBar>
 						</Drawer>
 					</header>
-					<section>
-						<div className={classes.mainView}>
-							{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
-							<Backdrop show={this.state.isEnabledBackdrop} disableBackdrop={this.backdropHandler} />
-							{login}
-							{adminPanel}
-							<Drawer
-								transitionDuration={500}
-								variant="persistent"
-								anchor="left"
-								open={this.state.isDrawerOpen}
-								classes={{
-									paper: classes.drawerPaper
-								}}
-							>
-								<Paper>{userPanel}</Paper>
-							</Drawer>
 
-							<ImagesGenerator
-								images={this.state.picturesPaths}
-								titles={this.state.picturesTitles}
-								imagesDataObj={this.state.imagesDataObj}
-								userName={this.state.userName}
-								filterButtonsState={this.state.filterButtonsState}
-								reset={this.state.reset}
-								isAdminLogin={this.state.isAdminLogin}
-								onImageClick={this.onImageClickedTitleHandler}
-								onHideMenu={this.onDrawerOpenHandler}
-								isDrawerOpen={this.state.isDrawerOpen}
-								isImageLarge={this.state.imageClickedTitle}
-								ImageClickedTitle={this.state.imageClickedTitle}
-								onImageLargeClose={this.imageLargeCloseHandler}
-								fik={() => this.setState({ fik: 'fikam' })}
-							/>
+					<main>
+						<div className={classes.mainView}>
+							<section>
+								{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
+								{login}
+							</section>
+
+							<section>{adminPanel}</section>
+
+							<section>
+								<Drawer
+									transitionDuration={500}
+									variant="persistent"
+									anchor="left"
+									open={this.state.isDrawerOpen}
+									classes={{
+										paper: classes.drawerPaper
+									}}
+								>
+									<Paper>{userPanel}</Paper>
+								</Drawer>
+							</section>
+
+							<section>{imagesGenerator}</section>
+
+							<section>{checkout}</section>
 						</div>
-					</section>
+					</main>
+
 					<footer>
 						<AppBar className={classes.footer} position="static" color="default">
 							<Toolbar className={classes.toolbar__footer}>

@@ -116,7 +116,7 @@ const counter = (props) => {
 				for (let everyPicture in props.imagesDataObj) {
 					if (everyPicture) amountOfElement++;
 				}
-				props.amountAll(amountOfElement);
+
 				return amountOfElement;
 
 			default:
