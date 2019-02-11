@@ -79,6 +79,7 @@ class PaymentConf extends Component {
 		// }
 
 		let price = Math.round((picturesAmount - this.props.freePicturesAmount) * this.props.picturePrice - discount);
+		if (price < 0) price = 0;
 
 		return (
 			<React.Fragment>

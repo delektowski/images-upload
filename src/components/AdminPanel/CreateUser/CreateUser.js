@@ -259,6 +259,7 @@ class CreateUser extends Component {
 						picturePrice={this.state.picturePrice}
 						userName={this.state.createUserLogin}
 						isUserCreated={this.state.onUserCreated}
+						imagesDataObj={this.props.imagesDataObj}
 					/>
 				</div>
 			</React.Fragment>

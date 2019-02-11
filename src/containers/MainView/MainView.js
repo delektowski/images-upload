@@ -5,7 +5,6 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Menu from '../../components/Shared/Menu/Menu';
-import Checkout from '../../components/UserPanel/Checkout/Checkout';
 
 import { AppBar, Toolbar, Typography, Paper, Fab, Drawer, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
@@ -135,6 +134,9 @@ class mainView extends Component {
 		createUserLogin: '',
 		createUserPassword: '',
 		imagesDataObj: null,
+		freePicturesAmount: 0,
+		picturePrice: 0,
+		discountProcent: 0,
 		selectedfiles: 0,
 		isButtonDisabled: true,
 		filterButtonsState: {
@@ -151,7 +153,8 @@ class mainView extends Component {
 		isFooterHidden: false,
 		imageClickedTitle: '',
 		anchorEl: null,
-		amountAll: 0
+		amountAll: 0,
+		amountSelected: 0
 	};
 
 	componentDidUpdate() {
@@ -199,6 +202,9 @@ class mainView extends Component {
 			createUserLogin: '',
 			createUserPassword: '',
 			imagesDataObj: null,
+			freePicturesAmount: 0,
+			picturePrice: 0,
+			discountProcent: 0,
 			selectedfiles: 0,
 			isButtonDisabled: true,
 			filterButtonsState: {
@@ -263,6 +269,16 @@ class mainView extends Component {
 		this.setState({ isCheckout: true });
 	};
 
+	onAmountSelectedHandler = (amountSelected) => {
+		if (amountSelected !== this.state.amountSelected) {
+			this.setState({ amountSelected: amountSelected });
+		}
+	};
+
+	onCheckoutCloseHandler = () => {
+		this.setState({ isCheckout: false });
+	};
+
 	render() {
 		const { classes } = this.props;
 		let adminPanel = null;
@@ -272,8 +288,8 @@ class mainView extends Component {
 		let menuHideButton = null;
 		let reset = null;
 		let amountAllIcon = null;
-		let checkout = null;
 		let imagesGenerator = null;
+		let footerBar = null;
 
 		if (this.state.isAdminLogin) {
 			adminPanel = (
@@ -304,7 +320,7 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isAuthenticated && !this.state.isCheckout) {
+		if (this.state.isAuthenticated) {
 			userPanel = (
 				<React.Fragment>
 					<UserPanel
@@ -318,6 +334,9 @@ class mainView extends Component {
 						picturePrice={this.state.picturePrice}
 						onLogoutHandler={this.onLogoutHandler}
 						isDrawerOpen={this.state.isDrawerOpen}
+						amountAll={this.state.amountAll}
+						isCheckout={this.state.isCheckout}
+						onAmountSelected={this.onAmountSelectedHandler}
 					/>
 				</React.Fragment>
 			);
@@ -349,6 +368,8 @@ class mainView extends Component {
 					onLogoutHandler={this.onLogoutHandler}
 					isAdminLogin={this.state.isAdminLogin}
 					onCheckoutRelease={this.onCheckoutReleaseHandler}
+					onCheckoutClose={this.onCheckoutCloseHandler}
+					isCheckout={this.state.isCheckout}
 				/>
 			);
 		}
@@ -373,10 +394,6 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isCheckout && !this.state.isAdminLogin) {
-			checkout = <Checkout />;
-		}
-
 		if (!this.state.isCheckout) {
 			imagesGenerator = (
 				<ImagesGenerator
@@ -397,12 +414,27 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isAuthenticated && !this.state.imageClickedTitle) {
+		if (this.state.isAuthenticated && !this.state.imageClickedTitle && !this.state.isCheckout) {
 			menuHideButton = (
 				<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
 					{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
 				</Fab>
 			);
+
+			if (!this.state.isAuthenticated) {
+				footerBar = (
+					<footer>
+						<AppBar className={classes.footer} position="static" color="default">
+							<Toolbar className={classes.toolbar__footer}>
+								<Copyright className={classes.icon} />
+								<Typography variant="caption" color="inherit">
+									2019 Marcin Delektowski
+								</Typography>
+							</Toolbar>
+						</AppBar>
+					</footer>
+				);
+			}
 		}
 
 		return (
@@ -470,21 +502,10 @@ class mainView extends Component {
 							</section>
 
 							<section>{imagesGenerator}</section>
-
-							<section>{checkout}</section>
 						</div>
 					</main>
 
-					<footer>
-						<AppBar className={classes.footer} position="static" color="default">
-							<Toolbar className={classes.toolbar__footer}>
-								<Copyright className={classes.icon} />
-								<Typography variant="caption" color="inherit">
-									2019 Marcin Delektowski
-								</Typography>
-							</Toolbar>
-						</AppBar>
-					</footer>
+					{footerBar}
 				</Layout>
 			</React.Fragment>
 		);

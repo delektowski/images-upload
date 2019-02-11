@@ -13,6 +13,7 @@ const Reset = (props) => {
 				isClickedRed: true
 			});
 		}
+		props.onMenuClose();
 	};
 	return (
 		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={resetUserSelection}>

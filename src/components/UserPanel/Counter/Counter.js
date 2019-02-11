@@ -1,5 +1,6 @@
 import React from 'react';
 import Payment from './Payment/Payment';
+import Checkout from '../Checkout/Checkout';
 import Filter from '../Filter/Filter';
 import { Paper, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
@@ -85,7 +86,9 @@ const counter = (props) => {
 		switch (elementColor) {
 			case 'green':
 				for (let imageTitle in props.imagesDataObj) {
-					if (props.imagesDataObj[imageTitle].isClickedGreen === true) amountOfElement++;
+					if (props.imagesDataObj[imageTitle].isClickedGreen === true) {
+						amountOfElement++;
+					}
 				}
 				return amountOfElement;
 			case 'blue':
@@ -124,109 +127,145 @@ const counter = (props) => {
 		}
 	};
 
-	return (
-		<React.Fragment>
-			<Paper className={classes.paper}>
-				<div className={classes.iconCaptionFilterContainer}>
-					<div className={[ classes.iconCaptionContainer, classes.green ].join(' ')}>
-						<div>
-							<ThumbUpAlt />
-							<Typography className={[ classes.iconCaption, classes.green ].join(' ')} variant="caption">
-								TAK
-							</Typography>
+	props.onAmountSelected(selectedElementsAmount('green'));
+	let paymentOnCheckout = null;
+	let paymentOnImagesSelect = null;
+	if (!props.isCheckout) {
+		paymentOnImagesSelect = (
+			<React.Fragment>
+				<Paper className={classes.paper}>
+					<div className={classes.iconCaptionFilterContainer}>
+						<div className={[ classes.iconCaptionContainer, classes.green ].join(' ')}>
+							<div>
+								<ThumbUpAlt />
+								<Typography
+									className={[ classes.iconCaption, classes.green ].join(' ')}
+									variant="caption"
+								>
+									TAK
+								</Typography>
+							</div>
+							<Avatar className={[ classes.avatar, classes.bgGreen ].join(' ')}>
+								<Typography className={classes.white} variant="caption">
+									{selectedElementsAmount('green')}
+								</Typography>
+							</Avatar>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgGreen ].join(' ')}>
-							<Typography className={classes.white} variant="caption">
-								{selectedElementsAmount('green')}
-							</Typography>
-						</Avatar>
+						<Filter
+							onFilterButtonsState={props.onFilterButtonsState}
+							filterClicked="greenClicked"
+							filterButtonsState={props.filterButtonsState}
+						/>
 					</div>
-					<Filter
-						onFilterButtonsState={props.onFilterButtonsState}
-						filterClicked="greenClicked"
-						filterButtonsState={props.filterButtonsState}
-					/>
-				</div>
 
-				<div className={classes.iconCaptionFilterContainer}>
-					<div className={[ classes.iconCaptionContainer, classes.blue ].join(' ')}>
-						<div>
-							<ThumbsUpDown />
-							<Typography className={[ classes.iconCaption, classes.blue ].join(' ')} variant="caption">
-								MOŻE
-							</Typography>
+					<div className={classes.iconCaptionFilterContainer}>
+						<div className={[ classes.iconCaptionContainer, classes.blue ].join(' ')}>
+							<div>
+								<ThumbsUpDown />
+								<Typography
+									className={[ classes.iconCaption, classes.blue ].join(' ')}
+									variant="caption"
+								>
+									MOŻE
+								</Typography>
+							</div>
+							<Avatar className={[ classes.avatar, classes.bgBlue ].join(' ')}>
+								<Typography className={classes.white} variant="caption">
+									{selectedElementsAmount('blue')}
+								</Typography>
+							</Avatar>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgBlue ].join(' ')}>
-							<Typography className={classes.white} variant="caption">
-								{selectedElementsAmount('blue')}
-							</Typography>
-						</Avatar>
+						<Filter
+							onFilterButtonsState={props.onFilterButtonsState}
+							filterClicked="blueClicked"
+							filterButtonsState={props.filterButtonsState}
+						/>
 					</div>
-					<Filter
-						onFilterButtonsState={props.onFilterButtonsState}
-						filterClicked="blueClicked"
-						filterButtonsState={props.filterButtonsState}
-					/>
-				</div>
 
-				<div className={classes.iconCaptionFilterContainer}>
-					<div className={[ classes.iconCaptionContainer, classes.red ].join(' ')}>
-						<div>
-							<ThumbDownAlt />
-							<Typography className={[ classes.iconCaption, classes.red ].join(' ')} variant="caption">
-								NIE
-							</Typography>
+					<div className={classes.iconCaptionFilterContainer}>
+						<div className={[ classes.iconCaptionContainer, classes.red ].join(' ')}>
+							<div>
+								<ThumbDownAlt />
+								<Typography
+									className={[ classes.iconCaption, classes.red ].join(' ')}
+									variant="caption"
+								>
+									NIE
+								</Typography>
+							</div>
+							<Avatar className={[ classes.avatar, classes.bgRed ].join(' ')}>
+								<Typography className={classes.white} variant="caption">
+									{selectedElementsAmount('red')}
+								</Typography>
+							</Avatar>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgRed ].join(' ')}>
-							<Typography className={classes.white} variant="caption">
-								{selectedElementsAmount('red')}
-							</Typography>
-						</Avatar>
+						<Filter
+							onFilterButtonsState={props.onFilterButtonsState}
+							filterClicked="redClicked"
+							filterButtonsState={props.filterButtonsState}
+						/>
 					</div>
-					<Filter
-						onFilterButtonsState={props.onFilterButtonsState}
-						filterClicked="redClicked"
-						filterButtonsState={props.filterButtonsState}
-					/>
-				</div>
 
-				<div className={classes.iconCaptionFilterContainer}>
-					<div
-						className={[
-							classes.iconCaptionContainer,
-							classes.iconCaptionContainerBig,
-							classes.orange
-						].join(' ')}
-					>
-						<div className={classes.captionContainer}>
-							<ChatBubble style={{ margin: '0 auto' }} />
-							<Typography className={[ classes.iconCaption, classes.orange ].join(' ')} variant="caption">
-								KOMENTARZ
-							</Typography>
+					<div className={classes.iconCaptionFilterContainer}>
+						<div
+							className={[
+								classes.iconCaptionContainer,
+								classes.iconCaptionContainerBig,
+								classes.orange
+							].join(' ')}
+						>
+							<div className={classes.captionContainer}>
+								<ChatBubble style={{ margin: '0 auto' }} />
+								<Typography
+									className={[ classes.iconCaption, classes.orange ].join(' ')}
+									variant="caption"
+								>
+									KOMENTARZ
+								</Typography>
+							</div>
+							<Avatar className={[ classes.avatar, classes.bgOrange ].join(' ')}>
+								<Typography className={classes.white} variant="caption">
+									{selectedElementsAmount('orange')}
+								</Typography>
+							</Avatar>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgOrange ].join(' ')}>
-							<Typography className={classes.white} variant="caption">
-								{selectedElementsAmount('orange')}
-							</Typography>
-						</Avatar>
+						<Filter
+							onFilterButtonsState={props.onFilterButtonsState}
+							filterButtonsState={props.filterButtonsState}
+							filterClicked="orangeClicked"
+						/>
 					</div>
-					<Filter
-						onFilterButtonsState={props.onFilterButtonsState}
-						filterButtonsState={props.filterButtonsState}
-						filterClicked="orangeClicked"
-					/>
-				</div>
-			</Paper>
+				</Paper>
+				<Payment
+					allSelectedAmount={selectedElementsAmount('all')}
+					selectedGreenAmount={selectedElementsAmount('green')}
+					freePicturesAmount={props.freePicturesAmount}
+					discountProcent={props.discountProcent}
+					picturePrice={props.picturePrice}
+					isCheckout={props.isCheckout}
+				/>
+			</React.Fragment>
+		);
+	}
 
-			<div className={classes.Counter} />
-
-			<Payment
+	if (props.isCheckout) {
+		paymentOnCheckout = (
+			<Checkout
+				isCheckout={props.isCheckout}
 				selectedGreenAmount={selectedElementsAmount('green')}
 				allSelectedAmount={selectedElementsAmount('all')}
 				freePicturesAmount={props.freePicturesAmount}
 				discountProcent={props.discountProcent}
 				picturePrice={props.picturePrice}
+				imagesDataObj={props.imagesDataObj}
 			/>
+		);
+	}
+
+	return (
+		<React.Fragment>
+			{paymentOnCheckout}
+			{paymentOnImagesSelect}
 		</React.Fragment>
 	);
 };

@@ -46,8 +46,8 @@ const styles = (theme) => ({
 
 class Login extends Component {
 	state = {
-		loginField: '',
-		passwordField: '',
+		loginField: 'zzz',
+		passwordField: 'zzzzzz',
 		errorLogin: ''
 	};
 
@@ -126,9 +126,6 @@ class Login extends Component {
 				<Fade in={true} timeout={2000}>
 					<main className={classes.main}>
 						<Paper className={classes.paper}>
-							<Typography component="h1" variant="h5">
-								Logowanie
-							</Typography>
 							<Typography color="secondary" variant="overline">
 								{this.state.errorLogin}
 							</Typography>

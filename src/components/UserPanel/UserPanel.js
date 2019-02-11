@@ -11,6 +11,10 @@ const UserPanel = (props) => {
 				picturePrice={props.picturePrice}
 				onFilterButtonsState={props.onFilterButtonsState}
 				filterButtonsState={props.filterButtonsState}
+				amountAll={props.amountAll}
+				isCheckout={props.isCheckout}
+				amountSelected={props.amountSelected}
+				onAmountSelected={props.onAmountSelected}
 			/>
 		</React.Fragment>
 	);
