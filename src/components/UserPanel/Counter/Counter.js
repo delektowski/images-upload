@@ -58,19 +58,19 @@ const styles = {
 		background: 'green'
 	},
 	red: {
-		color: 'rgb(98, 95, 90)'
+		color: 'rgb(0,0,0)'
 	},
 	bgRed: {
-		background: 'rgb(98, 95, 90)'
+		background: 'rgb(0,0,0)'
 	},
 	bgOrange: {
 		background: 'rgb(255,87,34)'
 	},
 	blue: {
-		color: 'rgb(63, 81, 181)'
+		color: 'rgb(158, 158, 158)'
 	},
 	bgBlue: {
-		background: 'rgb(63, 81, 181)'
+		background: 'rgb(158, 158, 158)'
 	},
 	white: {
 		color: 'white'

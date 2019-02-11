@@ -14,7 +14,7 @@ const menu = (props) => {
 	let checkout = null;
 	let selection = null;
 
-	if (!props.isAdminLogin) {
+	if (!props.isAdminLogin && !props.isCheckout) {
 		reset = (
 			<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
 				<Reset userName={props.userName} imagesDataObj={props.imagesDataObj} onMenuClose={props.onMenuClose} />

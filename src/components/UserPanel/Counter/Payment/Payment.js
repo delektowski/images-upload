@@ -14,8 +14,8 @@ const styles = (theme) => ({
 		width: '100%',
 		paddingLeft: 5,
 		paddingRight: 5,
-		paddingTop: 5,
-		paddingBottom: 5,
+		// paddingTop: 5,
+		// paddingBottom: 5,
 		[theme.breakpoints.down('xs')]: {
 			justifyContent: 'space-between'
 		}
@@ -50,8 +50,8 @@ const styles = (theme) => ({
 	bgRed: {
 		background: 'rgb(245, 0, 87)'
 	},
-	bgBlack: {
-		background: 'black'
+	bgPrimary: {
+		background: 'rgb(48, 63, 159)'
 	},
 	blue: {
 		color: 'rgb(63, 81, 181)'
@@ -67,6 +67,9 @@ const styles = (theme) => ({
 	},
 	white: {
 		color: 'white'
+	},
+	primary: {
+		color: 'rgb(48, 63, 159)'
 	}
 });
 
@@ -136,13 +139,13 @@ const Payment = (props) => {
 			<Paper className={classes.paper}>
 				{selectionPayment}
 				{checkoutPayment}
-				<div className={[ classes.iconCaptionContainer, classes.black ].join(' ')}>
+				<div className={[ classes.iconCaptionContainer, classes.primary ].join(' ')}>
 					<div>
-						<Typography className={[ classes.iconCaption, classes.black ].join(' ')} variant="caption">
+						<Typography className={[ classes.iconCaption, classes.primary ].join(' ')} variant="caption">
 							KOSZT WSZYSTKICH ZDJĘĆ
 						</Typography>
 					</div>
-					<Avatar className={[ classes.avatar, classes.bgBlack ].join(' ')}>
+					<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
 						<Typography className={classes.white} variant="caption">
 							{allImagesCost()} zł
 						</Typography>

@@ -75,7 +75,7 @@ const styles = {
 	},
 	drawerPaper: {
 		width: '100%',
-		height: 60,
+		height: 160,
 		overflow: 'visible',
 		border: 0,
 		background: 'rgba(0, 0, 0, 0)',
@@ -88,11 +88,7 @@ const styles = {
 		border: 0,
 		background: 'rgba(0, 0, 0, 0)'
 	},
-	paperNonDrawer: {
-		position: 'fixed',
-		width: '100%',
-		top: 50
-	},
+
 	menuLoginContainer: {
 		display: 'flex',
 		justifyContent: 'center',
@@ -114,14 +110,15 @@ const styles = {
 		height: 30,
 		width: 30
 	},
-	bgBlack: {
-		background: 'black'
+	bgPrimary: {
+		background: 'rgb(48, 63, 159)'
 	},
 	white: {
 		color: 'white'
 	},
 	iconCaption: {
-		fontSize: '.56rem'
+		fontSize: '.56rem',
+		color: 'rgb(48, 63, 159)'
 	}
 };
 
@@ -379,12 +376,12 @@ class mainView extends Component {
 				<React.Fragment>
 					<div className={classes.iconCaptionFilterContainer}>
 						<div className={classes.iconCaptionContainer}>
-							<BurstMode />
+							<BurstMode color="primary" />
 							<Typography className={classes.iconCaption} variant="caption">
 								ZDJĘCIA
 							</Typography>
 						</div>
-						<Avatar className={[ classes.avatar, classes.bgBlack ].join(' ')}>
+						<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
 							<Typography className={classes.white} variant="caption">
 								{this.state.amountAll}
 							</Typography>

@@ -5,11 +5,11 @@ import Payment from '../../UserPanel/Counter/Payment/Payment';
 
 const styles = (theme) => ({
 	container: {
-		background: 'whitesmoke',
-		marginTop: '10vh',
+		marginTop: 65,
 		width: '100%',
-		height: '90vh',
-		background: 'green'
+		height: 'auto',
+		overflow: 'hidden',
+		position: 'fixed'
 	},
 	imagesContainer: {
 		display: 'flex',
@@ -17,11 +17,10 @@ const styles = (theme) => ({
 		flexWrap: 'wrap',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginTop: 0,
+		marginTop: 160,
 		overflow: 'scroll',
-		height: '70vh',
-		width: '100%',
-		background: 'red'
+		height: `calc(${window.innerHeight}px - 160px)`,
+		width: '100%'
 	},
 	paymentContainer: {
 		width: '100%'
@@ -33,7 +32,6 @@ const styles = (theme) => ({
 	},
 	buttonsContainer: {
 		width: '100%',
-		background: 'purple',
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -43,43 +41,22 @@ const styles = (theme) => ({
 		padding: '1%',
 		margin: '0 auto',
 		width: '90%',
-		height: 80,
+		height: 60,
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		flexDirection: 'column',
-		background: 'yellow'
+		flexDirection: 'column'
 	},
 	image: {
 		width: 150,
 		[theme.breakpoints.down('xs')]: {
-			width: 100
+			width: 90
 		}
-	},
-	bgBlack: {
-		background: 'black'
 	}
 });
 
 const checkout = (props) => {
 	const { classes } = props;
-	const freePicturesAmount = props.freePicturesAmount;
-	const amountAll = props.allSelectedAmount;
-	const picturePrice = props.picturePrice;
-
-	const countPayPerImage = (howManySelected) => {
-		if (howManySelected > freePicturesAmount) {
-			return (howManySelected - freePicturesAmount) * picturePrice;
-		}
-		return 0;
-	};
-
-	const allImagesCost = () => {
-		const discount = (amountAll - freePicturesAmount) * picturePrice * (props.discountProcent / 100);
-		let price = Math.round((amountAll - freePicturesAmount) * picturePrice - discount);
-		if (price < 0) price = 0;
-		return price;
-	};
 
 	const getSelectedTitles = () => {
 		const selectedImages = [];
@@ -88,7 +65,6 @@ const checkout = (props) => {
 				selectedImages.push(imageTitle);
 			}
 		}
-
 		return selectedImages;
 	};
 
@@ -111,45 +87,36 @@ const checkout = (props) => {
 							variant="contained"
 							size="small"
 							color="primary"
-							className={[ classes.logout__button, classes.bgBlack ].join(' ')}
+							className={[ classes.logout__button ].join(' ')}
 							fullWidth
 							// onClick={(e) => this.onCreateUserHandler(e)}
 						>
 							<Typography variant="overline" />
 							wszystkie zdjęcia
 						</Button>
-						<Typography variant="overline" style={{ fontSize: '.5rem' }}>
-							<strong>koszt: {allImagesCost()} zł </strong>{' '}
-						</Typography>
 					</div>
 					<div className={classes.buttonContainer}>
 						<Button
 							variant="contained"
 							size="small"
-							color="primary"
 							className={classes.logout__button}
 							fullWidth
 							color="secondary"
 							// onClick={(e) => this.onCreateUserHandler(e)}
-							// disabled={!(this.state.userValidation && this.state.passwordValidation)}
 						>
 							<Typography variant="overline" />
 							darmowe + dodatkowe zdjęcia
 						</Button>
-						<Typography variant="overline" style={{ fontSize: '.5rem' }}>
-							<strong>koszt: {countPayPerImage(props.selectedGreenAmount)} zł </strong>{' '}
-						</Typography>
 					</div>
 				</div>
-
-				<div className={[ classes.paper, classes.imagesContainer ].join(' ')}>
-					{getSelectedTitles().map((ele) => (
-						<figure key={ele}>
-							<img className={classes.image} src={props.imagesDataObj[ele].path} alt={ele} />
-							<figcaption style={{ textAlign: 'center', fontSize: '.7rem' }}>{ele}</figcaption>
-						</figure>
-					))}
-				</div>
+			</div>
+			<div className={[ classes.paper, classes.imagesContainer ].join(' ')}>
+				{getSelectedTitles().map((ele) => (
+					<figure key={ele}>
+						<img className={classes.image} src={props.imagesDataObj[ele].path} alt={ele} />
+						<figcaption style={{ textAlign: 'center', fontSize: '.7rem' }}>{ele}</figcaption>
+					</figure>
+				))}
 			</div>
 		</React.Fragment>
 	);

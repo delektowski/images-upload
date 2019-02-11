@@ -31,7 +31,7 @@ const styles = (theme) => ({
 	cardRed: {
 		width: 400,
 		margin: '1%',
-		background: 'rgb(235, 235, 234)',
+		background: 'rgb(194, 194, 194)',
 		transition: 'all .3s ease-in-out'
 	},
 	cardGreen: {
@@ -43,7 +43,7 @@ const styles = (theme) => ({
 	cardBlue: {
 		width: 400,
 		margin: '1%',
-		background: 'rgb(212, 216, 236)',
+		background: 'rgb(235, 235, 234)',
 		transition: 'all .3s ease-in-out'
 	},
 	media: {
@@ -58,7 +58,7 @@ const styles = (theme) => ({
 		justifyContent: 'space-around'
 	},
 	borderRed: {
-		border: '4px solid rgba(98, 95, 90, 0.707)',
+		border: '4px solid rgb(73, 73, 73)',
 		transition: 'all .3s ease-in-out'
 	},
 	borderGreen: {
@@ -66,7 +66,7 @@ const styles = (theme) => ({
 		transition: 'all .3s ease-in-out'
 	},
 	borderBlue: {
-		border: '4px solid rgba(63, 81, 181)',
+		border: '4px solid rgb(235, 235, 234)',
 		transition: 'all .3s ease-in-out'
 	},
 	imageTitle: {
@@ -81,11 +81,11 @@ const styles = (theme) => ({
 		transition: 'all .3s ease-in-out'
 	},
 	thumbsUpDown: {
-		color: 'rgba(63, 81, 181)',
+		color: 'rgb(158, 158, 158)',
 		transition: 'all .3s ease-in-out'
 	},
 	thumbDownAlt: {
-		color: 'rgba(98, 95, 90, 0.307)',
+		color: 'rgb(0, 0, 0)',
 		transition: 'all .3s ease-in-out'
 	},
 	buttonsContainer: {
@@ -437,13 +437,31 @@ class Image extends Component {
 
 							<CardActions className={classes.actions}>
 								<IconButton onClick={() => this.buttonClickHandler('green')}>
-									<ThumbUpAlt className={this.state.isClickedGreen ? classes.thumbUpAlt : null} />
+									<ThumbUpAlt
+										className={
+											this.state.isClickedGreen && !this.state.isClickedRed ? (
+												classes.thumbUpAlt
+											) : null
+										}
+									/>
 								</IconButton>
 								<IconButton onClick={() => this.buttonClickHandler('blue')}>
-									<ThumbsUpDown className={this.state.isClickedBlue ? classes.thumbsUpDown : null} />
+									<ThumbsUpDown
+										className={
+											this.state.isClickedBlue && !this.state.isClickedRed ? (
+												classes.thumbsUpDown
+											) : null
+										}
+									/>
 								</IconButton>
 								<IconButton onClick={() => this.buttonClickHandler('red')}>
-									<ThumbDownAlt className={this.state.borderRed ? classes.thumbDownAlt : null} />
+									<ThumbDownAlt
+										className={
+											!this.state.isClickedGreen && !this.state.isClickedBlue ? (
+												classes.thumbDownAlt
+											) : null
+										}
+									/>
 								</IconButton>
 								<IconButton
 									onClick={this.handleExpandClick}

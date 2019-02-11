@@ -28,15 +28,15 @@ const styles = (theme) => ({
 		}
 	},
 	blueClicked: {
-		color: 'rgb(63, 81, 181)',
+		color: 'rgb(158, 158, 158)',
 		'&$checked': {
-			color: 'rgb(63, 81, 181)'
+			color: 'rgb(158, 158, 158)'
 		}
 	},
 	redClicked: {
-		color: 'rgb(98, 95, 90)',
+		color: 'rgb(0,0,0)',
 		'&$checked': {
-			color: 'rgb(98, 95, 90)'
+			color: 'rgb(0,0,0)'
 		}
 	},
 
