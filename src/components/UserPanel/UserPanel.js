@@ -15,6 +15,7 @@ const UserPanel = (props) => {
 				isCheckout={props.isCheckout}
 				amountSelected={props.amountSelected}
 				onAmountSelected={props.onAmountSelected}
+				allImagesTitles={props.allImagesTitles}
 			/>
 		</React.Fragment>
 	);

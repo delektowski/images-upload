@@ -6,7 +6,6 @@ import deepPurple from '@material-ui/core/colors/deepPurple';
 const styles = (theme) => ({
 	paper: {
 		background: 'whitesmoke',
-		// marginTop: '1%',
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -14,8 +13,6 @@ const styles = (theme) => ({
 		width: '100%',
 		paddingLeft: 5,
 		paddingRight: 5,
-		// paddingTop: 5,
-		// paddingBottom: 5,
 		[theme.breakpoints.down('xs')]: {
 			justifyContent: 'space-between'
 		}
@@ -75,24 +72,6 @@ const styles = (theme) => ({
 
 const Payment = (props) => {
 	const { classes } = props;
-	const freePicturesAmount = props.freePicturesAmount;
-	const amountAll = props.allSelectedAmount;
-	const picturePrice = props.picturePrice;
-
-	const countPayPerImage = (howManySelected) => {
-		if (howManySelected > freePicturesAmount) {
-			return (howManySelected - freePicturesAmount) * picturePrice;
-		}
-		return 0;
-	};
-
-	const allImagesCost = () => {
-		const discount = (amountAll - freePicturesAmount) * picturePrice * (props.discountProcent / 100);
-		let price = Math.round((amountAll - freePicturesAmount) * picturePrice - discount);
-		if (price < 0) price = 0;
-		return price;
-	};
-
 	let selectionPayment = null;
 	let checkoutPayment = null;
 
@@ -106,11 +85,7 @@ const Payment = (props) => {
 				</div>
 				<Avatar className={[ classes.avatar, classes.bgDeepPurple ].join(' ')}>
 					<Typography className={classes.white} variant="caption">
-						{freePicturesAmount - props.selectedGreenAmount > 0 ? (
-							freePicturesAmount - props.selectedGreenAmount
-						) : (
-							0
-						)}
+						{props.countFreePictures}
 					</Typography>
 				</Avatar>
 			</div>
@@ -127,7 +102,7 @@ const Payment = (props) => {
 				</div>
 				<Avatar className={[ classes.avatar, classes.bgGreen ].join(' ')}>
 					<Typography className={classes.white} variant="caption">
-						{props.selectedGreenAmount}
+						{props.selectedImages}
 					</Typography>
 				</Avatar>
 			</div>
@@ -147,7 +122,7 @@ const Payment = (props) => {
 					</div>
 					<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
 						<Typography className={classes.white} variant="caption">
-							{allImagesCost()} zł
+							{props.allImagesCost} zł
 						</Typography>
 					</Avatar>
 				</div>
@@ -155,12 +130,12 @@ const Payment = (props) => {
 					className={[ classes.iconCaptionContainer, classes.iconCaptionContainerBig, classes.red ].join(' ')}
 				>
 					<Typography className={[ classes.iconCaption, classes.red ].join(' ')} variant="caption">
-						KOSZT DODATKOWYCH ZDJĘĆ <br /> <strong>{picturePrice} zł/szt.</strong>
+						KOSZT DODATKOWYCH ZDJĘĆ <br /> <strong>{props.picturePrice} zł/szt.</strong>
 					</Typography>
 
 					<Avatar className={[ classes.avatar, classes.bgRed ].join(' ')}>
 						<Typography className={classes.white} variant="caption">
-							{countPayPerImage(props.selectedGreenAmount)} zł
+							{props.countPayPerImage} zł
 						</Typography>
 					</Avatar>
 				</div>

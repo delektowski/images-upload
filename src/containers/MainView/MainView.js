@@ -5,14 +5,19 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import UserPanel from '../../components/UserPanel/UserPanel';
 import Menu from '../../components/Shared/Menu/Menu';
+import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
+import Spinner from '../../components/Shared/Spinner/Spinner';
 
 import { AppBar, Toolbar, Typography, Paper, Fab, Drawer, Avatar } from '@material-ui/core/';
+
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
 import BurstMode from '@material-ui/icons/BurstMode';
+
+import { Route } from 'react-router-dom';
 
 const styles = {
 	mainView: {},
@@ -119,6 +124,23 @@ const styles = {
 	iconCaption: {
 		fontSize: '.56rem',
 		color: 'rgb(48, 63, 159)'
+	},
+	zindexNegative: {
+		zIndex: -1
+	},
+	route: {
+		background: 'green',
+		width: 200,
+		height: 100
+	},
+	modal: {
+		zIndex: 200,
+		width: '100%',
+		height: '100%',
+		position: 'fixed',
+		background: 'rgba(114, 114, 114, 0)',
+		pointerEvents: 'none',
+		overflow: 'hidden'
 	}
 };
 
@@ -151,7 +173,8 @@ class mainView extends Component {
 		imageClickedTitle: '',
 		anchorEl: null,
 		amountAll: 0,
-		amountSelected: 0
+		amountSelected: 0,
+		isModalSpinner: false
 	};
 
 	componentDidUpdate() {
@@ -276,8 +299,21 @@ class mainView extends Component {
 		this.setState({ isCheckout: false });
 	};
 
+	onAuthenticationHandler = () => {
+		this.setState({ isAuthenticated: true });
+	};
+
+	allImagesTitlesHandler = () => {
+		return this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).join('", "') : '';
+	};
+
+	onModalSpinnerHandler = (value) => {
+		this.setState({ isModalSpinner: value });
+	};
+
 	render() {
 		const { classes } = this.props;
+
 		let adminPanel = null;
 		let userPanel = null;
 		let login = null;
@@ -334,6 +370,7 @@ class mainView extends Component {
 						amountAll={this.state.amountAll}
 						isCheckout={this.state.isCheckout}
 						onAmountSelected={this.onAmountSelectedHandler}
+						allImagesTitles={this.allImagesTitlesHandler}
 					/>
 				</React.Fragment>
 			);
@@ -347,7 +384,7 @@ class mainView extends Component {
 					loginClicked={() => this.setState({ isLoginClicked: false })}
 					onChangeUserName={(userName) => this.setState({ userName: userName })}
 					isCreateUserLogin={this.state.createUserLogin}
-					isAuthenticated={() => this.setState({ isAuthenticated: true })}
+					isAuthenticated={this.onAuthenticationHandler}
 					onLoginDataPass={(imagesDataObj, freePicturesAmount, picturePrice, discountProcent) =>
 						this.onLoginDataPass(imagesDataObj, freePicturesAmount, picturePrice, discountProcent)}
 				/>
@@ -407,6 +444,7 @@ class mainView extends Component {
 					isImageLarge={this.state.imageClickedTitle}
 					ImageClickedTitle={this.state.imageClickedTitle}
 					onImageLargeClose={this.imageLargeCloseHandler}
+					onModalSpinner={this.onModalSpinnerHandler}
 				/>
 			);
 		}
@@ -417,92 +455,110 @@ class mainView extends Component {
 					{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
 				</Fab>
 			);
-
-			if (!this.state.isAuthenticated) {
-				footerBar = (
-					<footer>
-						<AppBar className={classes.footer} position="static" color="default">
-							<Toolbar className={classes.toolbar__footer}>
-								<Copyright className={classes.icon} />
-								<Typography variant="caption" color="inherit">
-									2019 Marcin Delektowski
-								</Typography>
-							</Toolbar>
-						</AppBar>
-					</footer>
-				);
-			}
 		}
+		if (!this.state.isAuthenticated) {
+			footerBar = (
+				<AppBar className={classes.footer} position="static" color="default">
+					<Toolbar className={classes.toolbar__footer}>
+						<Copyright className={classes.icon} />
+						<Typography variant="caption" color="inherit">
+							2019 Marcin Delektowski
+						</Typography>
+					</Toolbar>
+				</AppBar>
+			);
+		}
+
+		console.count('MAINVIEW');
 
 		return (
 			<React.Fragment>
 				<Layout>
-					<header>
-						{menuHideButton}
-						<Drawer
-							transitionDuration={500}
-							variant="persistent"
-							anchor="left"
-							open={this.state.isDrawerOpen}
-							classes={{
-								paper: classes.drawerPaperMenu
-							}}
-						>
-							<AppBar className={classes.header} position="static" color="default">
-								<Toolbar className={classes.toolbar__header}>
-									<div>
-										<Typography className={classes.appTitle} variant="overline" color="inherit">
-											Peek
-										</Typography>
-										<Typography className={classes.appTitle} variant="overline" color="inherit">
-											Pick
-										</Typography>
-										<Typography className={classes.appTitle} variant="overline" color="inherit">
-											Pic
-										</Typography>
-									</div>
-									{amountAllIcon}
-									{reset}
-									<div className={classes.menuLoginContainer}>
-										<div className={classes.icon__loginContainer}>
-											<AccountCircle className={classes.icon__login} />
-											<Typography variant="caption">{this.state.userName}</Typography>
+					<div className={this.state.isModalSpinner ? classes.modal : null}>
+						<Spinner isModalSpinner={this.state.isModalSpinner} />
+						<header>
+							{menuHideButton}
+							<Drawer
+								transitionDuration={500}
+								variant="persistent"
+								anchor="left"
+								open={this.state.isDrawerOpen}
+								classes={{
+									paper: classes.drawerPaperMenu
+								}}
+							>
+								<AppBar className={classes.header} position="static" color="default">
+									<Toolbar className={classes.toolbar__header}>
+										<div>
+											<Typography className={classes.appTitle} variant="overline" color="inherit">
+												Peek
+											</Typography>
+											<Typography className={classes.appTitle} variant="overline" color="inherit">
+												Pick
+											</Typography>
+											<Typography className={classes.appTitle} variant="overline" color="inherit">
+												Pic
+											</Typography>
 										</div>
-										{menu}
-									</div>
-								</Toolbar>
-							</AppBar>
-						</Drawer>
-					</header>
+										{amountAllIcon}
+										{reset}
+										<div className={classes.menuLoginContainer}>
+											<div className={classes.icon__loginContainer}>
+												<AccountCircle className={classes.icon__login} />
+												<Typography variant="caption">{this.state.userName}</Typography>
+											</div>
+											{menu}
+										</div>
+									</Toolbar>
+								</AppBar>
+							</Drawer>
+						</header>
 
-					<main>
-						<div className={classes.mainView}>
-							<section>
-								{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
-								{login}
-							</section>
+						<main>
+							<div className={classes.mainView}>
+								<section>
+									<Route
+										path="/confirmation"
+										render={() => {
+											return <Confirmation open={true} />;
+										}}
+									/>
 
-							<section>{adminPanel}</section>
+									{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
+									<Route
+										path="/"
+										exact
+										render={() => {
+											return login;
+										}}
+									/>
+								</section>
 
-							<section>
-								<Drawer
-									transitionDuration={500}
-									variant="persistent"
-									anchor="left"
-									open={this.state.isDrawerOpen}
-									classes={{
-										paper: classes.drawerPaper
-									}}
-								>
-									<Paper>{userPanel}</Paper>
-								</Drawer>
-							</section>
+								<section>{adminPanel}</section>
 
-							<section>{imagesGenerator}</section>
-						</div>
-					</main>
+								<section>
+									<Drawer
+										transitionDuration={500}
+										variant="persistent"
+										anchor="left"
+										open={this.state.isDrawerOpen}
+										classes={{
+											paper: [
+												classes.drawerPaper,
+												this.state.isAdminLogin ? classes.zindexNegative : null
+											].join(' ')
+										}}
+									>
+										<Paper>{userPanel}</Paper>
+									</Drawer>
+								</section>
 
-					{footerBar}
+								<section>{imagesGenerator}</section>
+							</div>
+						</main>
+
+						<footer>{footerBar}</footer>
+					</div>
 				</Layout>
 			</React.Fragment>
 		);

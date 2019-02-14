@@ -8,6 +8,8 @@ import 'firebase/database';
 
 const styles = (theme) => ({
 	main: {
+		position: 'relative',
+		zIndex: 1200,
 		marginTop: 100,
 		width: 'auto',
 		marginLeft: theme.spacing.unit * 3,
@@ -46,8 +48,8 @@ const styles = (theme) => ({
 
 class Login extends Component {
 	state = {
-		loginField: 'zzz',
-		passwordField: 'zzzzzz',
+		loginField: 'klf',
+		passwordField: 'klfklf',
 		errorLogin: ''
 	};
 
@@ -64,6 +66,7 @@ class Login extends Component {
 						this.props.loginClicked();
 					} else {
 						this.props.isAuthenticated();
+
 						this.props.onChangeUserName(this.state.loginField);
 					}
 				})
@@ -74,7 +77,7 @@ class Login extends Component {
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
-					userNameDbElement.on('value', (snapshot) => {
+					userNameDbElement.once('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
 

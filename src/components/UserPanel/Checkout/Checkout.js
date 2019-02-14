@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button } from '@material-ui/core/';
+import { Button } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import Payment from '../../UserPanel/Counter/Payment/Payment';
 
@@ -40,12 +40,7 @@ const styles = (theme) => ({
 	buttonContainer: {
 		padding: '1%',
 		margin: '0 auto',
-		width: '90%',
-		height: 60,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		flexDirection: 'column'
+		width: '90%'
 	},
 	image: {
 		width: 150,
@@ -73,40 +68,68 @@ const checkout = (props) => {
 			<div className={classes.container}>
 				<div className={classes.paymentContainer}>
 					<Payment
-						allSelectedAmount={props.allSelectedAmount}
-						selectedGreenAmount={props.selectedGreenAmount}
-						freePicturesAmount={props.freePicturesAmount}
-						discountProcent={props.discountProcent}
+						countPayPerImage={props.countPayPerImage}
+						allImagesCost={props.allImagesCost}
+						countFreePictures={props.countFreePictures}
 						picturePrice={props.picturePrice}
+						selectedImages={props.selectedImages}
 						isCheckout={props.isCheckout}
 					/>
 				</div>
 				<div className={classes.buttonsContainer}>
-					<div className={classes.buttonContainer}>
+					<form
+						className={classes.buttonContainer}
+						action="https://jumprock.co/mail/peekpickpic"
+						method="post"
+					>
+						<input
+							style={{ display: 'none' }}
+							type="text"
+							name="message"
+							value={`*** TYTUŁY ZDJĘĆ: "${props.allImagesTitles()}" *** WYBRANA OPCJA: "wszystkie zdjęcia" *** KOSZT: ${props.allImagesCost} zł ***`}
+							placeholder="message"
+							readOnly
+						/>
 						<Button
 							variant="contained"
 							size="small"
+							type="submit"
 							color="primary"
 							className={[ classes.logout__button ].join(' ')}
 							fullWidth
-							// onClick={(e) => this.onCreateUserHandler(e)}
 						>
-							<Typography variant="overline" />
-							wszystkie zdjęcia
+							wybieram: wszystkie zdjęcia
 						</Button>
-					</div>
+						<input type="hidden" name="after" value="http://localhost:3000/confirmation" />
+					</form>
 					<div className={classes.buttonContainer}>
-						<Button
-							variant="contained"
-							size="small"
-							className={classes.logout__button}
-							fullWidth
-							color="secondary"
-							// onClick={(e) => this.onCreateUserHandler(e)}
+						<form
+							className={classes.buttonContainer}
+							action="https://jumprock.co/mail/peekpickpic"
+							method="post"
 						>
-							<Typography variant="overline" />
-							darmowe + dodatkowe zdjęcia
-						</Button>
+							<input
+								style={{ display: 'none' }}
+								type="text"
+								name="message"
+								value={`*** TYTUŁY ZDJĘĆ: "${getSelectedTitles().join(
+									'" , "'
+								)}" *** WYBRANA OPCJA: "darmowe + dodatkowe zdjęcia" *** KOSZT: ${props.countPayPerImage} zł ***`}
+								placeholder="message"
+								readOnly
+							/>
+							<Button
+								variant="contained"
+								size="small"
+								type="submit"
+								className={classes.logout__button}
+								fullWidth
+								color="secondary"
+							>
+								wybieram: darmowe + dodatkowe zdjęcia
+							</Button>
+							<input type="hidden" name="after" value="http://localhost:3000/confirmation" />
+						</form>
 					</div>
 				</div>
 			</div>

@@ -127,7 +127,31 @@ const counter = (props) => {
 		}
 	};
 
+	const freePicturesAmount = props.freePicturesAmount;
+	const amountAll = selectedElementsAmount('all');
+	const picturePrice = props.picturePrice;
+
+	const countPayPerImage = (howManySelected) => {
+		if (howManySelected > freePicturesAmount) {
+			return (howManySelected - freePicturesAmount) * picturePrice;
+		}
+		return 0;
+	};
+
+	const allImagesCost = () => {
+		const discount = (amountAll - freePicturesAmount) * picturePrice * (props.discountProcent / 100);
+		let price = Math.round((amountAll - freePicturesAmount) * picturePrice - discount);
+		if (price < 0) price = 0;
+		return price;
+	};
+
+	const countFreePictures =
+		freePicturesAmount - selectedElementsAmount('green') > 0
+			? freePicturesAmount - selectedElementsAmount('green')
+			: 0;
+
 	props.onAmountSelected(selectedElementsAmount('green'));
+
 	let paymentOnCheckout = null;
 	let paymentOnImagesSelect = null;
 	if (!props.isCheckout) {
@@ -237,10 +261,9 @@ const counter = (props) => {
 					</div>
 				</Paper>
 				<Payment
-					allSelectedAmount={selectedElementsAmount('all')}
-					selectedGreenAmount={selectedElementsAmount('green')}
-					freePicturesAmount={props.freePicturesAmount}
-					discountProcent={props.discountProcent}
+					countPayPerImage={countPayPerImage(selectedElementsAmount('green'))}
+					allImagesCost={allImagesCost()}
+					countFreePictures={countFreePictures}
 					picturePrice={props.picturePrice}
 					isCheckout={props.isCheckout}
 				/>
@@ -251,13 +274,14 @@ const counter = (props) => {
 	if (props.isCheckout) {
 		paymentOnCheckout = (
 			<Checkout
-				isCheckout={props.isCheckout}
-				selectedGreenAmount={selectedElementsAmount('green')}
-				allSelectedAmount={selectedElementsAmount('all')}
-				freePicturesAmount={props.freePicturesAmount}
-				discountProcent={props.discountProcent}
+				countPayPerImage={countPayPerImage(selectedElementsAmount('green'))}
+				allImagesCost={allImagesCost()}
+				countFreePictures={countFreePictures}
 				picturePrice={props.picturePrice}
+				selectedImages={selectedElementsAmount('green')}
+				isCheckout={props.isCheckout}
 				imagesDataObj={props.imagesDataObj}
+				allImagesTitles={props.allImagesTitles}
 			/>
 		);
 	}

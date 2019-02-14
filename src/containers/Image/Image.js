@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import firebase from 'firebase/app';
 import Swipe from 'react-easy-swipe';
 import 'firebase/database';
@@ -121,7 +121,7 @@ const styles = (theme) => ({
 	}
 });
 
-class Image extends Component {
+class Image extends PureComponent {
 	state = {
 		containerColor: '',
 		isClickedGreen: false,
@@ -357,6 +357,8 @@ class Image extends Component {
 	};
 
 	render() {
+		console.count('IMAGE');
+
 		const { classes } = this.props;
 		let image = null;
 		let borderColor = 'borderRed';
@@ -422,8 +424,8 @@ class Image extends Component {
 								onSwipeEnd={this.onSwipeEnd}
 							>
 								<CardMedia
-									onMouseEnter={this.onHoverHandler}
-									onMouseLeave={this.onHoverHandler}
+									// onMouseEnter={this.onHoverHandler}
+									// onMouseLeave={this.onHoverHandler}
 									component="img"
 									onClick={() => this.props.onImageClick(this.state.imageId)}
 									className={[

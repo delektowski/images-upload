@@ -23,11 +23,11 @@ const styles = (theme) => ({
 });
 
 const imagesGenerator = (props) => {
+	console.count('IMAGESGENERATOR');
 	const { classes } = props;
 	let imagesPaths = [];
 	let imagesTitlesPaths;
 	const imagesDataObj = props.imagesDataObj;
-
 	if (imagesDataObj !== null) {
 		//Filter pictures based on filter button state
 		const imagesDataObjArr = [];
@@ -67,8 +67,12 @@ const imagesGenerator = (props) => {
 			});
 			return sum.concat({ [current]: img[0] });
 		}, []);
+		const imagesAmount = imageTitleArr.length;
+		imagesTitlesPaths = imageTitleArr.map((element, imageNumber) => {
+			if (imageNumber === imagesAmount) {
+				props.onModalSpinner(false);
+			}
 
-		imagesTitlesPaths = imageTitleArr.map((element) => {
 			return (
 				<React.Fragment key={Object.keys(element)}>
 					<Image

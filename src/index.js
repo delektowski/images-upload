@@ -8,12 +8,12 @@ import 'firebase/database';
 
 // Initialize Firebase
 const config = {
-	apiKey: 'AIzaSyCj6Pdybp3u5NdOUGzCK8ly2UnjtKoRfMs',
-	authDomain: 'hooks-b96d6.firebaseapp.com',
-	databaseURL: 'https://hooks-b96d6.firebaseio.com',
-	projectId: 'hooks-b96d6',
-	storageBucket: 'hooks-b96d6.appspot.com',
-	messagingSenderId: '114520526525'
+	apiKey: 'AIzaSyAUKm2cb6xXRKoIi6lUsrJkSARfzYryXNk',
+	authDomain: 'peekpickpic.firebaseapp.com',
+	databaseURL: 'https://peekpickpic.firebaseio.com',
+	projectId: 'peekpickpic',
+	storageBucket: 'peekpickpic.appspot.com',
+	messagingSenderId: '39879741826'
 };
 firebase.initializeApp(config);
 
