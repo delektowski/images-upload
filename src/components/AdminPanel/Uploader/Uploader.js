@@ -106,7 +106,7 @@ class Uploader extends Component {
 						Wyślij
 					</Button>
 					<DropzoneArea
-						filesLimit={999}
+						filesLimit={21}
 						showPreviewsInDropzone={false}
 						showPreviews={true}
 						dropzoneText={'Przeciągnij i upuść zdjęcia albo kliknij aby dodać'}

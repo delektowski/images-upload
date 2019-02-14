@@ -357,8 +357,6 @@ class Image extends PureComponent {
 	};
 
 	render() {
-		console.count('IMAGE');
-
 		const { classes } = this.props;
 		let image = null;
 		let borderColor = 'borderRed';

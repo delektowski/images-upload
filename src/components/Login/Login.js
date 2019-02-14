@@ -7,7 +7,7 @@ import 'firebase/storage';
 import 'firebase/database';
 
 const styles = (theme) => ({
-	main: {
+	container: {
 		position: 'relative',
 		zIndex: 1200,
 		marginTop: 100,
@@ -48,8 +48,8 @@ const styles = (theme) => ({
 
 class Login extends Component {
 	state = {
-		loginField: 'klf',
-		passwordField: 'klfklf',
+		loginField: 'test',
+		passwordField: 'testtest',
 		errorLogin: ''
 	};
 
@@ -77,7 +77,7 @@ class Login extends Component {
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
-					userNameDbElement.once('value', (snapshot) => {
+					userNameDbElement.on('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
 
@@ -127,7 +127,7 @@ class Login extends Component {
 		return (
 			<React.Fragment>
 				<Fade in={true} timeout={2000}>
-					<main className={classes.main}>
+					<div className={classes.container}>
 						<Paper className={classes.paper}>
 							<Typography color="secondary" variant="overline">
 								{this.state.errorLogin}
@@ -172,7 +172,7 @@ class Login extends Component {
 								Zaloguj
 							</Button>
 						</Paper>
-					</main>
+					</div>
 				</Fade>
 			</React.Fragment>
 		);

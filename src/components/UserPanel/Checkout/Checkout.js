@@ -20,14 +20,18 @@ const styles = (theme) => ({
 		marginTop: 160,
 		overflow: 'scroll',
 		height: `calc(${window.innerHeight}px - 160px)`,
-		width: '100%'
+		width: '100%',
+		[theme.breakpoints.down('xs')]: {
+			marginTop: 180
+		}
 	},
 	paymentContainer: {
 		width: '100%'
 	},
 	logout__button: {
 		[theme.breakpoints.down('xs')]: {
-			height: 60
+			height: 60,
+			fontSize: '.7rem'
 		}
 	},
 	buttonsContainer: {
