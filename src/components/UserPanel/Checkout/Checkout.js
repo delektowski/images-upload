@@ -22,7 +22,7 @@ const styles = (theme) => ({
 		height: `calc(${window.innerHeight}px - 160px)`,
 		width: '100%',
 		[theme.breakpoints.down('xs')]: {
-			marginTop: 180
+			paddingTop: 10
 		}
 	},
 	paymentContainer: {
