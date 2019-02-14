@@ -172,7 +172,6 @@ class mainView extends Component {
 		isFooterHidden: false,
 		imageClickedTitle: '',
 		anchorEl: null,
-		amountAll: 0,
 		amountSelected: 0,
 		isModalSpinner: false
 	};
@@ -192,14 +191,6 @@ class mainView extends Component {
 					orangeClicked: false
 				}
 			});
-		}
-
-		if (this.state.imagesDataObj && this.state.imagesDataObj !== null) {
-			const amountAll = Object.keys(this.state.imagesDataObj).length;
-
-			if (amountAll !== this.state.amountAll) {
-				this.setState({ amountAll });
-			}
 		}
 	}
 
@@ -240,8 +231,7 @@ class mainView extends Component {
 			isDrawerOpen: true,
 			isFooterHidden: false,
 			imageClickedTitle: '',
-			anchorEl: null,
-			amountAll: 0
+			anchorEl: null
 		});
 	};
 
@@ -367,7 +357,6 @@ class mainView extends Component {
 						picturePrice={this.state.picturePrice}
 						onLogoutHandler={this.onLogoutHandler}
 						isDrawerOpen={this.state.isDrawerOpen}
-						amountAll={this.state.amountAll}
 						isCheckout={this.state.isCheckout}
 						onAmountSelected={this.onAmountSelectedHandler}
 						allImagesTitles={this.allImagesTitlesHandler}
@@ -420,7 +409,7 @@ class mainView extends Component {
 						</div>
 						<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
 							<Typography className={classes.white} variant="caption">
-								{this.state.amountAll}
+								{Object.keys(this.state.imagesDataObj).length}
 							</Typography>
 						</Avatar>
 					</div>
