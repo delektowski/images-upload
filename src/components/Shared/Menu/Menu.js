@@ -8,8 +8,7 @@ import { Menu, MenuItem } from '@material-ui/core/';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const menu = (props) => {
-	console.log('menu');
-
+	console.count('MENU');
 	const isMenuOpen = Boolean(props.isMenuOpen);
 	const anchorEl = props.isMenuOpen;
 	let reset = null;

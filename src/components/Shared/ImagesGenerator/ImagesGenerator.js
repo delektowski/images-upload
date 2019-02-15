@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import Image from '../../../containers/Image/Image';
 import { withStyles } from '@material-ui/core/styles';
 import ModalImage from '../../../containers/ModalImage/ModalImage';
@@ -22,102 +22,104 @@ const styles = (theme) => ({
 	}
 });
 
-const imagesGenerator = (props) => {
-	console.count('IMAGESGENERATOR');
-	const { classes } = props;
-	let imagesPaths = [];
-	let imagesTitlesPaths;
-	const imagesDataObj = props.imagesDataObj;
-	if (imagesDataObj !== null) {
-		//Filter pictures based on filter button state
-		const imagesDataObjArr = [];
-		const greenClicked = props.filterButtonsState.greenClicked;
-		const blueClicked = props.filterButtonsState.blueClicked;
-		const redClicked = props.filterButtonsState.redClicked;
-		const orangeClicked = props.filterButtonsState.orangeClicked;
-		for (const prop in imagesDataObj) {
-			imagesDataObjArr.push({ [prop]: imagesDataObj[prop] });
-		}
-
-		const imagesDataObjFiltered = imagesDataObjArr
-			.filter((element) => {
-				const isFilterGreenClicked = greenClicked ? element[Object.keys(element)].isClickedGreen : null;
-				const isFilterBlueClicked = blueClicked ? element[Object.keys(element)].isClickedBlue : null;
-				const isFilterOrangeClicked = orangeClicked ? element[Object.keys(element)].comment : null;
-				let isFilterRedClicked = redClicked
-					? true &&
-						!element[Object.keys(element)].isClickedGreen &&
-						!element[Object.keys(element)].isClickedBlue
-					: null;
-
-				return isFilterGreenClicked || isFilterBlueClicked || isFilterRedClicked || isFilterOrangeClicked;
-			})
-			.map((e) => Object.keys(e)[0]);
-
-		// Link picture title with exact picture file
-		for (const prop in imagesDataObj) {
-			const imagePath = imagesDataObj[prop].path;
-			imagesPaths.push(imagePath);
-		}
-
-		const imageTitleArr = imagesDataObjFiltered.reduce((sum, current) => {
-			const img = imagesPaths.filter((image) => {
-				let patt = new RegExp(current, 'g');
-				return patt.test(image);
-			});
-			return sum.concat({ [current]: img[0] });
-		}, []);
-		const imagesAmount = imageTitleArr.length;
-		imagesTitlesPaths = imageTitleArr.map((element, imageNumber) => {
-			if (imageNumber === imagesAmount) {
-				props.onModalSpinner(false);
+class ImagesGenerator extends PureComponent {
+	render() {
+		console.count('IMAGESGENERATOR');
+		const { classes } = this.props;
+		let imagesPaths = [];
+		let imagesTitlesPaths;
+		const imagesDataObj = this.props.imagesDataObj;
+		if (imagesDataObj !== null) {
+			//Filter pictures based on filter button state
+			const imagesDataObjArr = [];
+			const greenClicked = this.props.filterButtonsState.greenClicked;
+			const blueClicked = this.props.filterButtonsState.blueClicked;
+			const redClicked = this.props.filterButtonsState.redClicked;
+			const orangeClicked = this.props.filterButtonsState.orangeClicked;
+			for (const prop in imagesDataObj) {
+				imagesDataObjArr.push({ [prop]: imagesDataObj[prop] });
 			}
 
-			return (
-				<React.Fragment key={Object.keys(element)}>
-					<Image
-						onImageClick={props.onImageClick}
-						src={Object.values(element)}
-						caption={Object.keys(element)}
-						imagesDataObj={imagesDataObj}
-						userName={props.userName}
-						isAdminLogin={props.isAdminLogin}
-						onHideMenu={props.onHideMenu}
-					/>
-					<ModalImage
-						isImageLarge={props.isImageLarge}
-						onImageClick={props.onImageClick}
-						imagesDataObj={imagesDataObj}
-						userName={props.userName}
-						isAdminLogin={props.isAdminLogin}
-						onHideMenu={props.onHideMenu}
-						onImageLargeClose={props.onImageLargeClose}
-						caption={Object.keys(element)[0]}
-					>
+			const imagesDataObjFiltered = imagesDataObjArr
+				.filter((element) => {
+					const isFilterGreenClicked = greenClicked ? element[Object.keys(element)].isClickedGreen : null;
+					const isFilterBlueClicked = blueClicked ? element[Object.keys(element)].isClickedBlue : null;
+					const isFilterOrangeClicked = orangeClicked ? element[Object.keys(element)].comment : null;
+					let isFilterRedClicked = redClicked
+						? true &&
+							!element[Object.keys(element)].isClickedGreen &&
+							!element[Object.keys(element)].isClickedBlue
+						: null;
+
+					return isFilterGreenClicked || isFilterBlueClicked || isFilterRedClicked || isFilterOrangeClicked;
+				})
+				.map((e) => Object.keys(e)[0]);
+
+			// Link picture title with exact picture file
+			for (const prop in imagesDataObj) {
+				const imagePath = imagesDataObj[prop].path;
+				imagesPaths.push(imagePath);
+			}
+
+			const imageTitleArr = imagesDataObjFiltered.reduce((sum, current) => {
+				const img = imagesPaths.filter((image) => {
+					let patt = new RegExp(current, 'g');
+					return patt.test(image);
+				});
+				return sum.concat({ [current]: img[0] });
+			}, []);
+			imagesTitlesPaths = imageTitleArr.map((element, imageNumber) => {
+				return (
+					<React.Fragment key={Object.keys(element)}>
 						<Image
-							onImageClick={props.onImageClick}
-							key={Object.keys(element)}
+							onImageClick={this.props.onImageClick}
 							src={Object.values(element)}
 							caption={Object.keys(element)}
 							imagesDataObj={imagesDataObj}
-							userName={props.userName}
-							isAdminLogin={props.isAdminLogin}
-							onHideMenu={props.onHideMenu}
-							isBiggerSize={true}
-							ImageClickedTitle={props.ImageClickedTitle}
+							userName={this.props.userName}
+							isAdminLogin={this.props.isAdminLogin}
+							onHideMenu={this.props.onHideMenu}
 						/>
-					</ModalImage>
-				</React.Fragment>
-			);
-		});
-	}
+						<ModalImage
+							isImageLarge={this.props.isImageLarge}
+							onImageClick={this.props.onImageClick}
+							imagesDataObj={imagesDataObj}
+							userName={this.props.userName}
+							isAdminLogin={this.props.isAdminLogin}
+							onHideMenu={this.props.onHideMenu}
+							onImageLargeClose={this.props.onImageLargeClose}
+							caption={Object.keys(element)[0]}
+						>
+							<Image
+								onImageClick={this.props.onImageClick}
+								key={Object.keys(element)}
+								src={Object.values(element)}
+								caption={Object.keys(element)}
+								imagesDataObj={imagesDataObj}
+								userName={this.props.userName}
+								isAdminLogin={this.props.isAdminLogin}
+								onHideMenu={this.props.onHideMenu}
+								isBiggerSize={true}
+								ImageClickedTitle={this.props.ImageClickedTitle}
+							/>
+						</ModalImage>
+					</React.Fragment>
+				);
+			});
+		}
 
-	return (
-		<React.Fragment>
-			<div className={[ classes.imagesContainer, props.isDrawerOpen ? classes.marginTop : null ].join(' ')}>
-				{imagesTitlesPaths}
-			</div>
-		</React.Fragment>
-	);
-};
-export default withStyles(styles)(imagesGenerator);
+		return (
+			<React.Fragment>
+				<div
+					className={[ classes.imagesContainer, this.props.isDrawerOpen ? classes.marginTop : null ].join(
+						' '
+					)}
+				>
+					{imagesTitlesPaths}
+				</div>
+			</React.Fragment>
+		);
+	}
+}
+
+export default withStyles(styles)(ImagesGenerator);

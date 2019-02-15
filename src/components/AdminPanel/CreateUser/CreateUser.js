@@ -191,6 +191,7 @@ class CreateUser extends Component {
 	};
 
 	render() {
+		console.count('CREATEUSER');
 		const { classes } = this.props;
 		let createUser = null;
 

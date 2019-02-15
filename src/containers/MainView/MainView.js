@@ -1,46 +1,22 @@
 import React, { Component } from 'react';
-import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
 import Login from '../../components/Login/Login';
 import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
-import UserPanel from '../../components/UserPanel/UserPanel';
-import Menu from '../../components/Shared/Menu/Menu';
 import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
-import Spinner from '../../components/Shared/Spinner/Spinner';
-
-import { AppBar, Toolbar, Typography, Paper, Fab, Drawer, Avatar } from '@material-ui/core/';
-
+import AplicationBar from '../AplicationBar/AplicationBar';
+import ImagesAndCounter from '../ImagesAndCounter/ImagesAndCounter';
+import { AppBar, Toolbar, Typography, Fab, Drawer } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
-import BurstMode from '@material-ui/icons/BurstMode';
-
 import { Route } from 'react-router-dom';
 
 const styles = {
 	mainView: {},
-	header: {
-		background: 'whitesmoke',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		position: 'fixed',
-		height: 60,
-		paddingLeft: '13%',
-		zIndex: 100000
-	},
 	icon: {
 		fontSize: '1rem',
 		marginRight: '2%'
-	},
-
-	toolbar__header: {
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		width: '100%'
 	},
 	footer: {
 		background: 'whitesmoke',
@@ -57,20 +33,6 @@ const styles = {
 
 		alignItems: 'center',
 		justifyContent: 'center'
-	},
-	icon__loginContainer: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	icon__login: {
-		marginLeft: '5%'
-	},
-
-	appTitle: {
-		lineHeight: 1.2,
-		letterSpacing: 3,
-		fontSize: '.5rem'
 	},
 	fab: {
 		position: 'fixed',
@@ -94,37 +56,6 @@ const styles = {
 		background: 'rgba(0, 0, 0, 0)'
 	},
 
-	menuLoginContainer: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	iconCaptionFilterContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	iconCaptionContainer: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: 40
-	},
-	avatar: {
-		height: 30,
-		width: 30
-	},
-	bgPrimary: {
-		background: 'rgb(48, 63, 159)'
-	},
-	white: {
-		color: 'white'
-	},
-	iconCaption: {
-		fontSize: '.56rem',
-		color: 'rgb(48, 63, 159)'
-	},
 	zindexNegative: {
 		zIndex: -1
 	},
@@ -153,46 +84,17 @@ class mainView extends Component {
 		createUserLogin: '',
 		createUserPassword: '',
 		imagesDataObj: null,
-		freePicturesAmount: 0,
 		picturePrice: 0,
 		discountProcent: 0,
 		selectedfiles: 0,
 		isButtonDisabled: true,
-		filterButtonsState: {
-			greenClicked: true,
-			blueClicked: true,
-			redClicked: true,
-			orangeClicked: true
-		},
 		isAdminLogin: false,
 		isAuthenticated: false,
 		errorLogin: '',
 		onUserCreated: false,
 		isDrawerOpen: true,
-		isFooterHidden: false,
-		imageClickedTitle: '',
-		anchorEl: null,
-		amountSelected: 0,
-		isModalSpinner: false
+		isFooterHidden: false
 	};
-
-	componentDidUpdate() {
-		if (
-			this.state.filterButtonsState.greenClicked === false &&
-			this.state.filterButtonsState.blueClicked === false &&
-			this.state.filterButtonsState.redClicked === false &&
-			this.state.filterButtonsState.orangeClicked === false
-		) {
-			this.setState({
-				filterButtonsState: {
-					greenClicked: false,
-					blueClicked: false,
-					redClicked: true,
-					orangeClicked: false
-				}
-			});
-		}
-	}
 
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
 		this.setState({
@@ -213,38 +115,18 @@ class mainView extends Component {
 			createUserLogin: '',
 			createUserPassword: '',
 			imagesDataObj: null,
-			freePicturesAmount: 0,
 			picturePrice: 0,
 			discountProcent: 0,
 			selectedfiles: 0,
 			isButtonDisabled: true,
-			filterButtonsState: {
-				greenClicked: true,
-				blueClicked: true,
-				redClicked: true,
-				orangeClicked: true
-			},
 			isAdminLogin: false,
 			isAuthenticated: false,
 			errorLogin: '',
 			onUserCreated: false,
 			isDrawerOpen: true,
-			isFooterHidden: false,
-			imageClickedTitle: '',
-			anchorEl: null
+			isFooterHidden: false
 		});
 	};
-
-	onFilterButtonsStateHandler = (buttonsStateObj) => {
-		this.setState((prevState) => {
-			const copyfilterButtonsState = { ...this.state.filterButtonsState };
-			copyfilterButtonsState[buttonsStateObj] = !prevState.filterButtonsState[buttonsStateObj];
-			return {
-				filterButtonsState: copyfilterButtonsState
-			};
-		});
-	};
-
 	onDrawerOpenHandler = () => {
 		if (!this.state.imageClickedTitle) {
 			this.setState((prevState) => {
@@ -255,34 +137,8 @@ class mainView extends Component {
 		}
 	};
 
-	onImageClickedTitleHandler = (title) => {
-		this.setState({
-			imageClickedTitle: title
-		});
-	};
-
-	imageLargeCloseHandler = () => {
-		this.setState({
-			imageClickedTitle: ''
-		});
-	};
-
-	onMenuClickHandler = (event) => {
-		this.setState({ anchorEl: event });
-	};
-
-	onMenuCloseHandler = () => {
-		this.setState({ anchorEl: null });
-	};
-
 	onCheckoutReleaseHandler = () => {
 		this.setState({ isCheckout: true });
-	};
-
-	onAmountSelectedHandler = (amountSelected) => {
-		if (amountSelected !== this.state.amountSelected) {
-			this.setState({ amountSelected: amountSelected });
-		}
 	};
 
 	onCheckoutCloseHandler = () => {
@@ -293,26 +149,30 @@ class mainView extends Component {
 		this.setState({ isAuthenticated: true });
 	};
 
-	allImagesTitlesHandler = () => {
-		return this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).join('", "') : '';
-	};
-
 	onModalSpinnerHandler = (value) => {
 		this.setState({ isModalSpinner: value });
+	};
+
+	onIsLoginClickedHandler = () => {
+		this.setState({ isLoginClicked: false });
+	};
+
+	onIsAdminLoginHandler = () => {
+		this.setState({ isAdminLogin: true });
+	};
+
+	onChangeUserNameHandler = (userName) => {
+		this.setState({ userName: userName });
 	};
 
 	render() {
 		const { classes } = this.props;
 
 		let adminPanel = null;
-		let userPanel = null;
 		let login = null;
-		let menu = null;
 		let menuHideButton = null;
-		let reset = null;
-		let amountAllIcon = null;
-		let imagesGenerator = null;
 		let footerBar = null;
+		let imagesAndCounter = null;
 
 		if (this.state.isAdminLogin) {
 			adminPanel = (
@@ -343,97 +203,17 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isAuthenticated) {
-			userPanel = (
-				<React.Fragment>
-					<UserPanel
-						buttonLogout={(e) => this.onLogoutHandler(e)}
-						imagesDataObj={this.state.imagesDataObj}
-						onFilterButtonsState={this.onFilterButtonsStateHandler}
-						filterButtonsState={this.state.filterButtonsState}
-						userName={this.state.userName}
-						freePicturesAmount={this.state.freePicturesAmount}
-						discountProcent={this.state.discountProcent}
-						picturePrice={this.state.picturePrice}
-						onLogoutHandler={this.onLogoutHandler}
-						isDrawerOpen={this.state.isDrawerOpen}
-						isCheckout={this.state.isCheckout}
-						onAmountSelected={this.onAmountSelectedHandler}
-						allImagesTitles={this.allImagesTitlesHandler}
-					/>
-				</React.Fragment>
-			);
-		}
-
 		if (!this.state.isAdminLogin && !this.state.isAuthenticated) {
 			login = (
 				<Login
 					onLogin={this.onLoginClickedHandler}
-					adminLogin={() => this.setState({ isAdminLogin: true })}
-					loginClicked={() => this.setState({ isLoginClicked: false })}
-					onChangeUserName={(userName) => this.setState({ userName: userName })}
+					onIsAdminLogin={this.onIsAdminLoginHandler}
+					onIsLoginClicked={this.onIsLoginClickedHandler}
+					onChangeUserName={this.onChangeUserNameHandler}
 					isCreateUserLogin={this.state.createUserLogin}
 					isAuthenticated={this.onAuthenticationHandler}
 					onLoginDataPass={(imagesDataObj, freePicturesAmount, picturePrice, discountProcent) =>
 						this.onLoginDataPass(imagesDataObj, freePicturesAmount, picturePrice, discountProcent)}
-				/>
-			);
-		}
-
-		if (this.state.isAdminLogin || this.state.isAuthenticated) {
-			menu = (
-				<Menu
-					onMenuOpen={(e) => this.onMenuClickHandler(e)}
-					onMenuClose={() => this.onMenuCloseHandler()}
-					isMenuOpen={this.state.anchorEl}
-					userName={this.state.userName}
-					imagesDataObj={this.state.imagesDataObj}
-					onLogoutHandler={this.onLogoutHandler}
-					isAdminLogin={this.state.isAdminLogin}
-					onCheckoutRelease={this.onCheckoutReleaseHandler}
-					onCheckoutClose={this.onCheckoutCloseHandler}
-					isCheckout={this.state.isCheckout}
-				/>
-			);
-		}
-
-		if (this.state.isAuthenticated) {
-			amountAllIcon = (
-				<React.Fragment>
-					<div className={classes.iconCaptionFilterContainer}>
-						<div className={classes.iconCaptionContainer}>
-							<BurstMode color="primary" />
-							<Typography className={classes.iconCaption} variant="caption">
-								ZDJĘCIA
-							</Typography>
-						</div>
-						<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
-							<Typography className={classes.white} variant="caption">
-								{Object.keys(this.state.imagesDataObj).length}
-							</Typography>
-						</Avatar>
-					</div>
-				</React.Fragment>
-			);
-		}
-
-		if (!this.state.isCheckout) {
-			imagesGenerator = (
-				<ImagesGenerator
-					images={this.state.picturesPaths}
-					titles={this.state.picturesTitles}
-					imagesDataObj={this.state.imagesDataObj}
-					userName={this.state.userName}
-					filterButtonsState={this.state.filterButtonsState}
-					reset={this.state.reset}
-					isAdminLogin={this.state.isAdminLogin}
-					onImageClick={this.onImageClickedTitleHandler}
-					onHideMenu={this.onDrawerOpenHandler}
-					isDrawerOpen={this.state.isDrawerOpen}
-					isImageLarge={this.state.imageClickedTitle}
-					ImageClickedTitle={this.state.imageClickedTitle}
-					onImageLargeClose={this.imageLargeCloseHandler}
-					onModalSpinner={this.onModalSpinnerHandler}
 				/>
 			);
 		}
@@ -458,96 +238,83 @@ class mainView extends Component {
 			);
 		}
 
+		if (this.state.isAuthenticated) {
+			imagesAndCounter = (
+				<ImagesAndCounter
+					imagesDataObj={this.state.imagesDataObj}
+					freePicturesAmount={this.state.freePicturesAmount}
+					discountProcent={this.state.discountProcent}
+					picturePrice={this.state.picturePrice}
+					allImagesTitles={this.allImagesTitlesHandler}
+					images={this.state.picturesPaths}
+					titles={this.state.picturesTitles}
+					userName={this.state.userName}
+					isAdminLogin={this.state.isAdminLogin}
+					onHideMenu={this.onDrawerOpenHandler}
+					isDrawerOpen={this.state.isDrawerOpen}
+					ImageClickedTitle={this.state.imageClickedTitle}
+					onImageLargeClose={this.imageLargeCloseHandler}
+					isCheckout={this.state.isCheckout}
+					isAuthenticated={this.state.isAuthenticated}
+				/>
+			);
+		}
+
 		console.count('MAINVIEW');
 
 		return (
 			<React.Fragment>
 				<Layout>
-					<div className={this.state.isModalSpinner ? classes.modal : null}>
-						<Spinner isModalSpinner={this.state.isModalSpinner} />
-						<header>
-							{menuHideButton}
-							<Drawer
-								transitionDuration={500}
-								variant="persistent"
-								anchor="left"
-								open={this.state.isDrawerOpen}
-								classes={{
-									paper: classes.drawerPaperMenu
-								}}
-							>
-								<AppBar className={classes.header} position="static" color="default">
-									<Toolbar className={classes.toolbar__header}>
-										<div>
-											<Typography className={classes.appTitle} variant="overline" color="inherit">
-												Peek
-											</Typography>
-											<Typography className={classes.appTitle} variant="overline" color="inherit">
-												Pick
-											</Typography>
-											<Typography className={classes.appTitle} variant="overline" color="inherit">
-												Pic
-											</Typography>
-										</div>
-										{amountAllIcon}
-										{reset}
-										<div className={classes.menuLoginContainer}>
-											<div className={classes.icon__loginContainer}>
-												<AccountCircle className={classes.icon__login} />
-												<Typography variant="caption">{this.state.userName}</Typography>
-											</div>
-											{menu}
-										</div>
-									</Toolbar>
-								</AppBar>
-							</Drawer>
-						</header>
+					<header>
+						{menuHideButton}
+						<Drawer
+							transitionDuration={500}
+							variant="persistent"
+							anchor="left"
+							open={this.state.isDrawerOpen}
+							classes={{
+								paper: classes.drawerPaperMenu
+							}}
+						>
+							<AplicationBar
+								userName={this.state.userName}
+								isAuthenticated={this.state.isAuthenticated}
+								imagesDataObj={this.state.imagesDataObj}
+								onLogoutHandler={this.onLogoutHandler}
+								isAdminLogin={this.state.isAdminLogin}
+								onCheckoutRelease={this.onCheckoutReleaseHandler}
+								onCheckoutClose={this.onCheckoutCloseHandler}
+								isCheckout={this.state.isCheckout}
+							/>
+						</Drawer>
+					</header>
 
-						<main>
-							<div className={classes.mainView}>
-								<section>
-									<Route
-										path="/confirmation"
-										render={() => {
-											return <Confirmation open={true} />;
-										}}
-									/>
+					<main>
+						<div className={classes.mainView}>
+							<section>
+								<Route
+									path="/confirmation"
+									render={() => {
+										return <Confirmation open={true} />;
+									}}
+								/>
 
-									{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
-									<Route
-										path="/"
-										exact
-										render={() => {
-											return login;
-										}}
-									/>
-								</section>
+								{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
+								<Route
+									path="/"
+									exact
+									render={() => {
+										return login;
+									}}
+								/>
+							</section>
 
-								<section>{adminPanel}</section>
+							<section>{adminPanel}</section>
+							{imagesAndCounter}
+						</div>
+					</main>
 
-								<section>
-									<Drawer
-										transitionDuration={500}
-										variant="persistent"
-										anchor="left"
-										open={this.state.isDrawerOpen}
-										classes={{
-											paper: [
-												classes.drawerPaper,
-												this.state.isAdminLogin ? classes.zindexNegative : null
-											].join(' ')
-										}}
-									>
-										<Paper>{userPanel}</Paper>
-									</Drawer>
-								</section>
-
-								<section>{imagesGenerator}</section>
-							</div>
-						</main>
-
-						<footer>{footerBar}</footer>
-					</div>
+					<footer>{footerBar}</footer>
 				</Layout>
 			</React.Fragment>
 		);

@@ -50,6 +50,7 @@ const styles = (theme) => ({
 });
 
 const filter = (props) => {
+	console.count('FILTER');
 	const { classes } = props;
 
 	const buttonClickHandler = (whichButton) => {

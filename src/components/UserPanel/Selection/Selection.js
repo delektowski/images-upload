@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core/';
 
 const selection = (props) => {
-	console.log('selection');
+	console.count('SELECTION');
 
 	const onSelectionHandler = () => {
 		props.onCheckoutClose();

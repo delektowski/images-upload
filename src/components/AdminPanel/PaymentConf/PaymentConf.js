@@ -67,6 +67,7 @@ const styles = (theme) => ({
 
 class PaymentConf extends Component {
 	render() {
+		console.count('PAYMENTCONF');
 		const { classes } = this.props;
 		let picturesAmount = this.props.amountSelectedImages ? this.props.amountSelectedImages.length : 0;
 		let discount =

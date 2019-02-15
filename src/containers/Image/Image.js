@@ -167,33 +167,33 @@ class Image extends PureComponent {
 	}
 
 	componentDidUpdate() {
-		if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
-			this.setState({
-				isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
-			this.setState({
-				isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
-			this.setState({
-				isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
-				containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
-			});
-		}
-		if (
-			(this.state.confirmedComment || !this.state.expanded) &&
-			this.props.imagesDataObj[this.state.imageId].comment !== this.state.comment
-		) {
-			this.setState({
-				comment: this.props.imagesDataObj[this.state.imageId].comment,
-				confirmedComment: false
-			});
-		}
+		// if (this.props.imagesDataObj[this.state.imageId].isClickedGreen !== this.state.isClickedGreen) {
+		// 	this.setState({
+		// 		isClickedGreen: this.props.imagesDataObj[this.state.imageId].isClickedGreen,
+		// 		containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+		// 	});
+		// }
+		// if (this.props.imagesDataObj[this.state.imageId].isClickedBlue !== this.state.isClickedBlue) {
+		// 	this.setState({
+		// 		isClickedBlue: this.props.imagesDataObj[this.state.imageId].isClickedBlue,
+		// 		containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+		// 	});
+		// }
+		// if (this.props.imagesDataObj[this.state.imageId].isClickedRed !== this.state.isClickedRed) {
+		// 	this.setState({
+		// 		isClickedRed: this.props.imagesDataObj[this.state.imageId].isClickedRed,
+		// 		containerColor: this.props.imagesDataObj[this.state.imageId].containerColor
+		// 	});
+		// }
+		// if (
+		// 	(this.state.confirmedComment || !this.state.expanded) &&
+		// 	this.props.imagesDataObj[this.state.imageId].comment !== this.state.comment
+		// ) {
+		// 	this.setState({
+		// 		comment: this.props.imagesDataObj[this.state.imageId].comment,
+		// 		confirmedComment: false
+		// 	});
+		// }
 
 		if (this.state.touchStart > 0 && this.state.touchEnd > 0) {
 			const touchLength = this.state.touchStart - this.state.touchEnd;
@@ -357,7 +357,7 @@ class Image extends PureComponent {
 	};
 
 	render() {
-		console.log('image');
+		console.count('image');
 
 		const { classes } = this.props;
 		let image = null;
@@ -424,8 +424,6 @@ class Image extends PureComponent {
 								onSwipeEnd={this.onSwipeEnd}
 							>
 								<CardMedia
-									// onMouseEnter={this.onHoverHandler}
-									// onMouseLeave={this.onHoverHandler}
 									component="img"
 									onClick={() => this.props.onImageClick(this.state.imageId)}
 									className={[

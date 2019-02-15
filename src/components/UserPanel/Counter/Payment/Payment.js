@@ -71,6 +71,7 @@ const styles = (theme) => ({
 });
 
 const Payment = (props) => {
+	console.count('PAYMENT');
 	const { classes } = props;
 	let selectionPayment = null;
 	let checkoutPayment = null;

@@ -27,6 +27,7 @@ class ModalImage extends React.Component {
 	};
 
 	render() {
+		console.count('MODALIMAGE');
 		const { classes } = this.props;
 		const mediaQuery =
 			window.innerWidth <= 600

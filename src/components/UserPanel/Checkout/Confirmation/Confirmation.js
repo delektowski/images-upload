@@ -18,6 +18,7 @@ const styles = {
 };
 
 const confirmation = (props) => {
+	console.count('CONFIRMATION');
 	const { classes } = props;
 
 	return (

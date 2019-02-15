@@ -4,6 +4,7 @@ import Uploader from './Uploader/Uploader';
 import CreateUser from './CreateUser/CreateUser';
 
 const AdminPanel = (props) => {
+	console.count('ADMINPANEL');
 	return (
 		<React.Fragment>
 			<CreateUser

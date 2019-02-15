@@ -4,6 +4,7 @@ import 'firebase/database';
 import { Typography } from '@material-ui/core/';
 
 const Reset = (props) => {
+	console.count('RESET');
 	const resetUserSelection = () => {
 		for (let value in props.imagesDataObj) {
 			firebase.database().ref(`${props.userName}/images/${value}`).update({

@@ -55,6 +55,7 @@ const styles = (theme) => ({
 });
 
 const checkout = (props) => {
+	console.count('CHECKOUT');
 	const { classes } = props;
 
 	const getSelectedTitles = () => {

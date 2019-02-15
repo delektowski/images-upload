@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography } from '@material-ui/core/';
 
 const checkoutRelease = (props) => {
+	console.count('CHECKOUTRELEASE');
 	const onCheckoutRelease = () => {
 		props.onCheckoutRelease();
 		props.onMenuClose();

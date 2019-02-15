@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Paper, Typography, FormControl, InputLabel, Input, Button, Fade } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import firebase from 'firebase/app';
@@ -46,7 +46,7 @@ const styles = (theme) => ({
 	}
 });
 
-class Login extends Component {
+class Login extends PureComponent {
 	state = {
 		loginField: 'test',
 		passwordField: 'testtest',
@@ -62,11 +62,10 @@ class Login extends Component {
 				.signInWithEmailAndPassword(`${this.state.loginField}@aaa.aa`, this.state.passwordField)
 				.then(() => {
 					if (this.state.loginField === 'admin') {
-						this.props.adminLogin();
-						this.props.loginClicked();
+						this.props.onIsAdminLogin();
+						this.props.onIsLoginClicked();
 					} else {
 						this.props.isAuthenticated();
-
 						this.props.onChangeUserName(this.state.loginField);
 					}
 				})
@@ -77,7 +76,7 @@ class Login extends Component {
 			firebase.auth().onAuthStateChanged((user) => {
 				if (user) {
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
-					userNameDbElement.on('value', (snapshot) => {
+					userNameDbElement.once('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
 
@@ -122,6 +121,8 @@ class Login extends Component {
 	};
 
 	render() {
+		console.count('LOGIN');
+
 		const { classes } = this.props;
 
 		return (
