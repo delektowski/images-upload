@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import Payment from './Payment/Payment';
-import Checkout from '../Checkout/Checkout';
-import Filter from '../Filter/Filter';
+import Payment from '../../../../components/UserPanel/Payment/Payment';
+import Checkout from '../../../../components/UserPanel/Checkout/Checkout';
+import Filter from '../../../../components/UserPanel/Filter/Filter';
 import { Paper, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';

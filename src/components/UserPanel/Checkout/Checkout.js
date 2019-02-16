@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
-import Payment from '../../UserPanel/Counter/Payment/Payment';
+import Payment from '../../UserPanel/Payment/Payment';
 
 const styles = (theme) => ({
 	container: {

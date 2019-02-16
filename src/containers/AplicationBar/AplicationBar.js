@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import Menu from '../../components/Shared/Menu/Menu';
+import Menu from '../../components/Menu/Menu';
 
 import { AppBar, Toolbar, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';

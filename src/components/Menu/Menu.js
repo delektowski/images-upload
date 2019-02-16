@@ -1,7 +1,7 @@
 import React from 'react';
-import Logout from '../../Logout/Logout';
-import Reset from '../../UserPanel/Reset/Reset';
-import Selection from '../../UserPanel/Selection/Selection';
+import Logout from './Logout/Logout';
+import Reset from './Reset/Reset';
+import Selection from './Selection/Selection';
 import CheckoutRelease from './CheckoutRelease/CheckoutRelease';
 import IconButton from '@material-ui/core/IconButton';
 import { Menu, MenuItem } from '@material-ui/core/';

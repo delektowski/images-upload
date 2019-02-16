@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Image from '../../../containers/Image/Image';
+import Image from './Image/Image';
 import { withStyles } from '@material-ui/core/styles';
-import ModalImage from '../../../containers/ModalImage/ModalImage';
+import ModalImage from './Image/ModalImage/ModalImage';
 
 const styles = (theme) => ({
 	imagesContainer: {

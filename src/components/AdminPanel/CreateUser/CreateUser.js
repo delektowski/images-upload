@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PaymentConf from '../../AdminPanel/PaymentConf/PaymentConf';
+import PaymentConf from './PaymentConf/PaymentConf';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@material-ui/core/';
 import firebase from 'firebase/app';

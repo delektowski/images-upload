@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Counter from '../../components/UserPanel/Counter/Counter';
-import ImagesGenerator from '../../components/Shared/ImagesGenerator/ImagesGenerator';
+import Counter from './Counter/Counter';
+import ImagesGenerator from './ImagesGenerator/ImagesGenerator';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Drawer } from '@material-ui/core/';
 
