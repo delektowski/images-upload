@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -13,7 +13,7 @@ const styles = {
 	}
 };
 
-class ModalImage extends React.Component {
+class ModalImage extends PureComponent {
 	state = {
 		open: false
 	};

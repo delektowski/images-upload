@@ -8,6 +8,8 @@ import ThumbUpAlt from '@material-ui/icons/ThumbUpAlt';
 import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import ChatBubble from '@material-ui/icons/ChatBubble';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 const styles = {
 	paper: {
@@ -78,8 +80,24 @@ const styles = {
 };
 
 class Counter extends PureComponent {
+	state = {
+		updatedImagesDataObj: null
+	};
+
+	componentDidMount() {
+		console.log('this.props.userName', this.props.userName);
+
+		const userNameDbElement = firebase.database().ref(this.props.userName);
+		userNameDbElement.on('value', (snapshot) => {
+			if (!snapshot.exists()) return;
+			const updatedDataObj = snapshot.val();
+
+			this.setState({ updatedImagesDataObj: updatedDataObj.images });
+		});
+	}
+
 	allImagesTitlesHandler = () => {
-		return this.props.imagesDataObj ? Object.keys(this.props.imagesDataObj).join('", "') : '';
+		return this.state.updatedImagesDataObj ? Object.keys(this.state.updatedImagesDataObj).join('", "') : '';
 	};
 
 	selectedElementsAmount = (elementColor) => {
@@ -87,38 +105,38 @@ class Counter extends PureComponent {
 
 		switch (elementColor) {
 			case 'green':
-				for (let imageTitle in this.props.imagesDataObj) {
-					if (this.props.imagesDataObj[imageTitle].isClickedGreen === true) {
+				for (let imageTitle in this.state.updatedImagesDataObj) {
+					if (this.state.updatedImagesDataObj[imageTitle].isClickedGreen === true) {
 						amountOfElement++;
 					}
 				}
 				return amountOfElement;
 			case 'blue':
-				for (let imageTitle in this.props.imagesDataObj) {
-					if (this.props.imagesDataObj[imageTitle].isClickedBlue === true) amountOfElement++;
+				for (let imageTitle in this.state.updatedImagesDataObj) {
+					if (this.state.updatedImagesDataObj[imageTitle].isClickedBlue === true) amountOfElement++;
 				}
 				return amountOfElement;
 
 			case 'red':
-				for (let imageTitle in this.props.imagesDataObj) {
+				for (let imageTitle in this.state.updatedImagesDataObj) {
 					if (
-						(this.props.imagesDataObj[imageTitle].isClickedRed === false ||
-							this.props.imagesDataObj[imageTitle].isClickedRed === true) &&
-						this.props.imagesDataObj[imageTitle].isClickedGreen === false &&
-						this.props.imagesDataObj[imageTitle].isClickedBlue === false
+						(this.state.updatedImagesDataObj[imageTitle].isClickedRed === false ||
+							this.state.updatedImagesDataObj[imageTitle].isClickedRed === true) &&
+						this.state.updatedImagesDataObj[imageTitle].isClickedGreen === false &&
+						this.state.updatedImagesDataObj[imageTitle].isClickedBlue === false
 					)
 						amountOfElement++;
 				}
 				return amountOfElement;
 
 			case 'orange':
-				for (let imageTitle in this.props.imagesDataObj) {
-					if (this.props.imagesDataObj[imageTitle].comment !== '') amountOfElement++;
+				for (let imageTitle in this.state.updatedImagesDataObj) {
+					if (this.state.updatedImagesDataObj[imageTitle].comment !== '') amountOfElement++;
 				}
 				return amountOfElement;
 
 			case 'all':
-				for (let everyPicture in this.props.imagesDataObj) {
+				for (let everyPicture in this.state.updatedImagesDataObj) {
 					if (everyPicture) amountOfElement++;
 				}
 
@@ -287,7 +305,7 @@ class Counter extends PureComponent {
 					picturePrice={this.props.picturePrice}
 					selectedImages={this.selectedElementsAmount('green')}
 					isCheckout={this.props.isCheckout}
-					imagesDataObj={this.props.imagesDataObj}
+					imagesDataObj={this.state.updatedImagesDataObj}
 					allImagesTitles={this.allImagesTitlesHandler}
 				/>
 			);

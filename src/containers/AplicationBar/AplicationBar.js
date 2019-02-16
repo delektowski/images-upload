@@ -115,8 +115,6 @@ class AplicationBar extends PureComponent {
 		}
 
 		if (this.props.isAdminLogin || this.props.isAuthenticated) {
-			console.count('MENUAPP');
-
 			menu = (
 				<Menu
 					onMenuOpen={(e) => this.onMenuClickHandler(e)}

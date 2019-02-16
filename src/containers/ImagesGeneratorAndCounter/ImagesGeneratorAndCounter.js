@@ -19,7 +19,7 @@ const styles = {
 	}
 };
 
-class ImagesAndCounter extends Component {
+class ImagesGeneratorAndCounter extends Component {
 	state = {
 		greenClicked: true,
 		blueClicked: true,
@@ -66,12 +66,12 @@ class ImagesAndCounter extends Component {
 	};
 
 	render() {
-		console.count('IMAGESANDCOUNTER');
+		console.count('ImagesGeneratorAndCounter');
 		const { classes } = this.props;
 		let counter = null;
 		let imagesGenerator = null;
 
-		if (this.props.isAuthenticated) {
+		if (this.props.isAuthenticated && this.props.userName) {
 			counter = (
 				<React.Fragment>
 					<Counter
@@ -84,6 +84,7 @@ class ImagesAndCounter extends Component {
 						isCheckout={this.props.isCheckout}
 						onAmountSelected={this.props.onAmountSelected}
 						allImagesTitles={this.props.allImagesTitles}
+						userName={this.props.userName}
 					/>
 				</React.Fragment>
 			);
@@ -133,4 +134,4 @@ class ImagesAndCounter extends Component {
 	}
 }
 
-export default withStyles(styles)(ImagesAndCounter);
+export default withStyles(styles)(ImagesGeneratorAndCounter);

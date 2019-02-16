@@ -4,7 +4,7 @@ import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
 import AplicationBar from '../AplicationBar/AplicationBar';
-import ImagesAndCounter from '../ImagesAndCounter/ImagesAndCounter';
+import ImagesGeneratorAndCounter from '../ImagesGeneratorAndCounter/ImagesGeneratorAndCounter';
 import { AppBar, Toolbar, Typography, Fab, Drawer } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
@@ -172,7 +172,7 @@ class mainView extends Component {
 		let login = null;
 		let menuHideButton = null;
 		let footerBar = null;
-		let imagesAndCounter = null;
+		let imagesGeneratorAndCounter = null;
 
 		if (this.state.isAdminLogin) {
 			adminPanel = (
@@ -239,8 +239,8 @@ class mainView extends Component {
 		}
 
 		if (this.state.isAuthenticated) {
-			imagesAndCounter = (
-				<ImagesAndCounter
+			imagesGeneratorAndCounter = (
+				<ImagesGeneratorAndCounter
 					imagesDataObj={this.state.imagesDataObj}
 					freePicturesAmount={this.state.freePicturesAmount}
 					discountProcent={this.state.discountProcent}
@@ -310,7 +310,7 @@ class mainView extends Component {
 							</section>
 
 							<section>{adminPanel}</section>
-							{imagesAndCounter}
+							{imagesGeneratorAndCounter}
 						</div>
 					</main>
 
