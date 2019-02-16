@@ -3,7 +3,7 @@ import Login from './Login/Login';
 import Layout from '../../hoc/Layout/Layout';
 import AdminPanel from '../../components/AdminPanel/AdminPanel';
 import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
-import AplicationBar from '../AplicationBar/AplicationBar';
+import AplicationBar from './AplicationBar/AplicationBar';
 import ImagesGeneratorAndCounter from './ImagesGeneratorAndCounter/ImagesGeneratorAndCounter';
 import { AppBar, Toolbar, Typography, Fab, Drawer } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
