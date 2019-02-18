@@ -39,6 +39,11 @@ const menu = (props) => {
 		);
 	}
 
+	const onLogoutHandler = () => {
+		props.onMenuClose();
+		props.onLogoutHandler();
+	};
+
 	return (
 		<div>
 			<IconButton onClick={(e) => props.onMenuOpen(e.target)}>
@@ -60,7 +65,7 @@ const menu = (props) => {
 				{selection}
 
 				<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-					<Logout userName={props.userName} onLogoutHandler={props.onLogoutHandler} />
+					<Logout userName={props.userName} onLogoutHandler={onLogoutHandler} />
 				</MenuItem>
 			</Menu>
 		</div>

@@ -176,7 +176,15 @@ class Counter extends PureComponent {
 	render() {
 		console.count('COUNTER');
 		const { classes } = this.props;
-
+		const filter = (buttonType) => {
+			return (
+				<Filter
+					onFilterButtonsState={this.props.onFilterButtonsState}
+					filterClicked={buttonType}
+					filterButtonsState={this.props.filterButtonsState}
+				/>
+			);
+		};
 		let paymentOnCheckout = null;
 		let paymentOnImagesSelect = null;
 		if (!this.props.isCheckout) {
@@ -200,11 +208,8 @@ class Counter extends PureComponent {
 									</Typography>
 								</Avatar>
 							</div>
-							<Filter
-								onFilterButtonsState={this.props.onFilterButtonsState}
-								filterClicked="greenClicked"
-								filterButtonsState={this.props.filterButtonsState}
-							/>
+
+							{filter('greenClicked')}
 						</div>
 
 						<div className={classes.iconCaptionFilterContainer}>
@@ -224,11 +229,7 @@ class Counter extends PureComponent {
 									</Typography>
 								</Avatar>
 							</div>
-							<Filter
-								onFilterButtonsState={this.props.onFilterButtonsState}
-								filterClicked="blueClicked"
-								filterButtonsState={this.props.filterButtonsState}
-							/>
+							{filter('blueClicked')}
 						</div>
 
 						<div className={classes.iconCaptionFilterContainer}>
@@ -248,11 +249,7 @@ class Counter extends PureComponent {
 									</Typography>
 								</Avatar>
 							</div>
-							<Filter
-								onFilterButtonsState={this.props.onFilterButtonsState}
-								filterClicked="redClicked"
-								filterButtonsState={this.props.filterButtonsState}
-							/>
+							{filter('redClicked')}
 						</div>
 
 						<div className={classes.iconCaptionFilterContainer}>
@@ -278,11 +275,7 @@ class Counter extends PureComponent {
 									</Typography>
 								</Avatar>
 							</div>
-							<Filter
-								onFilterButtonsState={this.props.onFilterButtonsState}
-								filterButtonsState={this.props.filterButtonsState}
-								filterClicked="orangeClicked"
-							/>
+							{filter('orangeClicked')}
 						</div>
 					</Paper>
 					<Payment

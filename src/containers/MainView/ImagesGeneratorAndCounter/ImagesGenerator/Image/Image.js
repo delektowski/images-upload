@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import firebase from 'firebase/app';
 import Swipe from 'react-easy-swipe';
 import 'firebase/database';
-import { updateImageState } from './utylity';
 import { withStyles } from '@material-ui/core/styles';
 import {
 	Card,
@@ -185,6 +184,22 @@ class Image extends PureComponent {
 		}
 	}
 
+	updateImageState = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
+		return {
+			containerColor: containerColor,
+			isClickedGreen: isClickedGreen,
+			isClickedBlue: isClickedBlue,
+			isClickedRed: isClickedRed
+		};
+	};
+
+	updateImageFirebase = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
+		firebase
+			.database()
+			.ref(`${this.props.userName}/images/${this.state.imageId}`)
+			.update(this.updateImageState(containerColor, isClickedGreen, isClickedBlue, isClickedRed));
+	};
+
 	keyDownEvent = (keyDownEvent) => {
 		switch (keyDownEvent.key) {
 			case 'ArrowRight':
@@ -212,37 +227,38 @@ class Image extends PureComponent {
 			case 'green':
 				this.setState((prevState) => {
 					let color = 'green';
-					if (prevState.isClickedGreen === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/images/${this.state.imageId}`)
-						.update(updateImageState(color, !prevState.isClickedGreen, false, false));
 
-					return updateImageState(color, !prevState.isClickedGreen, false, false);
+					if (prevState.isClickedGreen === true && prevState.isClickedBlue === false) {
+						color = '';
+						this.updateImageFirebase(color, false, false, true);
+						return this.updateImageState(color, false, false, true);
+					} else if (prevState.isClickedGreen === false) {
+						this.updateImageFirebase(color, !prevState.isClickedGreen, false, false);
+						return this.updateImageState(color, !prevState.isClickedGreen, false, false);
+					}
 				});
 				break;
 
 			case 'blue':
 				this.setState((prevState) => {
 					let color = 'blue';
-					if (prevState.isClickedBlue === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/images/${this.state.imageId}`)
-						.update(updateImageState(color, false, !prevState.isClickedBlue, false));
-					return updateImageState(color, false, !prevState.isClickedBlue, false);
+
+					if (prevState.isClickedBlue === true && prevState.isClickedGreen === false) {
+						color = '';
+						this.updateImageFirebase(color, false, false, true);
+						return this.updateImageState(color, false, false, true);
+					} else if (prevState.isClickedBlue === false) {
+						this.updateImageFirebase(color, false, !prevState.isClickedBlue, false);
+						return this.updateImageState(color, false, !prevState.isClickedBlue, false);
+					}
 				});
 				break;
 
 			case 'red':
-				this.setState((prevState) => {
-					let color = 'red';
-					if (prevState.isClickedRed === true) color = '';
-					firebase
-						.database()
-						.ref(`${this.props.userName}/images/${this.state.imageId}`)
-						.update(updateImageState(color, false, false, !prevState.isClickedRed));
-					return updateImageState(color, false, false, !prevState.isClickedRed);
+				this.setState(() => {
+					const color = '';
+					this.updateImageFirebase(color, false, false, true);
+					return this.updateImageState(color, false, false, true);
 				});
 				break;
 
