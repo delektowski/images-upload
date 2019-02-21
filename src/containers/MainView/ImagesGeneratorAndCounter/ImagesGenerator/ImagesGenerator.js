@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Image from './Image/Image';
 import { withStyles } from '@material-ui/core/styles';
-import ModalImage from './Image/ModalImage/ModalImage';
 
 const styles = (theme) => ({
 	imagesContainer: {
@@ -88,47 +87,17 @@ class ImagesGenerator extends Component {
 		let imagesTitlesPaths = null;
 
 		imagesTitlesPaths = this.getImagesTitleArr().map((element) => {
-			let modalImage = null;
-			if (this.props.isImageLarge) {
-				modalImage = (
-					<ModalImage
-						isImageLarge={this.props.isImageLarge}
-						onImageClick={this.props.onImageClick}
-						imagesDataObj={this.props.imagesDataObj}
-						userName={this.props.userName}
-						isAdminLogin={this.props.isAdminLogin}
-						onHideMenu={this.props.onHideMenu}
-						onImageLargeClose={this.props.onImageLargeClose}
-						caption={Object.keys(element)[0]}
-					>
-						<Image
-							onImageClick={this.props.onImageClick}
-							key={Object.keys(element)}
-							src={Object.values(element)}
-							caption={Object.keys(element)}
-							imagesDataObj={this.props.imagesDataObj}
-							userName={this.props.userName}
-							isAdminLogin={this.props.isAdminLogin}
-							onHideMenu={this.props.onHideMenu}
-							isBiggerSize={true}
-							ImageClickedTitle={this.props.ImageClickedTitle}
-						/>
-					</ModalImage>
-				);
-			}
-
 			return (
 				<React.Fragment key={Object.keys(element)}>
 					<Image
-						onImageClick={this.props.onImageClick}
 						src={Object.values(element)}
 						caption={Object.keys(element)}
 						imagesDataObj={this.props.imagesDataObj}
 						userName={this.props.userName}
 						isAdminLogin={this.props.isAdminLogin}
 						onHideMenu={this.props.onHideMenu}
+						testForceUpdate={this.props.testForceUpdate}
 					/>
-					{modalImage}
 				</React.Fragment>
 			);
 		});

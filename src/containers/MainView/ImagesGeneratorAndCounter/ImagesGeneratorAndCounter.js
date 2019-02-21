@@ -3,6 +3,8 @@ import Counter from './Counter/Counter';
 import ImagesGenerator from './ImagesGenerator/ImagesGenerator';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Drawer } from '@material-ui/core/';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 const styles = {
 	drawerPaper: {
@@ -25,7 +27,6 @@ class ImagesGeneratorAndCounter extends Component {
 		blueClicked: true,
 		redClicked: true,
 		orangeClicked: true,
-		imageClickedTitle: '',
 		clientImagesDataObj: null,
 		filterButtonsState: {
 			greenClicked: true,
@@ -59,11 +60,27 @@ class ImagesGeneratorAndCounter extends Component {
 		});
 	};
 
-	imageLargeCloseHandler = () => {
-		this.setState({
-			imageClickedTitle: ''
-		});
+	updateImageState = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
+		return {
+			containerColor: containerColor,
+			isClickedGreen: isClickedGreen,
+			isClickedBlue: isClickedBlue,
+			isClickedRed: isClickedRed
+		};
 	};
+
+	// testForceUpdate = (imageId, containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
+	// 	firebase
+	// 		.database()
+	// 		.ref(`${this.props.userName}/images/${imageId}`)
+	// 		.update(this.updateImageState(containerColor, isClickedGreen, isClickedBlue, isClickedRed));
+
+	// 	const userNameDbElement = firebase.database().ref(this.props.userName);
+	// 	userNameDbElement.once('value', (snapshot) => {
+	// 		if (!snapshot.exists()) return;
+	// 		this.setState({ clientImagesDataObj: snapshot.val().images });
+	// 	});
+	// };
 
 	render() {
 		console.count('ImagesGeneratorAndCounter');
@@ -102,9 +119,7 @@ class ImagesGeneratorAndCounter extends Component {
 					onImageClick={this.onImageClickedTitleHandler}
 					onHideMenu={this.onDrawerOpenHandler}
 					isDrawerOpen={this.props.isDrawerOpen}
-					isImageLarge={this.state.imageClickedTitle}
-					ImageClickedTitle={this.state.imageClickedTitle}
-					onImageLargeClose={this.imageLargeCloseHandler}
+					// testForceUpdate={this.testForceUpdate}
 				/>
 			);
 		}

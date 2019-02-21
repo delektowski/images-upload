@@ -218,7 +218,7 @@ class mainView extends Component {
 			);
 		}
 
-		if (this.state.isAuthenticated && !this.state.imageClickedTitle && !this.state.isCheckout) {
+		if (this.state.isAuthenticated && !this.state.isCheckout) {
 			menuHideButton = (
 				<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
 					{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
@@ -245,15 +245,12 @@ class mainView extends Component {
 					freePicturesAmount={this.state.freePicturesAmount}
 					discountProcent={this.state.discountProcent}
 					picturePrice={this.state.picturePrice}
-					allImagesTitles={this.allImagesTitlesHandler}
 					images={this.state.picturesPaths}
 					titles={this.state.picturesTitles}
 					userName={this.state.userName}
 					isAdminLogin={this.state.isAdminLogin}
 					onHideMenu={this.onDrawerOpenHandler}
 					isDrawerOpen={this.state.isDrawerOpen}
-					ImageClickedTitle={this.state.imageClickedTitle}
-					onImageLargeClose={this.imageLargeCloseHandler}
 					isCheckout={this.state.isCheckout}
 					isAuthenticated={this.state.isAuthenticated}
 				/>

@@ -85,8 +85,6 @@ class Counter extends PureComponent {
 	};
 
 	componentDidMount() {
-		console.log('this.props.userName', this.props.userName);
-
 		const userNameDbElement = firebase.database().ref(this.props.userName);
 		userNameDbElement.on('value', (snapshot) => {
 			if (!snapshot.exists()) return;

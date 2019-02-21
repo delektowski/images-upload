@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ModalImage from './ModalImage/ModalImage';
 import firebase from 'firebase/app';
 import Swipe from 'react-easy-swipe';
 import 'firebase/database';
@@ -11,9 +12,7 @@ import {
 	TextField,
 	Collapse,
 	IconButton,
-	CardHeader,
-	Fab,
-	Fade
+	CardHeader
 } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import ChatBubble from '@material-ui/icons/ChatBubble';
@@ -23,8 +22,6 @@ import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
-import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
 
 const styles = (theme) => ({
 	cardRed: {
@@ -126,61 +123,88 @@ class Image extends PureComponent {
 		isClickedGreen: false,
 		isClickedBlue: false,
 		isClickedRed: false,
+		comment: '',
 		isImageClicked: false,
 		imageId: '',
-		src: 'no-scr',
+		src: null,
 		expanded: false,
-		comment: '',
 		confirmedComment: false,
-		isHover: false,
-		touchStart: 0,
-		touchEnd: 0
+		isImageLarge: false
 	};
 
-	componentDidMount() {
-		// Recognize state of the element based on Firebase data
-		for (let key in this.props.imagesDataObj) {
-			if (key === this.props.caption[0]) {
-				let color = '';
-				if (this.props.imagesDataObj[key].isClickedGreen) color = 'green';
-				if (this.props.imagesDataObj[key].isClickedBlue) color = 'blue';
-				if (this.props.imagesDataObj[key].isClickedRed) color = 'red';
-				this.setState({
-					containerColor: color,
-					isClickedGreen: this.props.imagesDataObj[key].isClickedGreen,
-					isClickedBlue: this.props.imagesDataObj[key].isClickedBlue,
-					isClickedRed: this.props.imagesDataObj[key].isClickedRed,
-					imageId: this.props.caption[0],
-					src: this.props.src[0],
-					comment: this.props.imagesDataObj[key].comment
-				});
-			}
-		}
-		if (this.props.isBiggerSize) {
-			window.addEventListener('keydown', this.keyDownEvent, false);
-		}
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('keydown', this.keyDownEvent, null);
-	}
-
 	componentDidUpdate() {
-		if (this.state.touchStart > 0 && this.state.touchEnd > 0) {
-			const touchLength = this.state.touchStart - this.state.touchEnd;
+		const turnOnDatabaseListen = () => {
+			const userNameDbElement = firebase.database().ref(`${this.props.userName}/images/${this.props.caption[0]}`);
+			userNameDbElement.on('value', (snapshot) => {
+				if (!snapshot.exists()) return;
 
-			if (touchLength < 0) {
-				this.OnModalImageSelection('back');
-			}
+				if (!this.state.confirmedComment) {
+					this.setState({
+						containerColor: snapshot.val().containerColor,
+						isClickedGreen: snapshot.val().isClickedGreen,
+						isClickedBlue: snapshot.val().isClickedBlue,
+						isClickedRed: snapshot.val().isClickedRed
+					});
+				}
 
-			if (touchLength > 0) {
-				this.OnModalImageSelection('forward');
-			}
+				if (this.state.confirmedComment) {
+					this.setState({
+						containerColor: snapshot.val().containerColor,
+						isClickedGreen: snapshot.val().isClickedGreen,
+						isClickedBlue: snapshot.val().isClickedBlue,
+						isClickedRed: snapshot.val().isClickedRed,
+						comment: snapshot.val().comment,
+						confirmedComment: false
+					});
+				}
 
-			this.setState({
-				touchStart: 0,
-				touchEnd: 0
+				if (!this.state.confirmedComment && this.state.isImageLarge) {
+					this.setState({
+						containerColor: snapshot.val().containerColor,
+						isClickedGreen: snapshot.val().isClickedGreen,
+						isClickedBlue: snapshot.val().isClickedBlue,
+						isClickedRed: snapshot.val().isClickedRed,
+						comment: snapshot.val().comment
+					});
+				}
+				if (!this.state.confirmedComment && !this.state.isImageLarge && !this.state.expanded) {
+					this.setState({
+						containerColor: snapshot.val().containerColor,
+						isClickedGreen: snapshot.val().isClickedGreen,
+						isClickedBlue: snapshot.val().isClickedBlue,
+						isClickedRed: snapshot.val().isClickedRed,
+						comment: snapshot.val().comment
+					});
+				}
 			});
+		};
+
+		turnOnDatabaseListen();
+	}
+
+	componentDidMount() {
+		let color = this.checkContainerColor();
+
+		this.setState({
+			containerColor: color,
+			isClickedGreen: this.props.imagesDataObj[this.props.caption[0]].isClickedGreen,
+			isClickedBlue: this.props.imagesDataObj[this.props.caption[0]].isClickedBlue,
+			isClickedRed: this.props.imagesDataObj[this.props.caption[0]].isClickedRed,
+			imageId: this.props.caption[0],
+			src: this.props.src[0],
+			comment: this.props.imagesDataObj[this.props.caption[0]].comment
+		});
+	}
+
+	checkContainerColor() {
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedGreen) {
+			return 'green';
+		}
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedBlue) {
+			return 'blue';
+		}
+		if (this.props.imagesDataObj[this.props.caption[0]].isClickedRed) {
+			return 'red';
 		}
 	}
 
@@ -200,21 +224,6 @@ class Image extends PureComponent {
 			.update(this.updateImageState(containerColor, isClickedGreen, isClickedBlue, isClickedRed));
 	};
 
-	keyDownEvent = (keyDownEvent) => {
-		switch (keyDownEvent.key) {
-			case 'ArrowRight':
-				this.OnModalImageSelection('forward');
-				break;
-
-			case 'ArrowLeft':
-				this.OnModalImageSelection('back');
-				break;
-
-			default:
-				break;
-		}
-	};
-
 	handleExpandClick = () => {
 		this.setState((state) => ({ expanded: !state.expanded }));
 		if (window.innerWidth <= 600) {
@@ -223,47 +232,37 @@ class Image extends PureComponent {
 	};
 
 	buttonClickHandler = (buttonColor) => {
-		switch (buttonColor) {
-			case 'green':
-				this.setState((prevState) => {
-					let color = 'green';
-
-					if (prevState.isClickedGreen === true && prevState.isClickedBlue === false) {
+		if (!this.state.isImageLarge) {
+			let color;
+			switch (buttonColor) {
+				case 'green':
+					color = 'green';
+					if (this.state.isClickedGreen === true && this.state.isClickedBlue === false) {
 						color = '';
 						this.updateImageFirebase(color, false, false, true);
-						return this.updateImageState(color, false, false, true);
-					} else if (prevState.isClickedGreen === false) {
-						this.updateImageFirebase(color, !prevState.isClickedGreen, false, false);
-						return this.updateImageState(color, !prevState.isClickedGreen, false, false);
+					} else if (this.state.isClickedGreen === false) {
+						this.updateImageFirebase(color, true, false, false);
 					}
-				});
-				break;
+					break;
 
-			case 'blue':
-				this.setState((prevState) => {
-					let color = 'blue';
-
-					if (prevState.isClickedBlue === true && prevState.isClickedGreen === false) {
+				case 'blue':
+					color = 'blue';
+					if (this.state.isClickedBlue === true && this.state.isClickedGreen === false) {
 						color = '';
 						this.updateImageFirebase(color, false, false, true);
-						return this.updateImageState(color, false, false, true);
-					} else if (prevState.isClickedBlue === false) {
-						this.updateImageFirebase(color, false, !prevState.isClickedBlue, false);
-						return this.updateImageState(color, false, !prevState.isClickedBlue, false);
+					} else if (this.state.isClickedBlue === false) {
+						this.updateImageFirebase(color, false, true, false);
 					}
-				});
-				break;
+					break;
 
-			case 'red':
-				this.setState(() => {
-					const color = '';
+				case 'red':
+					color = '';
 					this.updateImageFirebase(color, false, false, true);
-					return this.updateImageState(color, false, false, true);
-				});
-				break;
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
 	};
 
@@ -285,69 +284,18 @@ class Image extends PureComponent {
 		this.handleExpandClick();
 	};
 
-	OnModalImageSelection = (direction) => {
-		const imagesArr = Object.keys(this.props.imagesDataObj);
-		const lastIndex = imagesArr.length - 1;
-		let index = imagesArr.indexOf(this.state.imageId);
-
-		if (direction === 'forward' && index === lastIndex) {
-			index = -1;
-		}
-
-		if (direction === 'back' && index === 0) {
-			index = lastIndex + 1;
-		}
-
-		switch (direction) {
-			case 'forward':
-				const nextImageTitle = imagesArr[index + 1];
-				const nextImageSrc = this.props.imagesDataObj[nextImageTitle].path;
-				this.setState({ imageId: nextImageTitle, src: nextImageSrc });
-				break;
-
-			case 'back':
-				const previousImageTitle = imagesArr[index - 1];
-				const previousImageSrc = this.props.imagesDataObj[previousImageTitle].path;
-				this.setState({ imageId: previousImageTitle, src: previousImageSrc });
-				break;
-
-			default:
-				break;
-		}
-	};
-
-	onHoverHandler = (event) => {
-		switch (event.type) {
-			case 'mouseenter':
-				this.setState({ isHover: true });
-				break;
-
-			case 'mouseleave':
-				this.setState({ isHover: false });
-				break;
-
-			default:
-				this.setState({ isHover: true });
-				break;
-		}
-	};
-
-	onSwipeStart = (e) => {
-		if (this.props.ImageClickedTitle) {
-			this.setState({ touchStart: e.changedTouches[0].clientX });
-		}
-	};
-
-	onSwipeEnd = (e) => {
-		if (this.props.ImageClickedTitle) {
-			this.setState({ touchEnd: e.changedTouches[0].clientX });
-		}
+	onIsImageLargeHandler = () => {
+		this.setState((prevState) => {
+			return {
+				isImageLarge: !prevState.isImageLarge
+			};
+		});
 	};
 
 	render() {
-		console.log('image');
-
+		// console.log('image');
 		const { classes } = this.props;
+		let modalImage = null;
 		let image = null;
 		let borderColor = 'borderRed';
 		let cardColor = 'cardRed';
@@ -369,41 +317,11 @@ class Image extends PureComponent {
 			borderColor = 'borderBlue';
 			cardColor = 'cardBlue';
 		}
-		if (!this.props.isAdminLogin) {
+
+		if (!this.props.isAdminLogin && this.state.src) {
 			image = (
 				<React.Fragment>
-					<Card
-						className={[ classes[cardColor], this.props.isBiggerSize ? classes.biggerCard : null ].join(
-							' '
-						)}
-					>
-						{this.props.ImageClickedTitle && !this.state.expanded ? (
-							<React.Fragment>
-								<Fade
-									in={this.state.isHover}
-									timeout={500}
-									onMouseEnter={this.onHoverHandler}
-									onMouseLeave={this.onHoverHandler}
-								>
-									<Fab className={classes.fabLeft} onClick={() => this.OnModalImageSelection('back')}>
-										<ArrowBackIos />
-									</Fab>
-								</Fade>
-								<Fade
-									in={this.state.isHover}
-									timeout={500}
-									onMouseEnter={this.onHoverHandler}
-									onMouseLeave={this.onHoverHandler}
-								>
-									<Fab
-										className={classes.fabRight}
-										onClick={() => this.OnModalImageSelection('forward')}
-									>
-										<ArrowForwardIos />
-									</Fab>
-								</Fade>
-							</React.Fragment>
-						) : null}
+					<Card className={classes[cardColor]}>
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
 							<Swipe
@@ -413,11 +331,8 @@ class Image extends PureComponent {
 							>
 								<CardMedia
 									component="img"
-									onClick={() => this.props.onImageClick(this.state.imageId)}
-									className={[
-										classes.media,
-										this.props.isBiggerSize ? classes.biggerMedia : null
-									].join(' ')}
+									onClick={this.onIsImageLargeHandler}
+									className={classes.media}
 									src={this.state.src}
 									title={this.state.imageId}
 								/>
@@ -489,7 +404,35 @@ class Image extends PureComponent {
 			);
 		}
 
-		return <React.Fragment>{image}</React.Fragment>;
+		if (this.state.isImageLarge) {
+			modalImage = (
+				<React.Fragment>
+					<ModalImage
+						isImageLarge={this.state.isImageLarge}
+						onImageLargeClose={this.onIsImageLargeHandler}
+						imageIdImageLarge={this.state.imageIdImageLarge}
+						onSwipeStart={this.onSwipeStart}
+						onSwipeMove={this.onSwipeMove}
+						onSwipeEnd={this.onSwipeEnd}
+						isExpanded={this.state.expanded}
+						userName={this.props.userName}
+						handleExpandClick={this.handleExpandClick}
+						getImageSrc={this.state.src}
+						getImageId={this.state.imageId}
+						imagesDataObj={this.props.imagesDataObj}
+						caption={this.props.caption[0]}
+						// onModImgStateEqualToImgState={this.modImgStateEqualToImgStateHandler}
+					/>
+				</React.Fragment>
+			);
+		}
+
+		return (
+			<React.Fragment>
+				{image}
+				{modalImage}
+			</React.Fragment>
+		);
 	}
 }
 
