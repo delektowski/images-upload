@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Image from './Image/Image';
 import { withStyles } from '@material-ui/core/styles';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 const styles = (theme) => ({
 	imagesContainer: {
@@ -23,12 +25,37 @@ const styles = (theme) => ({
 
 class ImagesGenerator extends Component {
 	state = {
-		isModalImage: false
+		updatedImagesDataObj: null,
+		imageButtonClicked: false
 	};
 
+	componentDidUpdate() {
+		if (this.props.isFilterButtonClicked || this.state.imageButtonClicked) {
+			const userNameDbElement = firebase.database().ref(`${this.props.userName}/images`);
+			userNameDbElement.once('value', (snapshot) => {
+				if (!snapshot.exists()) return;
+				this.setState({ updatedImagesDataObj: snapshot.val(), imageButtonClicked: false });
+				this.props.onResetFilterButtonClicked();
+			});
+		}
+	}
+
 	getImagesTitlesArray = () => {
-		const imagesDataObj = this.props.imagesDataObj;
+		console.log('this.props.userName', this.props.userName);
+
+		let imagesDataObj;
 		const imagesDataObjArr = [];
+
+		const userNameDbElement = firebase.database().ref(`${this.props.userName}/images`);
+		userNameDbElement.once('value', (snapshot) => {
+			if (!snapshot.exists()) return;
+			if (this.state.updatedImagesDataObj === null) {
+				this.setState({ updatedImagesDataObj: snapshot.val() });
+			}
+		});
+
+		imagesDataObj = this.state.updatedImagesDataObj;
+
 		for (const prop in imagesDataObj) {
 			imagesDataObjArr.push({ [prop]: imagesDataObj[prop] });
 		}
@@ -96,7 +123,6 @@ class ImagesGenerator extends Component {
 						userName={this.props.userName}
 						isAdminLogin={this.props.isAdminLogin}
 						onHideMenu={this.props.onHideMenu}
-						testForceUpdate={this.props.testForceUpdate}
 					/>
 				</React.Fragment>
 			);

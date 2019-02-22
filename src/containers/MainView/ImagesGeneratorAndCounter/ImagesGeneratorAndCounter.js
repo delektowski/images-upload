@@ -3,8 +3,7 @@ import Counter from './Counter/Counter';
 import ImagesGenerator from './ImagesGenerator/ImagesGenerator';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Drawer } from '@material-ui/core/';
-import firebase from 'firebase/app';
-import 'firebase/database';
+import FilterContext from '../../../context/filter-context';
 
 const styles = {
 	drawerPaper: {
@@ -27,29 +26,14 @@ class ImagesGeneratorAndCounter extends Component {
 		blueClicked: true,
 		redClicked: true,
 		orangeClicked: true,
-		clientImagesDataObj: null,
-		filterButtonsState: {
-			greenClicked: true,
-			blueClicked: true,
-			redClicked: true,
-			orangeClicked: true
-		}
-	};
-
-	onFilterButtonsStateHandler = (buttonsStateObj) => {
-		this.setState((prevState) => {
-			const copyfilterButtonsState = { ...this.state.filterButtonsState };
-			copyfilterButtonsState[buttonsStateObj] = !prevState.filterButtonsState[buttonsStateObj];
-			return {
-				filterButtonsState: copyfilterButtonsState
-			};
-		});
+		filterButtonClicked: false
 	};
 
 	onFilterButtonsStateHandler = (buttonsStateObj) => {
 		this.setState((prevState) => {
 			return {
-				[buttonsStateObj]: !prevState[buttonsStateObj]
+				[buttonsStateObj]: !prevState[buttonsStateObj],
+				filterButtonClicked: true
 			};
 		});
 	};
@@ -60,27 +44,9 @@ class ImagesGeneratorAndCounter extends Component {
 		});
 	};
 
-	updateImageState = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
-		return {
-			containerColor: containerColor,
-			isClickedGreen: isClickedGreen,
-			isClickedBlue: isClickedBlue,
-			isClickedRed: isClickedRed
-		};
+	resetFilterButtonClickedHandler = () => {
+		this.setState({ filterButtonClicked: false });
 	};
-
-	// testForceUpdate = (imageId, containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
-	// 	firebase
-	// 		.database()
-	// 		.ref(`${this.props.userName}/images/${imageId}`)
-	// 		.update(this.updateImageState(containerColor, isClickedGreen, isClickedBlue, isClickedRed));
-
-	// 	const userNameDbElement = firebase.database().ref(this.props.userName);
-	// 	userNameDbElement.once('value', (snapshot) => {
-	// 		if (!snapshot.exists()) return;
-	// 		this.setState({ clientImagesDataObj: snapshot.val().images });
-	// 	});
-	// };
 
 	render() {
 		console.count('ImagesGeneratorAndCounter');
@@ -90,20 +56,20 @@ class ImagesGeneratorAndCounter extends Component {
 
 		if (this.props.isAuthenticated && this.props.userName) {
 			counter = (
-				<React.Fragment>
-					<Counter
-						imagesDataObj={this.props.imagesDataObj}
-						freePicturesAmount={this.props.freePicturesAmount}
-						discountProcent={this.props.discountProcent}
-						picturePrice={this.props.picturePrice}
-						onFilterButtonsState={this.onFilterButtonsStateHandler}
-						filterButtonsState={this.state}
-						isCheckout={this.props.isCheckout}
-						onAmountSelected={this.props.onAmountSelected}
-						allImagesTitles={this.props.allImagesTitles}
-						userName={this.props.userName}
-					/>
-				</React.Fragment>
+				<Counter
+					imagesDataObj={this.props.imagesDataObj}
+					import
+					FilterContext
+					freePicturesAmount={this.props.freePicturesAmount}
+					discountProcent={this.props.discountProcent}
+					picturePrice={this.props.picturePrice}
+					onFilterButtonsState={this.onFilterButtonsStateHandler}
+					filterButtonsState={this.state}
+					isCheckout={this.props.isCheckout}
+					onAmountSelected={this.props.onAmountSelected}
+					allImagesTitles={this.props.allImagesTitles}
+					userName={this.props.userName}
+				/>
 			);
 		}
 
@@ -119,6 +85,8 @@ class ImagesGeneratorAndCounter extends Component {
 					onImageClick={this.onImageClickedTitleHandler}
 					onHideMenu={this.onDrawerOpenHandler}
 					isDrawerOpen={this.props.isDrawerOpen}
+					isFilterButtonClicked={this.state.filterButtonClicked}
+					onResetFilterButtonClicked={this.resetFilterButtonClickedHandler}
 					// testForceUpdate={this.testForceUpdate}
 				/>
 			);
@@ -142,8 +110,9 @@ class ImagesGeneratorAndCounter extends Component {
 						<Paper>{counter}</Paper>
 					</Drawer>
 				</section>
-
-				<section>{imagesGenerator}</section>
+				<FilterContext.Provider value={{ filterButtonsState: this.state }}>
+					<section>{imagesGenerator}</section>
+				</FilterContext.Provider>
 			</React.Fragment>
 		);
 	}

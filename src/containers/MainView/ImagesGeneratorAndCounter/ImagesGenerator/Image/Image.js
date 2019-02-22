@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import ModalImage from './ModalImage/ModalImage';
 import firebase from 'firebase/app';
-import Swipe from 'react-easy-swipe';
 import 'firebase/database';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -22,6 +21,8 @@ import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
+import Swipe from 'react-easy-swipe';
+import FilterContext from '../../../../../context/filter-context';
 
 const styles = (theme) => ({
 	cardRed: {
@@ -132,6 +133,8 @@ class Image extends PureComponent {
 		isImageLarge: false
 	};
 
+	static contextType = FilterContext;
+
 	componentDidUpdate() {
 		const turnOnDatabaseListen = () => {
 			const userNameDbElement = firebase.database().ref(`${this.props.userName}/images/${this.props.caption[0]}`);
@@ -183,6 +186,8 @@ class Image extends PureComponent {
 	}
 
 	componentDidMount() {
+		// console.log('this.context', this.context.filterButtonsState.greenClicked);
+
 		let color = this.checkContainerColor();
 
 		this.setState({
@@ -194,6 +199,10 @@ class Image extends PureComponent {
 			src: this.props.src[0],
 			comment: this.props.imagesDataObj[this.props.caption[0]].comment
 		});
+	}
+
+	componentWillUnmount() {
+		firebase.database().ref(`${this.props.userName}/images/${this.props.caption[0]}`).off();
 	}
 
 	checkContainerColor() {
@@ -293,7 +302,7 @@ class Image extends PureComponent {
 	};
 
 	render() {
-		// console.log('image');
+		console.log('image');
 		const { classes } = this.props;
 		let modalImage = null;
 		let image = null;
@@ -318,7 +327,14 @@ class Image extends PureComponent {
 			cardColor = 'cardBlue';
 		}
 
-		if (!this.props.isAdminLogin && this.state.src) {
+		if (
+			(!this.props.isAdminLogin &&
+				this.state.src &&
+				((this.context.filterButtonsState.greenClicked && this.state.isClickedGreen) ||
+					(this.context.filterButtonsState.blueClicked && this.state.isClickedBlue) ||
+					(this.context.filterButtonsState.redClicked && this.state.isClickedRed))) ||
+			(this.context.filterButtonsState.orangeClicked && this.state.comment)
+		) {
 			image = (
 				<React.Fragment>
 					<Card className={classes[cardColor]}>
