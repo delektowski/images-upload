@@ -29,6 +29,14 @@ class ImagesGenerator extends Component {
 		imageButtonClicked: false
 	};
 
+	componentDidMount() {
+		const userNameDbElement = firebase.database().ref(`${this.props.userName}/images`);
+		userNameDbElement.once('value', (snapshot) => {
+			if (!snapshot.exists()) return;
+			this.setState({ updatedImagesDataObj: snapshot.val() });
+		});
+	}
+
 	componentDidUpdate() {
 		if (this.props.isFilterButtonClicked || this.state.imageButtonClicked) {
 			const userNameDbElement = firebase.database().ref(`${this.props.userName}/images`);
@@ -88,8 +96,8 @@ class ImagesGenerator extends Component {
 
 	getImagesPaths = () => {
 		const imagesPaths = [];
-		for (const prop in this.props.imagesDataObj) {
-			const imagePath = this.props.imagesDataObj[prop].path;
+		for (const prop in this.state.updatedImagesDataObj) {
+			const imagePath = this.state.updatedImagesDataObj[prop].path;
 			imagesPaths.push(imagePath);
 		}
 		return imagesPaths;
@@ -119,7 +127,7 @@ class ImagesGenerator extends Component {
 					<Image
 						src={Object.values(element)}
 						caption={Object.keys(element)}
-						imagesDataObj={this.props.imagesDataObj}
+						imagesDataObj={this.state.updatedImagesDataObj}
 						userName={this.props.userName}
 						isAdminLogin={this.props.isAdminLogin}
 						onHideMenu={this.props.onHideMenu}

@@ -50,7 +50,7 @@ class Uploader extends Component {
 							path: downloadURL,
 							isClickedGreen: false,
 							isClickedBlue: false,
-							isClickedRed: false,
+							isClickedRed: true,
 							comment: ''
 						});
 					});
@@ -107,7 +107,7 @@ class Uploader extends Component {
 						Wyślij
 					</Button>
 					<DropzoneArea
-						filesLimit={21}
+						filesLimit={100}
 						showPreviewsInDropzone={false}
 						showPreviews={true}
 						dropzoneText={'Przeciągnij i upuść zdjęcia albo kliknij aby dodać'}

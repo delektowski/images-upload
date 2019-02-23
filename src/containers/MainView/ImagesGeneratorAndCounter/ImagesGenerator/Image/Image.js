@@ -3,6 +3,10 @@ import ModalImage from './ModalImage/ModalImage';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { withStyles } from '@material-ui/core/styles';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { trackWindowScroll } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/opacity.css';
+
 import {
 	Card,
 	CardMedia,
@@ -29,26 +33,27 @@ const styles = (theme) => ({
 		width: 400,
 		margin: '1%',
 		background: 'rgb(194, 194, 194)',
-		transition: 'all .3s ease-in-out'
+		transition: 'all .3s ease-in-out',
+		textAlign: 'center'
 	},
 	cardGreen: {
 		width: 400,
 		margin: '1%',
 		background: 'rgb(229, 242, 229)',
-		transition: 'all .3s ease-in-out'
+		transition: 'all .3s ease-in-out',
+		textAlign: 'center'
 	},
 	cardBlue: {
 		width: 400,
 		margin: '1%',
 		background: 'rgb(235, 235, 234)',
-		transition: 'all .3s ease-in-out'
+		transition: 'all .3s ease-in-out',
+		textAlign: 'center'
 	},
 	media: {
 		maxWidth: '100%',
-		padding: '0 3%',
 		objectFit: 'contain',
-		maxHeight: 250,
-		margin: '0 auto'
+		maxHeight: 250
 	},
 	actions: {
 		display: 'flex',
@@ -301,6 +306,17 @@ class Image extends PureComponent {
 		});
 	};
 
+	checkIfImagePassFilter = () => {
+		return (
+			(!this.props.isAdminLogin &&
+				this.state.src &&
+				((this.context.filterButtonsState.greenClicked && this.state.isClickedGreen) ||
+					(this.context.filterButtonsState.blueClicked && this.state.isClickedBlue) ||
+					(this.context.filterButtonsState.redClicked && this.state.isClickedRed))) ||
+			(this.context.filterButtonsState.orangeClicked && this.state.comment)
+		);
+	};
+
 	render() {
 		console.log('image');
 		const { classes } = this.props;
@@ -327,14 +343,7 @@ class Image extends PureComponent {
 			cardColor = 'cardBlue';
 		}
 
-		if (
-			(!this.props.isAdminLogin &&
-				this.state.src &&
-				((this.context.filterButtonsState.greenClicked && this.state.isClickedGreen) ||
-					(this.context.filterButtonsState.blueClicked && this.state.isClickedBlue) ||
-					(this.context.filterButtonsState.redClicked && this.state.isClickedRed))) ||
-			(this.context.filterButtonsState.orangeClicked && this.state.comment)
-		) {
+		if (this.checkIfImagePassFilter()) {
 			image = (
 				<React.Fragment>
 					<Card className={classes[cardColor]}>
@@ -345,12 +354,22 @@ class Image extends PureComponent {
 								onSwipeMove={this.onSwipeMove}
 								onSwipeEnd={this.onSwipeEnd}
 							>
-								<CardMedia
+								{/* <CardMedia
 									component="img"
 									onClick={this.onIsImageLargeHandler}
 									className={classes.media}
 									src={this.state.src}
 									title={this.state.imageId}
+								/> */}
+
+								<LazyLoadImage
+									afterLoad={() => console.log('afterLoadText')}
+									beforeLoad={() => console.log('beforeLoadText')}
+									alt="kokos"
+									onClick={this.onIsImageLargeHandler}
+									className={classes.media}
+									src={this.state.src} // use normal <img> attributes as props
+									effect="opacity"
 								/>
 							</Swipe>
 
@@ -437,7 +456,6 @@ class Image extends PureComponent {
 						getImageId={this.state.imageId}
 						imagesDataObj={this.props.imagesDataObj}
 						caption={this.props.caption[0]}
-						// onModImgStateEqualToImgState={this.modImgStateEqualToImgStateHandler}
 					/>
 				</React.Fragment>
 			);
@@ -446,10 +464,11 @@ class Image extends PureComponent {
 		return (
 			<React.Fragment>
 				{image}
+
 				{modalImage}
 			</React.Fragment>
 		);
 	}
 }
 
-export default withStyles(styles)(Image);
+export default trackWindowScroll(withStyles(styles)(Image));

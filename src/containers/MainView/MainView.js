@@ -225,18 +225,6 @@ class mainView extends Component {
 				</Fab>
 			);
 		}
-		if (!this.state.isAuthenticated) {
-			footerBar = (
-				<AppBar className={classes.footer} position="static" color="default">
-					<Toolbar className={classes.toolbar__footer}>
-						<Copyright className={classes.icon} />
-						<Typography variant="caption" color="inherit">
-							2019 Marcin Delektowski
-						</Typography>
-					</Toolbar>
-				</AppBar>
-			);
-		}
 
 		if (this.state.isAuthenticated) {
 			imagesGeneratorAndCounter = (
@@ -254,6 +242,19 @@ class mainView extends Component {
 					isCheckout={this.state.isCheckout}
 					isAuthenticated={this.state.isAuthenticated}
 				/>
+			);
+		}
+
+		if (!this.state.isAuthenticated) {
+			footerBar = (
+				<AppBar className={classes.footer} position="static" color="default">
+					<Toolbar className={classes.toolbar__footer}>
+						<Copyright className={classes.icon} />
+						<Typography variant="caption" color="inherit">
+							2019 Marcin Delektowski
+						</Typography>
+					</Toolbar>
+				</AppBar>
 			);
 		}
 
