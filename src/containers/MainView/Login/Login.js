@@ -74,11 +74,14 @@ class Login extends PureComponent {
 				});
 
 			firebase.auth().onAuthStateChanged((user) => {
+				console.log('loooooooooooooooggggggggggggiiiiiinnnnnnnnn', this.state.loginField);
+
 				if (user) {
 					const userNameDbElement = firebase.database().ref(this.state.loginField);
 					userNameDbElement.once('value', (snapshot) => {
 						if (!snapshot.exists()) return;
 						const imagesDataObj = snapshot.val();
+						console.log('uuuuuuloooogin', imagesDataObj.images);
 
 						this.props.onLoginDataPass(
 							imagesDataObj.images,

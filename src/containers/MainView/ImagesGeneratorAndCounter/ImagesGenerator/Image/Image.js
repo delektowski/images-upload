@@ -7,16 +7,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { trackWindowScroll } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 
-import {
-	Card,
-	CardMedia,
-	CardContent,
-	CardActions,
-	TextField,
-	Collapse,
-	IconButton,
-	CardHeader
-} from '@material-ui/core/';
+import { Card, CardContent, CardActions, TextField, Collapse, IconButton, CardHeader } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import ChatBubble from '@material-ui/icons/ChatBubble';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -354,21 +345,13 @@ class Image extends PureComponent {
 								onSwipeMove={this.onSwipeMove}
 								onSwipeEnd={this.onSwipeEnd}
 							>
-								{/* <CardMedia
-									component="img"
-									onClick={this.onIsImageLargeHandler}
-									className={classes.media}
-									src={this.state.src}
-									title={this.state.imageId}
-								/> */}
-
 								<LazyLoadImage
 									afterLoad={() => console.log('afterLoadText')}
 									beforeLoad={() => console.log('beforeLoadText')}
 									alt="kokos"
 									onClick={this.onIsImageLargeHandler}
 									className={classes.media}
-									src={this.state.src} // use normal <img> attributes as props
+									src={this.state.src}
 									effect="opacity"
 								/>
 							</Swipe>

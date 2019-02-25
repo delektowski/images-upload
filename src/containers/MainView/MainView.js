@@ -97,6 +97,8 @@ class mainView extends Component {
 	};
 
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
+		console.log('onLoginDataPass', imagesDataObj);
+
 		this.setState({
 			imagesDataObj: imagesDataObj,
 			isLoginClicked: false,
@@ -126,7 +128,9 @@ class mainView extends Component {
 			isDrawerOpen: true,
 			isFooterHidden: false
 		});
+		window.location.reload();
 	};
+
 	onDrawerOpenHandler = () => {
 		if (!this.state.imageClickedTitle) {
 			this.setState((prevState) => {
@@ -212,8 +216,7 @@ class mainView extends Component {
 					onChangeUserName={this.onChangeUserNameHandler}
 					isCreateUserLogin={this.state.createUserLogin}
 					isAuthenticated={this.onAuthenticationHandler}
-					onLoginDataPass={(imagesDataObj, freePicturesAmount, picturePrice, discountProcent) =>
-						this.onLoginDataPass(imagesDataObj, freePicturesAmount, picturePrice, discountProcent)}
+					onLoginDataPass={this.onLoginDataPass}
 				/>
 			);
 		}
