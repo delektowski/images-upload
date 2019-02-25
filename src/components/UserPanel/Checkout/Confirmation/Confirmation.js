@@ -3,6 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const styles = {
 	container: {
@@ -39,6 +40,10 @@ const confirmation = (props) => {
 			</div>
 		</Dialog>
 	);
+};
+
+confirmation.propTypes = {
+	classes: PropTypes.object
 };
 
 export default withStyles(styles)(confirmation);

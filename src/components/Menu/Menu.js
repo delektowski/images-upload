@@ -6,6 +6,7 @@ import CheckoutRelease from './CheckoutRelease/CheckoutRelease';
 import IconButton from '@material-ui/core/IconButton';
 import { Menu, MenuItem } from '@material-ui/core/';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import PropTypes from 'prop-types';
 
 const menu = (props) => {
 	console.count('MENU');
@@ -70,6 +71,18 @@ const menu = (props) => {
 			</Menu>
 		</div>
 	);
+};
+
+menu.propTypes = {
+	classes: PropTypes.object,
+	PaperProps: PropTypes.object,
+	anchorEl: PropTypes.any,
+	children: PropTypes.array,
+	disableAutoFocusItem: PropTypes.bool,
+	onClose: PropTypes.func,
+	open: PropTypes.bool,
+	theme: PropTypes.any,
+	transitionDuration: PropTypes.any
 };
 
 export default menu;

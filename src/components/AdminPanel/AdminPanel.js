@@ -1,7 +1,7 @@
 import React from 'react';
 import Uploader from './Uploader/Uploader';
-
 import CreateUser from './CreateUser/CreateUser';
+import PropTypes from 'prop-types';
 
 const AdminPanel = (props) => {
 	console.count('ADMINPANEL');
@@ -37,6 +37,22 @@ const AdminPanel = (props) => {
 			/>
 		</React.Fragment>
 	);
+};
+
+AdminPanel.propTypes = {
+	adminLogin: PropTypes.func,
+	discountProcent: PropTypes.number,
+	imagesAmount: PropTypes.number,
+	imagesDataObj: PropTypes.func,
+	isButtonDisabled: PropTypes.bool,
+	loginClicked: PropTypes.func,
+	logout: PropTypes.func,
+	onChangeUserName: PropTypes.func,
+	onUserCreated: PropTypes.func,
+	picturePrice: PropTypes.number,
+	selectedfiles: PropTypes.func,
+	uploadSelectedImages: PropTypes.number,
+	userName: PropTypes.string
 };
 
 export default AdminPanel;

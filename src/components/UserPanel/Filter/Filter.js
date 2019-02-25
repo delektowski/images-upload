@@ -2,6 +2,7 @@ import React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	container: {
@@ -53,29 +54,6 @@ const filter = (props) => {
 	console.count('FILTER');
 	const { classes } = props;
 
-	const buttonClickHandler = (whichButton) => {
-		switch (whichButton) {
-			case 'greenClicked':
-				props.onFilterButtonsState('greenClicked');
-				break;
-
-			case 'blueClicked':
-				props.onFilterButtonsState('blueClicked');
-				break;
-
-			case 'redClicked':
-				props.onFilterButtonsState('redClicked');
-				break;
-
-			case 'orangeClicked':
-				props.onFilterButtonsState('orangeClicked');
-				break;
-
-			default:
-				break;
-		}
-	};
-
 	return (
 		<div className={classes.container}>
 			{props.filterClicked === 'greenClicked' ? (
@@ -85,7 +63,6 @@ const filter = (props) => {
 			) : null}
 			<Checkbox
 				checked={props.filterButtonsState[props.filterClicked]}
-				onChange={() => buttonClickHandler(props.filterClicked)}
 				classes={{
 					root: classes[props.filterClicked],
 					checked: classes.checked
@@ -93,6 +70,13 @@ const filter = (props) => {
 			/>
 		</div>
 	);
+};
+
+filter.propTypes = {
+	classes: PropTypes.object,
+	filterButtonsState: PropTypes.object,
+	filterClicked: PropTypes.string,
+	onFilterButtonsState: PropTypes.func
 };
 
 export default withStyles(styles)(filter);

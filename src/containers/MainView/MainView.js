@@ -11,6 +11,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Copyright from '@material-ui/icons/Copyright';
 import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const styles = {
 	mainView: {},
@@ -75,7 +76,7 @@ const styles = {
 	}
 };
 
-class mainView extends Component {
+class MainView extends Component {
 	state = {
 		userName: '',
 		isLoginClicked: false,
@@ -322,4 +323,8 @@ class mainView extends Component {
 	}
 }
 
-export default withStyles(styles)(mainView);
+MainView.propTypes = {
+	classes: PropTypes.object
+};
+
+export default withStyles(styles)(MainView);

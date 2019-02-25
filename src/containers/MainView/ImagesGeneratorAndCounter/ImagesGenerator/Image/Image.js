@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { trackWindowScroll } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/opacity.css';
-
 import { Card, CardContent, CardActions, TextField, Collapse, IconButton, CardHeader } from '@material-ui/core/';
 import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import ChatBubble from '@material-ui/icons/ChatBubble';
@@ -16,8 +15,8 @@ import ThumbDownAlt from '@material-ui/icons/ThumbDownAlt';
 import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
-import Swipe from 'react-easy-swipe';
 import FilterContext from '../../../../../context/filter-context';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	cardRed: {
@@ -126,7 +125,8 @@ class Image extends PureComponent {
 		src: null,
 		expanded: false,
 		confirmedComment: false,
-		isImageLarge: false
+		isImageLarge: false,
+		showSpinner: true
 	};
 
 	static contextType = FilterContext;
@@ -231,7 +231,7 @@ class Image extends PureComponent {
 
 	handleExpandClick = () => {
 		this.setState((state) => ({ expanded: !state.expanded }));
-		if (window.innerWidth <= 600) {
+		if (this.getWindowInnerWidth()) {
 			this.props.onHideMenu();
 		}
 	};
@@ -308,8 +308,12 @@ class Image extends PureComponent {
 		);
 	};
 
+	getWindowInnerWidth = () => {
+		return window.innerWidth < 900;
+	};
+
 	render() {
-		console.log('image');
+		console.log('image', this.props.imgNumber);
 		const { classes } = this.props;
 		let modalImage = null;
 		let image = null;
@@ -340,21 +344,15 @@ class Image extends PureComponent {
 					<Card className={classes[cardColor]}>
 						<div className={classes[borderColor]}>
 							<CardHeader subheader={this.state.imageId} className={classes.imageTitle} />
-							<Swipe
-								onSwipeStart={this.onSwipeStart}
-								onSwipeMove={this.onSwipeMove}
-								onSwipeEnd={this.onSwipeEnd}
-							>
-								<LazyLoadImage
-									afterLoad={() => console.log('afterLoadText')}
-									beforeLoad={() => console.log('beforeLoadText')}
-									alt="kokos"
-									onClick={this.onIsImageLargeHandler}
-									className={classes.media}
-									src={this.state.src}
-									effect="opacity"
-								/>
-							</Swipe>
+
+							<LazyLoadImage
+								alt="image"
+								onClick={this.getWindowInnerWidth() ? null : this.onIsImageLargeHandler}
+								className={classes.media}
+								src={this.state.src}
+								effect="opacity"
+								threshold={this.getWindowInnerWidth() ? 1000 : 100}
+							/>
 
 							<CardActions className={classes.actions}>
 								<IconButton onClick={() => this.buttonClickHandler('green')}>
@@ -429,9 +427,6 @@ class Image extends PureComponent {
 						isImageLarge={this.state.isImageLarge}
 						onImageLargeClose={this.onIsImageLargeHandler}
 						imageIdImageLarge={this.state.imageIdImageLarge}
-						onSwipeStart={this.onSwipeStart}
-						onSwipeMove={this.onSwipeMove}
-						onSwipeEnd={this.onSwipeEnd}
 						isExpanded={this.state.expanded}
 						userName={this.props.userName}
 						handleExpandClick={this.handleExpandClick}
@@ -453,5 +448,15 @@ class Image extends PureComponent {
 		);
 	}
 }
+
+Image.propTypes = {
+	classes: PropTypes.object,
+	caption: PropTypes.array,
+	imagesDataObj: PropTypes.object,
+	isAdminLogin: PropTypes.bool,
+	scrollPosition: PropTypes.any,
+	src: PropTypes.array,
+	userName: PropTypes.string
+};
 
 export default trackWindowScroll(withStyles(styles)(Image));

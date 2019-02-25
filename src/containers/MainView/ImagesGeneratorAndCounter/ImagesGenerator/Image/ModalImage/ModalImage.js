@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import firebase from 'firebase/app';
-import Swipe from 'react-easy-swipe';
 import 'firebase/database';
 import {
 	Card,
@@ -27,6 +26,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import Cancel from '@material-ui/icons/Cancel';
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIos from '@material-ui/icons/ArrowForwardIos';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	widtha: {
@@ -141,8 +141,6 @@ class ModalImage extends PureComponent {
 		comment: '',
 		isImageClicked: false,
 		open: false,
-		touchStart: 0,
-		touchEnd: 0,
 		isHover: false
 	};
 
@@ -163,40 +161,6 @@ class ModalImage extends PureComponent {
 				comment: snapshot.val().comment
 			});
 		});
-
-		// let color = '';
-		// if (this.props.imagesDataObj[this.props.caption].isClickedGreen) color = 'green';
-		// if (this.props.imagesDataObj[this.props.caption].isClickedBlue) color = 'blue';
-		// if (this.props.imagesDataObj[this.props.caption].isClickedRed) color = 'red';
-		// this.setState({
-		// 	containerColor: color,
-		// 	isClickedGreen: this.props.imagesDataObj[this.props.caption].isClickedGreen,
-		// 	isClickedBlue: this.props.imagesDataObj[this.props.caption].isClickedBlue,
-		// 	isClickedRed: this.props.imagesDataObj[this.props.caption].isClickedRed,
-		// 	srcImageLarge: this.props.getImageSrc,
-		// 	imageIdImageLarge: this.props.getImageId,
-		// 	comment: this.props.imagesDataObj[this.props.caption].comment
-		// });
-	}
-
-	componentDidUpdate() {
-		if (this)
-			if (this.state.touchStart > 0 && this.state.touchEnd > 0) {
-				const touchLength = this.state.touchStart - this.state.touchEnd;
-
-				if (touchLength < 0) {
-					this.onModalImageSelectionHandler('back');
-				}
-
-				if (touchLength > 0) {
-					this.onModalImageSelectionHandler('forward');
-				}
-
-				this.setState({
-					touchStart: 0,
-					touchEnd: 0
-				});
-			}
 	}
 
 	componentWillUnmount() {
@@ -298,7 +262,6 @@ class ModalImage extends PureComponent {
 				});
 				break;
 
-
 			default:
 				break;
 		}
@@ -325,18 +288,6 @@ class ModalImage extends PureComponent {
 
 	handleClose = () => {
 		this.setState({ open: false });
-	};
-
-	onSwipeStart = (e) => {
-		if (this.props.ImageClickedTitle) {
-			this.setState({ touchStart: e.changedTouches[0].clientX });
-		}
-	};
-
-	onSwipeEnd = (e) => {
-		if (this.props.ImageClickedTitle) {
-			this.setState({ touchEnd: e.changedTouches[0].clientX });
-		}
 	};
 
 	onCommentHandler = (e) => {
@@ -374,8 +325,6 @@ class ModalImage extends PureComponent {
 	};
 
 	updateImageFirebase = (containerColor, isClickedGreen, isClickedBlue, isClickedRed) => {
-		console.log('FIREBASE');
-
 		firebase
 			.database()
 			.ref(`${this.props.userName}/images/${this.state.imageIdImageLarge}`)
@@ -491,23 +440,15 @@ class ModalImage extends PureComponent {
 									</Fab>
 								</Fade>
 							</React.Fragment>
-
 							<div className={classes[borderColor]}>
 								<CardHeader subheader={this.state.imageIdImageLarge} className={classes.imageTitle} />
-								<Swipe
-									onSwipeStart={this.onSwipeStart}
-									onSwipeMove={this.onSwipeMove}
-									onSwipeEnd={this.onSwipeEnd}
-								>
-									<CardMedia
-										onMouseMove={this.onHoverHandler}
-										component="img"
-										className={[ classes.media, classes.biggerMedia ].join(' ')}
-										src={this.state.srcImageLarge}
-										title={this.state.imageIdImageLarge}
-									/>
-								</Swipe>
-
+								<CardMedia
+									onMouseMove={this.onHoverHandler}
+									component="img"
+									className={[ classes.media, classes.biggerMedia ].join(' ')}
+									src={this.state.srcImageLarge}
+									title={this.state.imageIdImageLarge}
+								/>
 								<CardActions className={classes.actions}>
 									<IconButton onClick={() => this.buttonClickHandler('green')}>
 										<ThumbUpAlt
@@ -576,5 +517,18 @@ class ModalImage extends PureComponent {
 		);
 	}
 }
+
+ModalImage.propTypes = {
+	classes: PropTypes.object,
+	caption: PropTypes.string,
+	getImageId: PropTypes.string,
+	getImageSrc: PropTypes.string,
+	handleExpandClick: PropTypes.func,
+	imagesDataObj: PropTypes.object,
+	isExpanded: PropTypes.bool,
+	isImageLarge: PropTypes.bool,
+	onImageLargeClose: PropTypes.func,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(ModalImage);

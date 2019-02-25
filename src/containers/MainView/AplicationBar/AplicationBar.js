@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
-
 import Menu from '../../../components/Menu/Menu';
-
 import { AppBar, Toolbar, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import BurstMode from '@material-ui/icons/BurstMode';
+import PropTypes from 'prop-types';
 
 const styles = {
 	header: {
@@ -160,5 +159,17 @@ class AplicationBar extends PureComponent {
 		);
 	}
 }
+
+AplicationBar.propTypes = {
+	classes: PropTypes.object,
+	imagesDataObj: PropTypes.object,
+	isAdminLogin: PropTypes.bool,
+	isAuthenticated: PropTypes.bool,
+	isCheckout: PropTypes.bool,
+	onCheckoutClose: PropTypes.func,
+	onCheckoutRelease: PropTypes.func,
+	onLogoutHandler: PropTypes.func,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(AplicationBar);

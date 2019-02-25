@@ -4,6 +4,7 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import 'firebase/database';
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	bar: {
@@ -41,13 +42,11 @@ const styles = (theme) => ({
 		paddingBottom: '.8%',
 		paddingTop: '.8%'
 	},
-
 	orangeAvatar: {
 		width: 70,
 		height: 70,
 		margin: '0 auto',
 		fontSize: '.9rem',
-
 		color: '#fff',
 		backgroundColor: deepOrange[500]
 	},
@@ -70,14 +69,11 @@ class PaymentConf extends Component {
 		console.count('PAYMENTCONF');
 		const { classes } = this.props;
 		let picturesAmount = this.props.amountSelectedImages ? this.props.amountSelectedImages.length : 0;
+
 		let discount =
 			(picturesAmount - this.props.freePicturesAmount) *
 			this.props.picturePrice *
 			(this.props.discountProcent / 100);
-
-		// if (this.props.discountProcent === '0') {
-		// 	discount = 1;
-		// }
 
 		let price = Math.round((picturesAmount - this.props.freePicturesAmount) * this.props.picturePrice - discount);
 		if (price < 0) price = 0;
@@ -160,5 +156,19 @@ class PaymentConf extends Component {
 		);
 	}
 }
+
+PaymentConf.propTypes = {
+	classes: PropTypes.object,
+	amountSelectedImages: PropTypes.number,
+	changeDiscountValue: PropTypes.func,
+	changeFreePicturesAmount: PropTypes.func,
+	changePicturePrice: PropTypes.func,
+	discountProcent: PropTypes.number,
+	freePicturesAmount: PropTypes.number,
+	imagesDataObj: PropTypes.object,
+	isUserCreated: PropTypes.bool,
+	picturePrice: PropTypes.number,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(PaymentConf);

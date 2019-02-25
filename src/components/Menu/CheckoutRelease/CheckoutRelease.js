@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-ui/core/';
+import PropTypes from 'prop-types';
 
 const checkoutRelease = (props) => {
 	console.count('CHECKOUTRELEASE');
@@ -13,6 +14,11 @@ const checkoutRelease = (props) => {
 			podsumowanie
 		</Typography>
 	);
+};
+
+checkoutRelease.propTypes = {
+	onCheckoutRelease: PropTypes.func,
+	onMenuClose: PropTypes.func
 };
 
 export default checkoutRelease;

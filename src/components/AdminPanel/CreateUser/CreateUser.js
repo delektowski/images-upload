@@ -5,6 +5,7 @@ import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	root: {
@@ -267,5 +268,20 @@ class CreateUser extends Component {
 		);
 	}
 }
+
+CreateUser.propTypes = {
+	classes: PropTypes.object,
+	adminLogin: PropTypes.func,
+	amountSelectedImages: PropTypes.number,
+	buttonCreate: PropTypes.func,
+	clicked: PropTypes.func,
+	discountProcent: PropTypes.number,
+	imagesDataObj: PropTypes.object,
+	loginClicked: PropTypes.object,
+	onChangeUserName: PropTypes.object,
+	onCreateUser: PropTypes.object,
+	onUserCreated: PropTypes.object,
+	picturePrice: PropTypes.number
+};
 
 export default withStyles(styles)(CreateUser);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-ui/core/';
+import PropTypes from 'prop-types';
 
 const selection = (props) => {
 	console.count('SELECTION');
@@ -14,6 +15,11 @@ const selection = (props) => {
 			selekcja
 		</Typography>
 	);
+};
+
+selection.propTypes = {
+	onCheckoutClose: PropTypes.func,
+	onMenuClose: PropTypes.func
 };
 
 export default selection;

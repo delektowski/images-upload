@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import Payment from '../../UserPanel/Payment/Payment';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	container: {
@@ -148,6 +149,18 @@ const checkout = (props) => {
 			</div>
 		</React.Fragment>
 	);
+};
+
+checkout.propTypes = {
+	classes: PropTypes.object,
+	allImagesCost: PropTypes.number,
+	allImagesTitles: PropTypes.func,
+	countFreePictures: PropTypes.number,
+	countPayPerImage: PropTypes.number,
+	imagesDataObj: PropTypes.object,
+	isCheckout: PropTypes.bool,
+	picturePrice: PropTypes.string,
+	selectedImages: PropTypes.number
 };
 
 export default withStyles(styles)(checkout);

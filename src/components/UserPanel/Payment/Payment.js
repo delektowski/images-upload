@@ -2,6 +2,7 @@ import React from 'react';
 import { Paper, Typography, Avatar } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
 import deepPurple from '@material-ui/core/colors/deepPurple';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	paper: {
@@ -144,4 +145,15 @@ const Payment = (props) => {
 		</React.Fragment>
 	);
 };
+
+Payment.propTypes = {
+	classes: PropTypes.object,
+	allImagesCost: PropTypes.number,
+	countFreePictures: PropTypes.number,
+	countPayPerImage: PropTypes.number,
+	isCheckout: PropTypes.bool,
+	picturePrice: PropTypes.string,
+	selectedImages: PropTypes.number
+};
+
 export default withStyles(styles)(Payment);

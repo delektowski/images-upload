@@ -10,6 +10,7 @@ import ThumbsUpDown from '@material-ui/icons/ThumbsUpDown';
 import ChatBubble from '@material-ui/icons/ChatBubble';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import PropTypes from 'prop-types';
 
 const styles = {
 	paper: {
@@ -89,7 +90,6 @@ class Counter extends PureComponent {
 		userNameDbElement.on('value', (snapshot) => {
 			if (!snapshot.exists()) return;
 			const updatedDataObj = snapshot.val();
-
 			this.setState({ updatedImagesDataObj: updatedDataObj.images });
 		});
 	}
@@ -171,6 +171,29 @@ class Counter extends PureComponent {
 			: 0;
 	};
 
+	filterButtonClickHandler = (whichButton) => {
+		switch (whichButton) {
+			case 'greenClicked':
+				this.props.onFilterButtonsState(whichButton);
+				break;
+
+			case 'blueClicked':
+				this.props.onFilterButtonsState(whichButton);
+				break;
+
+			case 'redClicked':
+				this.props.onFilterButtonsState(whichButton);
+				break;
+
+			case 'orangeClicked':
+				this.props.onFilterButtonsState(whichButton);
+				break;
+
+			default:
+				break;
+		}
+	};
+
 	render() {
 		console.count('COUNTER');
 		const { classes } = this.props;
@@ -189,7 +212,10 @@ class Counter extends PureComponent {
 			paymentOnImagesSelect = (
 				<React.Fragment>
 					<Paper className={classes.paper}>
-						<div className={classes.iconCaptionFilterContainer}>
+						<div
+							className={classes.iconCaptionFilterContainer}
+							onClick={() => this.filterButtonClickHandler('greenClicked')}
+						>
 							<div className={[ classes.iconCaptionContainer, classes.green ].join(' ')}>
 								<div>
 									<ThumbUpAlt />
@@ -210,7 +236,10 @@ class Counter extends PureComponent {
 							{filter('greenClicked')}
 						</div>
 
-						<div className={classes.iconCaptionFilterContainer}>
+						<div
+							className={classes.iconCaptionFilterContainer}
+							onClick={() => this.filterButtonClickHandler('blueClicked')}
+						>
 							<div className={[ classes.iconCaptionContainer, classes.blue ].join(' ')}>
 								<div>
 									<ThumbsUpDown />
@@ -230,7 +259,10 @@ class Counter extends PureComponent {
 							{filter('blueClicked')}
 						</div>
 
-						<div className={classes.iconCaptionFilterContainer}>
+						<div
+							className={classes.iconCaptionFilterContainer}
+							onClick={() => this.filterButtonClickHandler('redClicked')}
+						>
 							<div className={[ classes.iconCaptionContainer, classes.red ].join(' ')}>
 								<div>
 									<ThumbDownAlt />
@@ -250,7 +282,10 @@ class Counter extends PureComponent {
 							{filter('redClicked')}
 						</div>
 
-						<div className={classes.iconCaptionFilterContainer}>
+						<div
+							className={classes.iconCaptionFilterContainer}
+							onClick={() => this.filterButtonClickHandler('orangeClicked')}
+						>
 							<div
 								className={[
 									classes.iconCaptionContainer,
@@ -310,5 +345,19 @@ class Counter extends PureComponent {
 		);
 	}
 }
+
+Counter.propTypes = {
+	FilterContext: PropTypes.bool,
+	classes: PropTypes.object,
+	discountProcent: PropTypes.string,
+	freePicturesAmount: PropTypes.string,
+	picturePrice: PropTypes.string,
+	imagesDataObj: PropTypes.object,
+	filterButtonsState: PropTypes.object,
+	import: PropTypes.bool,
+	isCheckout: PropTypes.bool,
+	onFilterButtonsState: PropTypes.func,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(Counter);

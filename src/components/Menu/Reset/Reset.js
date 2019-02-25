@@ -2,8 +2,9 @@ import React from 'react';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { Typography } from '@material-ui/core/';
+import PropTypes from 'prop-types';
 
-const Reset = (props) => {
+const reset = (props) => {
 	console.count('RESET');
 	const resetUserSelection = () => {
 		for (let value in props.imagesDataObj) {
@@ -23,4 +24,10 @@ const Reset = (props) => {
 	);
 };
 
-export default Reset;
+reset.propTypes = {
+	imagesDataObj: PropTypes.object,
+	onMenuClose: PropTypes.func,
+	userName: PropTypes.string
+};
+
+export default reset;

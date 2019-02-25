@@ -4,6 +4,7 @@ import ImagesGenerator from './ImagesGenerator/ImagesGenerator';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Drawer } from '@material-ui/core/';
 import FilterContext from '../../../context/filter-context';
+import PropTypes from 'prop-types';
 
 const styles = {
 	drawerPaper: {
@@ -117,5 +118,19 @@ class ImagesGeneratorAndCounter extends Component {
 		);
 	}
 }
+
+ImagesGeneratorAndCounter.propTypes = {
+	classes: PropTypes.object,
+	discountProcent: PropTypes.string,
+	freePicturesAmount: PropTypes.string,
+	imagesDataObj: PropTypes.object,
+	isAdminLogin: PropTypes.bool,
+	isAuthenticated: PropTypes.bool,
+	isCheckout: PropTypes.bool,
+	isDrawerOpen: PropTypes.bool,
+	onHideMenu: PropTypes.func,
+	picturePrice: PropTypes.string,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(ImagesGeneratorAndCounter);

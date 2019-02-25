@@ -4,6 +4,7 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import 'firebase/database';
+import PropTypes from 'prop-types';
 
 class Uploader extends Component {
 	state = {
@@ -132,5 +133,15 @@ class Uploader extends Component {
 		) : null;
 	}
 }
+
+Uploader.propTypes = {
+	imagesDataObj: PropTypes.func,
+	isButtonDisabled: PropTypes.bool,
+	isUserCreated: PropTypes.bool,
+	loginClicked: PropTypes.func,
+	selectedfiles: PropTypes.func,
+	uploadSelectedImages: PropTypes.number,
+	userName: PropTypes.string
+};
 
 export default Uploader;

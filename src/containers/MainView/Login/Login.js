@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/storage';
 import 'firebase/database';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	container: {
@@ -182,5 +183,15 @@ class Login extends PureComponent {
 		);
 	}
 }
+
+Login.propTypes = {
+	classes: PropTypes.object,
+	isAuthenticated: PropTypes.func,
+	isCreateUserLogin: PropTypes.string,
+	onChangeUserName: PropTypes.func,
+	onIsAdminLogin: PropTypes.func,
+	onIsLoginClicked: PropTypes.func,
+	onLoginDataPass: PropTypes.func
+};
 
 export default withStyles(styles)(Login);

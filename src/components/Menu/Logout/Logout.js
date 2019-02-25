@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import { Typography } from '@material-ui/core/';
+import PropTypes from 'prop-types';
 
 const logout = (props) => {
 	const onLogoutHandler = () => {
@@ -25,6 +26,11 @@ const logout = (props) => {
 			wyloguj
 		</Typography>
 	);
+};
+
+logout.propTypes = {
+	onLogoutHandler: PropTypes.func,
+	userName: PropTypes.string
 };
 
 export default logout;

@@ -3,6 +3,7 @@ import Image from './Image/Image';
 import { withStyles } from '@material-ui/core/styles';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	imagesContainer: {
@@ -121,10 +122,11 @@ class ImagesGenerator extends Component {
 
 		let imagesTitlesPaths = null;
 
-		imagesTitlesPaths = this.getImagesTitleArr().map((element) => {
+		imagesTitlesPaths = this.getImagesTitleArr().map((element, i) => {
 			return (
 				<React.Fragment key={Object.keys(element)}>
 					<Image
+						imgNumber={i}
 						src={Object.values(element)}
 						caption={Object.keys(element)}
 						imagesDataObj={this.state.updatedImagesDataObj}
@@ -149,5 +151,17 @@ class ImagesGenerator extends Component {
 		);
 	}
 }
+
+ImagesGenerator.propTypes = {
+	classes: PropTypes.object,
+	filterButtonsState: PropTypes.object,
+	imagesDataObj: PropTypes.object,
+	isAdminLogin: PropTypes.bool,
+	isDrawerOpen: PropTypes.bool,
+	isFilterButtonClicked: PropTypes.bool,
+	onImageClick: PropTypes.func,
+	onResetFilterButtonClicked: PropTypes.func,
+	userName: PropTypes.string
+};
 
 export default withStyles(styles)(ImagesGenerator);
