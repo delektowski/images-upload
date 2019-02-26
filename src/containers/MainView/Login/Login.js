@@ -49,8 +49,8 @@ const styles = (theme) => ({
 
 class Login extends PureComponent {
 	state = {
-		loginField: 'admin',
-		passwordField: 'admin78',
+		loginField: 'test',
+		passwordField: 'testtest',
 		errorLogin: ''
 	};
 

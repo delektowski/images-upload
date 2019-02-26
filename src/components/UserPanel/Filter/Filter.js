@@ -50,21 +50,19 @@ const styles = (theme) => ({
 	checked: {}
 });
 
-const filter = (props) => {
+const filter = ({ filterClicked, filterButtonsState, classes }) => {
 	console.count('FILTER');
-	const { classes } = props;
-
 	return (
 		<div className={classes.container}>
-			{props.filterClicked === 'greenClicked' ? (
+			{filterClicked === 'greenClicked' ? (
 				<Typography className={classes.caption} variant="caption">
 					POKAŻ
 				</Typography>
 			) : null}
 			<Checkbox
-				checked={props.filterButtonsState[props.filterClicked]}
+				checked={filterButtonsState[filterClicked]}
 				classes={{
-					root: classes[props.filterClicked],
+					root: classes[filterClicked],
 					checked: classes.checked
 				}}
 			/>
@@ -75,8 +73,7 @@ const filter = (props) => {
 filter.propTypes = {
 	classes: PropTypes.object,
 	filterButtonsState: PropTypes.object,
-	filterClicked: PropTypes.string,
-	onFilterButtonsState: PropTypes.func
+	filterClicked: PropTypes.string
 };
 
 export default withStyles(styles)(filter);

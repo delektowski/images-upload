@@ -379,10 +379,10 @@ class ModalImage extends PureComponent {
 
 	render() {
 		console.count('MODALIMAGE');
+		const { classes, isImageLarge, onImageLargeClose, handleExpandClick, isExpanded } = this.props;
 		let borderColor = 'borderRed';
 		let cardColor = 'cardRed';
 		let commentIcon = <ChatBubbleOutline />;
-		const { classes } = this.props;
 
 		if (this.state.comment) {
 			commentIcon = <ChatBubble className={classes.orange} />;
@@ -411,8 +411,8 @@ class ModalImage extends PureComponent {
 				<Dialog
 					maxWidth={'md'}
 					scroll="body"
-					open={this.props.isImageLarge}
-					onClose={this.props.onImageLargeClose}
+					open={isImageLarge}
+					onClose={onImageLargeClose}
 					PaperProps={{ style: mediaQuery }}
 					PaperComponent="div"
 				>
@@ -478,14 +478,14 @@ class ModalImage extends PureComponent {
 										/>
 									</IconButton>
 									<IconButton
-										onClick={this.props.handleExpandClick}
-										aria-expanded={this.props.isExpanded}
+										onClick={handleExpandClick}
+										aria-expanded={isExpanded}
 										aria-label="Show more"
 									>
-										{this.props.isExpanded ? <ExpandLess /> : commentIcon}
+										{isExpanded ? <ExpandLess /> : commentIcon}
 									</IconButton>
 								</CardActions>
-								<Collapse in={this.props.isExpanded} timeout="auto" unmountOnExit>
+								<Collapse in={isExpanded} timeout="auto" unmountOnExit>
 									<CardContent>
 										<TextField
 											id="outlined-textarea"

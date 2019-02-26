@@ -71,13 +71,20 @@ const styles = (theme) => ({
 	}
 });
 
-const Payment = (props) => {
+const Payment = ({
+	classes,
+	allImagesCost,
+	countFreePictures,
+	countPayPerImage,
+	isCheckout,
+	picturePrice,
+	selectedImages
+}) => {
 	console.count('PAYMENT');
-	const { classes } = props;
 	let selectionPayment = null;
 	let checkoutPayment = null;
 
-	if (!props.isCheckout) {
+	if (!isCheckout) {
 		selectionPayment = (
 			<div className={[ classes.iconCaptionContainer, classes.deepPurple ].join(' ')}>
 				<div>
@@ -87,14 +94,14 @@ const Payment = (props) => {
 				</div>
 				<Avatar className={[ classes.avatar, classes.bgDeepPurple ].join(' ')}>
 					<Typography className={classes.white} variant="caption">
-						{props.countFreePictures}
+						{countFreePictures}
 					</Typography>
 				</Avatar>
 			</div>
 		);
 	}
 
-	if (props.isCheckout) {
+	if (isCheckout) {
 		checkoutPayment = (
 			<div className={[ classes.iconCaptionContainer, classes.green ].join(' ')}>
 				<div>
@@ -104,7 +111,7 @@ const Payment = (props) => {
 				</div>
 				<Avatar className={[ classes.avatar, classes.bgGreen ].join(' ')}>
 					<Typography className={classes.white} variant="caption">
-						{props.selectedImages}
+						{selectedImages}
 					</Typography>
 				</Avatar>
 			</div>
@@ -124,7 +131,7 @@ const Payment = (props) => {
 					</div>
 					<Avatar className={[ classes.avatar, classes.bgPrimary ].join(' ')}>
 						<Typography className={classes.white} variant="caption">
-							{props.allImagesCost} zł
+							{allImagesCost} zł
 						</Typography>
 					</Avatar>
 				</div>
@@ -132,12 +139,12 @@ const Payment = (props) => {
 					className={[ classes.iconCaptionContainer, classes.iconCaptionContainerBig, classes.red ].join(' ')}
 				>
 					<Typography className={[ classes.iconCaption, classes.red ].join(' ')} variant="caption">
-						KOSZT DODATKOWYCH ZDJĘĆ <br /> <strong>{props.picturePrice} zł/szt.</strong>
+						KOSZT DODATKOWYCH ZDJĘĆ <br /> <strong>{picturePrice} zł/szt.</strong>
 					</Typography>
 
 					<Avatar className={[ classes.avatar, classes.bgRed ].join(' ')}>
 						<Typography className={classes.white} variant="caption">
-							{props.countPayPerImage} zł
+							{countPayPerImage} zł
 						</Typography>
 					</Avatar>
 				</div>

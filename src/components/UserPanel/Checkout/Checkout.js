@@ -55,18 +55,27 @@ const styles = (theme) => ({
 	}
 });
 
-const checkout = (props) => {
+const checkout = ({
+	classes,
+	allImagesCost,
+	allImagesTitles,
+	countFreePictures,
+	countPayPerImage,
+	imagesDataObj,
+	isCheckout,
+	picturePrice,
+	selectedImages
+}) => {
 	console.count('CHECKOUT');
-	const { classes } = props;
 
 	const getSelectedTitles = () => {
-		const selectedImages = [];
-		for (let imageTitle in props.imagesDataObj) {
-			if (props.imagesDataObj[imageTitle].isClickedGreen === true) {
-				selectedImages.push(imageTitle);
+		const onSelectedImages = [];
+		for (let imageTitle in imagesDataObj) {
+			if (imagesDataObj[imageTitle].isClickedGreen === true) {
+				onSelectedImages.push(imageTitle);
 			}
 		}
-		return selectedImages;
+		return onSelectedImages;
 	};
 
 	return (
@@ -74,12 +83,12 @@ const checkout = (props) => {
 			<div className={classes.container}>
 				<div className={classes.paymentContainer}>
 					<Payment
-						countPayPerImage={props.countPayPerImage}
-						allImagesCost={props.allImagesCost}
-						countFreePictures={props.countFreePictures}
-						picturePrice={props.picturePrice}
-						selectedImages={props.selectedImages}
-						isCheckout={props.isCheckout}
+						countPayPerImage={countPayPerImage}
+						allImagesCost={allImagesCost}
+						countFreePictures={countFreePictures}
+						picturePrice={picturePrice}
+						selectedImages={selectedImages}
+						isCheckout={isCheckout}
 					/>
 				</div>
 				<div className={classes.buttonsContainer}>
@@ -92,7 +101,7 @@ const checkout = (props) => {
 							style={{ display: 'none' }}
 							type="text"
 							name="message"
-							value={`*** TYTUŁY ZDJĘĆ: "${props.allImagesTitles()}" *** WYBRANA OPCJA: "wszystkie zdjęcia" *** KOSZT: ${props.allImagesCost} zł ***`}
+							value={`*** TYTUŁY ZDJĘĆ: "${allImagesTitles()}" *** WYBRANA OPCJA: "wszystkie zdjęcia" *** KOSZT: ${allImagesCost} zł ***`}
 							placeholder="message"
 							readOnly
 						/>
@@ -120,7 +129,7 @@ const checkout = (props) => {
 								name="message"
 								value={`*** TYTUŁY ZDJĘĆ: "${getSelectedTitles().join(
 									'" , "'
-								)}" *** WYBRANA OPCJA: "darmowe + dodatkowe zdjęcia" *** KOSZT: ${props.countPayPerImage} zł ***`}
+								)}" *** WYBRANA OPCJA: "darmowe + dodatkowe zdjęcia" *** KOSZT: ${countPayPerImage} zł ***`}
 								placeholder="message"
 								readOnly
 							/>
@@ -142,7 +151,7 @@ const checkout = (props) => {
 			<div className={[ classes.paper, classes.imagesContainer ].join(' ')}>
 				{getSelectedTitles().map((ele) => (
 					<figure key={ele}>
-						<img className={classes.image} src={props.imagesDataObj[ele].path} alt={ele} />
+						<img className={classes.image} src={imagesDataObj[ele].path} alt={ele} />
 						<figcaption style={{ textAlign: 'center', fontSize: '.7rem' }}>{ele}</figcaption>
 					</figure>
 				))}

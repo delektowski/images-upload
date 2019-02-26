@@ -8,53 +8,63 @@ import { Menu, MenuItem } from '@material-ui/core/';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
 
-const menu = (props) => {
+const menu = ({
+	imagesDataObj,
+	isAdminLogin,
+	isCheckout,
+	isMenuOpen,
+	onCheckoutClose,
+	onCheckoutRelease,
+	onLogoutHandler,
+	onMenuClose,
+	onMenuOpen,
+	userName
+}) => {
 	console.count('MENU');
-	const isMenuOpen = Boolean(props.isMenuOpen);
-	const anchorEl = props.isMenuOpen;
+	const menuOpen = Boolean(isMenuOpen);
 	let reset = null;
 	let checkout = null;
 	let selection = null;
 
-	if (!props.isAdminLogin && !props.isCheckout) {
+	if (!isAdminLogin && !isCheckout) {
 		reset = (
 			<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-				<Reset userName={props.userName} imagesDataObj={props.imagesDataObj} onMenuClose={props.onMenuClose} />
+				<Reset userName={userName} imagesDataObj={imagesDataObj} onMenuClose={onMenuClose} />
 			</MenuItem>
 		);
 	}
 
-	if (!props.isAdminLogin && !props.isCheckout) {
+	if (!isAdminLogin && !isCheckout) {
 		checkout = (
 			<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-				<CheckoutRelease onCheckoutRelease={props.onCheckoutRelease} onMenuClose={props.onMenuClose} />
+				<CheckoutRelease onCheckoutRelease={onCheckoutRelease} onMenuClose={onMenuClose} />
 			</MenuItem>
 		);
 	}
 
-	if (props.isCheckout) {
+	if (isCheckout) {
 		selection = (
 			<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-				<Selection onCheckoutClose={props.onCheckoutClose} onMenuClose={props.onMenuClose} />
+				<Selection onCheckoutClose={onCheckoutClose} onMenuClose={onMenuClose} />
 			</MenuItem>
 		);
 	}
 
-	const onLogoutHandler = () => {
-		props.onMenuClose();
-		props.onLogoutHandler();
+	const logoutHandler = () => {
+		onMenuClose();
+		onLogoutHandler();
 	};
 
 	return (
 		<div>
-			<IconButton onClick={(e) => props.onMenuOpen(e.target)}>
+			<IconButton onClick={(e) => onMenuOpen(e.target)}>
 				<MoreVertIcon />
 			</IconButton>
 			<Menu
-				anchorEl={anchorEl}
+				anchorEl={isMenuOpen}
 				disableAutoFocusItem
-				open={isMenuOpen}
-				onClose={props.onMenuClose}
+				open={menuOpen}
+				onClose={onMenuClose}
 				PaperProps={{
 					style: {
 						width: 200
@@ -66,7 +76,7 @@ const menu = (props) => {
 				{selection}
 
 				<MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-					<Logout userName={props.userName} onLogoutHandler={onLogoutHandler} />
+					<Logout userName={userName} onLogoutHandler={logoutHandler} />
 				</MenuItem>
 			</Menu>
 		</div>
@@ -74,15 +84,16 @@ const menu = (props) => {
 };
 
 menu.propTypes = {
-	classes: PropTypes.object,
-	PaperProps: PropTypes.object,
-	anchorEl: PropTypes.any,
-	children: PropTypes.array,
-	disableAutoFocusItem: PropTypes.bool,
-	onClose: PropTypes.func,
-	open: PropTypes.bool,
-	theme: PropTypes.any,
-	transitionDuration: PropTypes.any
+	imagesDataObj: PropTypes.object,
+	isAdminLogin: PropTypes.bool,
+	isCheckout: PropTypes.bool,
+	isMenuOpen: PropTypes.any,
+	onCheckoutClose: PropTypes.func,
+	onCheckoutRelease: PropTypes.func,
+	onLogoutHandler: PropTypes.func,
+	onMenuClose: PropTypes.func,
+	onMenuOpen: PropTypes.func,
+	userName: PropTypes.string
 };
 
 export default menu;

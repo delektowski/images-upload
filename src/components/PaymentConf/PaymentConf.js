@@ -77,12 +77,10 @@ const paymentConf = ({
 }) => {
 	console.count('PAYMENTCONF');
 	let picturesAmount = amountSelectedImages ? amountSelectedImages.length : 0;
-
 	let discount = (picturesAmount - freePicturesAmount) * picturePrice * (discountProcent / 100);
-
 	let price = Math.round((picturesAmount - freePicturesAmount) * picturePrice - discount);
 	if (price < 0) price = 0;
-
+	console.log('PAYMENTCONssssssssssssssssssF', amountSelectedImages);
 	return (
 		<React.Fragment>
 			<Fade in={true} timeout={500}>

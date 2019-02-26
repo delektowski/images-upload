@@ -118,7 +118,7 @@ class ImagesGenerator extends Component {
 
 	render() {
 		console.count('IMAGESGENERATOR');
-		const { classes } = this.props;
+		const { classes, userName, isAdminLogin, onHideMenu, isDrawerOpen } = this.props;
 
 		let imagesTitlesPaths = null;
 
@@ -130,9 +130,9 @@ class ImagesGenerator extends Component {
 						src={Object.values(element)}
 						caption={Object.keys(element)}
 						imagesDataObj={this.state.updatedImagesDataObj}
-						userName={this.props.userName}
-						isAdminLogin={this.props.isAdminLogin}
-						onHideMenu={this.props.onHideMenu}
+						userName={userName}
+						isAdminLogin={isAdminLogin}
+						onHideMenu={onHideMenu}
 					/>
 				</React.Fragment>
 			);
@@ -140,11 +140,7 @@ class ImagesGenerator extends Component {
 
 		return (
 			<React.Fragment>
-				<div
-					className={[ classes.imagesContainer, this.props.isDrawerOpen ? classes.marginTop : null ].join(
-						' '
-					)}
-				>
+				<div className={[ classes.imagesContainer, isDrawerOpen ? classes.marginTop : null ].join(' ')}>
 					{imagesTitlesPaths}
 				</div>
 			</React.Fragment>

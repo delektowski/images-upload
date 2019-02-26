@@ -193,7 +193,7 @@ class CreateUser extends Component {
 
 	render() {
 		console.count('CREATEUSER');
-		const { classes } = this.props;
+		const { classes, uploadSelectedImages } = this.props;
 		let createUser = null;
 
 		if (!this.state.onUserCreated) {
@@ -254,7 +254,7 @@ class CreateUser extends Component {
 					<PaymentConf
 						freePicturesAmount={this.state.freePicturesAmount}
 						discountProcent={this.state.discountProcent}
-						amountSelectedImages={this.props.amountSelectedImages}
+						amountSelectedImages={uploadSelectedImages}
 						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
 						changeDiscountValue={this.changeDiscountValueHandler}
 						changePicturePrice={this.changepicturePriceHandler}

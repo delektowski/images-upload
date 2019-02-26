@@ -196,19 +196,13 @@ class Counter extends PureComponent {
 
 	render() {
 		console.count('COUNTER');
-		const { classes } = this.props;
+		const { classes, filterButtonsState, isCheckout, picturePrice } = this.props;
 		const filter = (buttonType) => {
-			return (
-				<Filter
-					onFilterButtonsState={this.props.onFilterButtonsState}
-					filterClicked={buttonType}
-					filterButtonsState={this.props.filterButtonsState}
-				/>
-			);
+			return <Filter filterClicked={buttonType} filterButtonsState={filterButtonsState} />;
 		};
 		let paymentOnCheckout = null;
 		let paymentOnImagesSelect = null;
-		if (!this.props.isCheckout) {
+		if (!isCheckout) {
 			paymentOnImagesSelect = (
 				<React.Fragment>
 					<Paper className={classes.paper}>
@@ -315,8 +309,8 @@ class Counter extends PureComponent {
 						countPayPerImage={this.countPayPerImage(this.selectedElementsAmount('green'))}
 						allImagesCost={this.allImagesCost()}
 						countFreePictures={this.countFreePictures()}
-						picturePrice={this.props.picturePrice}
-						isCheckout={this.props.isCheckout}
+						picturePrice={picturePrice}
+						isCheckout={isCheckout}
 					/>
 				</React.Fragment>
 			);
@@ -328,9 +322,9 @@ class Counter extends PureComponent {
 					countPayPerImage={this.countPayPerImage(this.selectedElementsAmount('green'))}
 					allImagesCost={this.allImagesCost()}
 					countFreePictures={this.countFreePictures()}
-					picturePrice={this.props.picturePrice}
+					picturePrice={picturePrice}
 					selectedImages={this.selectedElementsAmount('green')}
-					isCheckout={this.props.isCheckout}
+					isCheckout={isCheckout}
 					imagesDataObj={this.state.updatedImagesDataObj}
 					allImagesTitles={this.allImagesTitlesHandler}
 				/>

@@ -92,9 +92,10 @@ class Uploader extends Component {
 	};
 
 	render() {
+		const { isUserCreated } = this.props;
 		console.count('UPLOADER');
-		return this.props.isUserCreated ? (
-			<Fade in={this.props.isUserCreated} timeout={500}>
+		return isUserCreated ? (
+			<Fade in={isUserCreated} timeout={500}>
 				<div style={{ marginTop: '2%', width: '100%' }}>
 					<Button
 						variant="contained"

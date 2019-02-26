@@ -85,15 +85,25 @@ class AplicationBar extends PureComponent {
 
 	render() {
 		console.count('APLICATIONBAR');
-		const { classes } = this.props;
+		const {
+			classes,
+			imagesDataObj,
+			isAdminLogin,
+			isAuthenticated,
+			isCheckout,
+			onCheckoutClose,
+			onCheckoutRelease,
+			onLogoutHandler,
+			userName
+		} = this.props;
 		let amountAllIcon = null;
 		let menu = null;
 		let imagesAmount = null;
-		if (this.props.imagesDataObj) {
-			imagesAmount = Object.keys(this.props.imagesDataObj).length;
+		if (imagesDataObj) {
+			imagesAmount = Object.keys(imagesDataObj).length;
 		}
 
-		if (this.props.isAuthenticated) {
+		if (isAuthenticated) {
 			amountAllIcon = (
 				<React.Fragment>
 					<div className={classes.iconCaptionFilterContainer}>
@@ -113,19 +123,19 @@ class AplicationBar extends PureComponent {
 			);
 		}
 
-		if (this.props.isAdminLogin || this.props.isAuthenticated) {
+		if (isAdminLogin || isAuthenticated) {
 			menu = (
 				<Menu
 					onMenuOpen={(e) => this.onMenuClickHandler(e)}
 					onMenuClose={() => this.onMenuCloseHandler()}
 					isMenuOpen={this.state.anchorEl}
-					userName={this.props.userName}
-					imagesDataObj={this.props.imagesDataObj}
-					onLogoutHandler={this.props.onLogoutHandler}
-					isAdminLogin={this.props.isAdminLogin}
-					onCheckoutRelease={this.props.onCheckoutRelease}
-					onCheckoutClose={this.props.onCheckoutClose}
-					isCheckout={this.props.isCheckout}
+					userName={userName}
+					imagesDataObj={imagesDataObj}
+					onLogoutHandler={onLogoutHandler}
+					isAdminLogin={isAdminLogin}
+					onCheckoutRelease={onCheckoutRelease}
+					onCheckoutClose={onCheckoutClose}
+					isCheckout={isCheckout}
 				/>
 			);
 		}
@@ -149,7 +159,7 @@ class AplicationBar extends PureComponent {
 						<div className={classes.menuLoginContainer}>
 							<div className={classes.icon__loginContainer}>
 								<AccountCircle className={classes.icon__login} />
-								<Typography variant="caption">{this.props.userName}</Typography>
+								<Typography variant="caption">{userName}</Typography>
 							</div>
 							{menu}
 						</div>

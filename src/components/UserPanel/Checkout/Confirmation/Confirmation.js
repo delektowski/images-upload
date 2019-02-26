@@ -18,12 +18,11 @@ const styles = {
 	}
 };
 
-const confirmation = (props) => {
+const confirmation = ({ classes, open }) => {
 	console.count('CONFIRMATION');
-	const { classes } = props;
 
 	return (
-		<Dialog open={props.open} maxWidth="xs">
+		<Dialog open={open} maxWidth="xs">
 			<div className={classes.container}>
 				<Typography variant="overline">Informacja o wyborze została wysłana do fotografa</Typography>
 				<Typography variant="overline">Dziękuję! :-)</Typography>
@@ -43,7 +42,8 @@ const confirmation = (props) => {
 };
 
 confirmation.propTypes = {
-	classes: PropTypes.object
+	classes: PropTypes.object,
+	open: PropTypes.bool
 };
 
 export default withStyles(styles)(confirmation);

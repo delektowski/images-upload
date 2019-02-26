@@ -51,25 +51,40 @@ class ImagesGeneratorAndCounter extends Component {
 
 	render() {
 		console.count('ImagesGeneratorAndCounter');
-		const { classes } = this.props;
+		const {
+			classes,
+			isAuthenticated,
+			userName,
+			imagesDataObj,
+			freePicturesAmount,
+			discountProcent,
+			picturePrice,
+			isCheckout,
+			onAmountSelected,
+			allImagesTitles,
+			picturesPaths,
+			picturesTitles,
+			isAdminLogin,
+			isDrawerOpen
+		} = this.props;
 		let counter = null;
 		let imagesGenerator = null;
 
-		if (this.props.isAuthenticated && this.props.userName) {
+		if (isAuthenticated && userName) {
 			counter = (
 				<Counter
-					imagesDataObj={this.props.imagesDataObj}
+					imagesDataObj={imagesDataObj}
 					import
 					FilterContext
-					freePicturesAmount={this.props.freePicturesAmount}
-					discountProcent={this.props.discountProcent}
-					picturePrice={this.props.picturePrice}
+					freePicturesAmount={freePicturesAmount}
+					discountProcent={discountProcent}
+					picturePrice={picturePrice}
 					onFilterButtonsState={this.onFilterButtonsStateHandler}
 					filterButtonsState={this.state}
-					isCheckout={this.props.isCheckout}
-					onAmountSelected={this.props.onAmountSelected}
-					allImagesTitles={this.props.allImagesTitles}
-					userName={this.props.userName}
+					isCheckout={isCheckout}
+					onAmountSelected={onAmountSelected}
+					allImagesTitles={allImagesTitles}
+					userName={userName}
 				/>
 			);
 		}
@@ -77,18 +92,17 @@ class ImagesGeneratorAndCounter extends Component {
 		if (!this.props.isCheckout) {
 			imagesGenerator = (
 				<ImagesGenerator
-					images={this.props.picturesPaths}
-					titles={this.props.picturesTitles}
-					imagesDataObj={this.props.imagesDataObj}
-					userName={this.props.userName}
+					images={picturesPaths}
+					titles={picturesTitles}
+					imagesDataObj={imagesDataObj}
+					userName={userName}
 					filterButtonsState={this.state}
-					isAdminLogin={this.props.isAdminLogin}
+					isAdminLogin={isAdminLogin}
 					onImageClick={this.onImageClickedTitleHandler}
 					onHideMenu={this.onDrawerOpenHandler}
-					isDrawerOpen={this.props.isDrawerOpen}
+					isDrawerOpen={isDrawerOpen}
 					isFilterButtonClicked={this.state.filterButtonClicked}
 					onResetFilterButtonClicked={this.resetFilterButtonClickedHandler}
-					// testForceUpdate={this.testForceUpdate}
 				/>
 			);
 		}
@@ -100,12 +114,9 @@ class ImagesGeneratorAndCounter extends Component {
 						transitionDuration={500}
 						variant="persistent"
 						anchor="left"
-						open={this.props.isDrawerOpen}
+						open={isDrawerOpen}
 						classes={{
-							paper: [
-								classes.drawerPaper,
-								this.props.isAdminLogin ? classes.zindexNegative : null
-							].join(' ')
+							paper: [ classes.drawerPaper, isAdminLogin ? classes.zindexNegative : null ].join(' ')
 						}}
 					>
 						<Paper>{counter}</Paper>
