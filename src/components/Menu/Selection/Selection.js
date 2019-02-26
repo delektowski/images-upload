@@ -2,12 +2,12 @@ import React from 'react';
 import { Typography } from '@material-ui/core/';
 import PropTypes from 'prop-types';
 
-const selection = (props) => {
+const selection = ({ onCheckoutClose, onMenuClose }) => {
 	console.count('SELECTION');
 
 	const onSelectionHandler = () => {
-		props.onCheckoutClose();
-		props.onMenuClose();
+		onCheckoutClose();
+		onMenuClose();
 	};
 
 	return (

@@ -2,15 +2,15 @@ import React from 'react';
 import { Typography } from '@material-ui/core/';
 import PropTypes from 'prop-types';
 
-const checkoutRelease = (props) => {
+const checkoutRelease = ({ onCheckoutRelease, onMenuClose }) => {
 	console.count('CHECKOUTRELEASE');
-	const onCheckoutRelease = () => {
-		props.onCheckoutRelease();
-		props.onMenuClose();
+	const checkoutRelease = () => {
+		onCheckoutRelease();
+		onMenuClose();
 	};
 
 	return (
-		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={onCheckoutRelease}>
+		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={checkoutRelease}>
 			podsumowanie
 		</Typography>
 	);

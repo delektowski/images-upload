@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PaymentConf from './PaymentConf/PaymentConf';
+import PaymentConf from '../../../components/PaymentConf/PaymentConf';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Input, InputLabel, FormControl, Button, Fade } from '@material-ui/core/';
 import firebase from 'firebase/app';
@@ -259,9 +259,7 @@ class CreateUser extends Component {
 						changeDiscountValue={this.changeDiscountValueHandler}
 						changePicturePrice={this.changepicturePriceHandler}
 						picturePrice={this.state.picturePrice}
-						userName={this.state.createUserLogin}
 						isUserCreated={this.state.onUserCreated}
-						imagesDataObj={this.props.imagesDataObj}
 					/>
 				</div>
 			</React.Fragment>

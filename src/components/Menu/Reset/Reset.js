@@ -4,18 +4,18 @@ import 'firebase/database';
 import { Typography } from '@material-ui/core/';
 import PropTypes from 'prop-types';
 
-const reset = (props) => {
+const reset = ({ imagesDataObj, onMenuClose, userName }) => {
 	console.count('RESET');
 	const resetUserSelection = () => {
-		for (let value in props.imagesDataObj) {
-			firebase.database().ref(`${props.userName}/images/${value}`).update({
+		for (let value in imagesDataObj) {
+			firebase.database().ref(`${userName}/images/${value}`).update({
 				containerColor: '',
 				isClickedBlue: false,
 				isClickedGreen: false,
 				isClickedRed: true
 			});
 		}
-		props.onMenuClose();
+		onMenuClose();
 	};
 	return (
 		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={resetUserSelection}>

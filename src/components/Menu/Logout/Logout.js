@@ -5,10 +5,10 @@ import 'firebase/database';
 import { Typography } from '@material-ui/core/';
 import PropTypes from 'prop-types';
 
-const logout = (props) => {
-	const onLogoutHandler = () => {
-		if (props.userName) {
-			firebase.database().ref(props.userName).off();
+const logout = ({ onLogoutHandler, userName }) => {
+	const logoutHandler = () => {
+		if (userName) {
+			firebase.database().ref(userName).off();
 		}
 		firebase
 			.auth()
@@ -19,10 +19,10 @@ const logout = (props) => {
 			.catch(function(error) {
 				console.log('Logout: ', error);
 			});
-		props.onLogoutHandler();
+		onLogoutHandler();
 	};
 	return (
-		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={onLogoutHandler}>
+		<Typography style={{ width: '100%' }} variant="overline" align="center" onClick={logoutHandler}>
 			wyloguj
 		</Typography>
 	);

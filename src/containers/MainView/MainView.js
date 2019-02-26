@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Login from './Login/Login';
 import Layout from '../../hoc/Layout/Layout';
-import AdminPanel from '../../components/AdminPanel/AdminPanel';
+import Uploader from './Uploader/Uploader';
+import CreateUser from './CreateUser/CreateUser';
 import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
 import AplicationBar from './AplicationBar/AplicationBar';
 import ImagesGeneratorAndCounter from './ImagesGeneratorAndCounter/ImagesGeneratorAndCounter';
@@ -151,6 +152,30 @@ class MainView extends Component {
 		this.setState({ userName: userName });
 	};
 
+	selectedfilesHandler = (files) => {
+		this.setState({ selectedfiles: files });
+	};
+
+	adminLoginHandler = () => {
+		this.setState({ isAdminLogin: true });
+	};
+
+	onChangeUserNameHandler = (userName) => {
+		this.setState({ userName: userName, createUserLogin: userName });
+	};
+
+	imagesDataObjHandler = (images) => {
+		this.setState({ imagesDataObj: images });
+	};
+
+	loginClickedHandler = () => {
+		this.setState({ isLoginClicked: false });
+	};
+
+	onUserCreatedHandler = () => {
+		this.setState({ isUserCreated: true });
+	};
+
 	render() {
 		const { classes } = this.props;
 
@@ -163,27 +188,29 @@ class MainView extends Component {
 		if (this.state.isAdminLogin) {
 			adminPanel = (
 				<React.Fragment>
-					<AdminPanel
-						logout={(e) => this.onLogoutHandler(e)}
-						selectedfiles={(e) => this.setState({ selectedfiles: e })}
+					<CreateUser
+						clicked={this.onLogoutHandler}
+						adminLogin={this.adminLoginHandler}
+						onChangeUserName={this.onChangeUserNameHandler}
+						freePicturesAmount={this.state.freePicturesAmount}
+						picturePrice={this.state.picturePrice}
+						discountProcent={this.state.discountProcent}
+						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
+						loginClicked={this.loginClickedHandler}
+						uploadSelectedImages={this.state.selectedfiles}
+						onUserCreated={this.onUserCreatedHandler}
+					/>
+
+					<Uploader
+						userName={this.state.userName}
 						uploadSelectedImages={this.state.selectedfiles}
 						isButtonDisabled={this.state.isButtonDisabled}
 						disableButton={this.disableUploadButtonHandler}
-						freePicturesAmount={this.state.freePicturesAmount}
-						changeFreePicturesAmount={this.changeFreePicturesAmountHandler}
-						discountProcent={this.state.discountProcent}
-						changeDiscountValue={this.changeDiscountValueHandler}
-						picturePrice={this.state.picturePrice}
-						changePicturePrice={this.changepicturePriceHandler}
 						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
-						adminLogin={() => this.setState({ isAdminLogin: true })}
-						onChangeUserName={(userName) =>
-							this.setState({ userName: userName, createUserLogin: userName })}
-						imagesDataObj={(images) => this.setState({ imagesDataObj: images })}
-						loginClicked={() => this.setState({ isLoginClicked: false })}
-						userName={this.state.userName}
-						onUserCreated={() => this.setState({ isUserCreated: true })}
+						loginClicked={this.loginClickedHandler}
+						selectedfiles={this.selectedfilesHandler}
 						isUserCreated={this.state.isUserCreated}
+						imagesDataObj={this.imagesDataObjHandler}
 					/>
 				</React.Fragment>
 			);
