@@ -272,16 +272,16 @@ class CreateUser extends Component {
 CreateUser.propTypes = {
 	classes: PropTypes.object,
 	adminLogin: PropTypes.func,
-	amountSelectedImages: PropTypes.number,
+	amountSelectedImages: PropTypes.any,
 	buttonCreate: PropTypes.func,
 	clicked: PropTypes.func,
-	discountProcent: PropTypes.number,
-	imagesDataObj: PropTypes.object,
-	loginClicked: PropTypes.object,
-	onChangeUserName: PropTypes.object,
-	onCreateUser: PropTypes.object,
-	onUserCreated: PropTypes.object,
-	picturePrice: PropTypes.number
+	discountProcent: PropTypes.any,
+	imagesDataObj: PropTypes.func,
+	loginClicked: PropTypes.func,
+	onChangeUserName: PropTypes.func,
+	onCreateUser: PropTypes.func,
+	onUserCreated: PropTypes.func,
+	picturePrice: PropTypes.any
 };
 
 export default withStyles(styles)(CreateUser);

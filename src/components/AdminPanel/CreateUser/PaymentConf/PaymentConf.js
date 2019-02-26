@@ -159,15 +159,15 @@ class PaymentConf extends Component {
 
 PaymentConf.propTypes = {
 	classes: PropTypes.object,
-	amountSelectedImages: PropTypes.number,
+	amountSelectedImages: PropTypes.array,
 	changeDiscountValue: PropTypes.func,
 	changeFreePicturesAmount: PropTypes.func,
 	changePicturePrice: PropTypes.func,
-	discountProcent: PropTypes.number,
-	freePicturesAmount: PropTypes.number,
-	imagesDataObj: PropTypes.object,
+	discountProcent: PropTypes.any,
+	freePicturesAmount: PropTypes.any,
+	imagesDataObj: PropTypes.func,
 	isUserCreated: PropTypes.bool,
-	picturePrice: PropTypes.number,
+	picturePrice: PropTypes.any,
 	userName: PropTypes.string
 };
 

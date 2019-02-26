@@ -87,7 +87,7 @@ class MainView extends Component {
 		imagesDataObj: null,
 		picturePrice: 0,
 		discountProcent: 0,
-		selectedfiles: 0,
+		selectedfiles: [],
 		isButtonDisabled: true,
 		isAdminLogin: false,
 		isAuthenticated: false,
@@ -110,25 +110,6 @@ class MainView extends Component {
 	};
 
 	onLogoutHandler = () => {
-		this.setState({
-			userName: '',
-			isLoginClicked: false,
-			isCreateClicked: false,
-			isCheckout: false,
-			createUserLogin: '',
-			createUserPassword: '',
-			imagesDataObj: null,
-			picturePrice: 0,
-			discountProcent: 0,
-			selectedfiles: 0,
-			isButtonDisabled: true,
-			isAdminLogin: false,
-			isAuthenticated: false,
-			errorLogin: '',
-			onUserCreated: false,
-			isDrawerOpen: true,
-			isFooterHidden: false
-		});
 		window.location.reload();
 	};
 

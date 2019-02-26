@@ -140,7 +140,7 @@ Uploader.propTypes = {
 	isUserCreated: PropTypes.bool,
 	loginClicked: PropTypes.func,
 	selectedfiles: PropTypes.func,
-	uploadSelectedImages: PropTypes.number,
+	uploadSelectedImages: PropTypes.array,
 	userName: PropTypes.string
 };
 

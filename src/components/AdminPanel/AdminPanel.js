@@ -51,7 +51,7 @@ AdminPanel.propTypes = {
 	onUserCreated: PropTypes.func,
 	picturePrice: PropTypes.number,
 	selectedfiles: PropTypes.func,
-	uploadSelectedImages: PropTypes.number,
+	uploadSelectedImages: PropTypes.array,
 	userName: PropTypes.string
 };
 
