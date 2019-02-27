@@ -98,6 +98,10 @@ class MainView extends Component {
 		isFooterHidden: false
 	};
 
+	componentDidMount() {
+		console.log('window.innerWidth', window.innerWidth);
+	}
+
 	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
 		console.log('onLoginDataPass', imagesDataObj);
 
@@ -323,9 +327,8 @@ class MainView extends Component {
 							{imagesGeneratorAndCounter}
 						</div>
 					</main>
-
-					<footer>{footerBar}</footer>
 				</Layout>
+				<footer>{footerBar}</footer>
 			</React.Fragment>
 		);
 	}
