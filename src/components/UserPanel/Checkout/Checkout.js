@@ -67,6 +67,7 @@ const checkout = ({
 	selectedImages
 }) => {
 	console.count('CHECKOUT');
+	console.log('window.location', window.location.href);
 
 	const getSelectedTitles = () => {
 		const onSelectedImages = [];
@@ -77,8 +78,6 @@ const checkout = ({
 		}
 		return onSelectedImages;
 	};
-
-	console.log('window.location', window.location);
 
 	return (
 		<React.Fragment>
