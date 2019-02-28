@@ -78,6 +78,8 @@ const checkout = ({
 		return onSelectedImages;
 	};
 
+	console.log('window.location', window.location);
+
 	return (
 		<React.Fragment>
 			<div className={classes.container}>
@@ -115,7 +117,7 @@ const checkout = ({
 						>
 							wybieram: wszystkie zdjęcia
 						</Button>
-						<input type="hidden" name="after" value="http://localhost:3000/confirmation" />
+						<input type="hidden" name="after" value="/confirmation" />
 					</form>
 					<div className={classes.buttonContainer}>
 						<form
@@ -143,7 +145,7 @@ const checkout = ({
 							>
 								wybieram: darmowe + dodatkowe zdjęcia
 							</Button>
-							<input type="hidden" name="after" value="http://localhost:3000/confirmation" />
+							<input type="hidden" name="after" value="/confirmation" />
 						</form>
 					</div>
 				</div>
