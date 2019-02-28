@@ -8,7 +8,7 @@ class App extends Component {
 		return (
 			<React.Fragment>
 				<CssBaseline />
-				<BrowserRouter basename="/images-upload">
+				<BrowserRouter basename={process.env.PUBLIC_URL}>
 					<MainView />
 				</BrowserRouter>
 			</React.Fragment>
