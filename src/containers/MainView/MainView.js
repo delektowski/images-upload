@@ -307,7 +307,7 @@ class MainView extends Component {
 						<div className={classes.mainView}>
 							<section>
 								<Route
-									path="/confirmation"
+									path={`${process.env.PUBLIC_URL}/confirmation`}
 									render={() => {
 										return <Confirmation open={true} />;
 									}}
@@ -315,7 +315,7 @@ class MainView extends Component {
 
 								{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
 								<Route
-									path="/"
+									path={`${process.env.PUBLIC_URL}/`}
 									exact
 									render={() => {
 										return login;
