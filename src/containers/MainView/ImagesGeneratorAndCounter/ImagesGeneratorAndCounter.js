@@ -132,15 +132,15 @@ class ImagesGeneratorAndCounter extends Component {
 
 ImagesGeneratorAndCounter.propTypes = {
 	classes: PropTypes.object,
-	discountProcent: PropTypes.string,
-	freePicturesAmount: PropTypes.string,
+	discountProcent: PropTypes.any,
+	freePicturesAmount: PropTypes.any,
 	imagesDataObj: PropTypes.object,
 	isAdminLogin: PropTypes.bool,
 	isAuthenticated: PropTypes.bool,
 	isCheckout: PropTypes.bool,
 	isDrawerOpen: PropTypes.bool,
 	onHideMenu: PropTypes.func,
-	picturePrice: PropTypes.string,
+	picturePrice: PropTypes.any,
 	userName: PropTypes.string
 };
 

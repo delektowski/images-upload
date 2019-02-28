@@ -164,11 +164,11 @@ checkout.propTypes = {
 	classes: PropTypes.object,
 	allImagesCost: PropTypes.number,
 	allImagesTitles: PropTypes.func,
-	countFreePictures: PropTypes.number,
+	countFreePictures: PropTypes.any,
 	countPayPerImage: PropTypes.number,
 	imagesDataObj: PropTypes.object,
 	isCheckout: PropTypes.bool,
-	picturePrice: PropTypes.string,
+	picturePrice: PropTypes.any,
 	selectedImages: PropTypes.number
 };
 

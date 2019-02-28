@@ -343,9 +343,9 @@ class Counter extends PureComponent {
 Counter.propTypes = {
 	FilterContext: PropTypes.bool,
 	classes: PropTypes.object,
-	discountProcent: PropTypes.string,
-	freePicturesAmount: PropTypes.string,
-	picturePrice: PropTypes.string,
+	discountProcent: PropTypes.any,
+	freePicturesAmount: PropTypes.any,
+	picturePrice: PropTypes.any,
 	imagesDataObj: PropTypes.object,
 	filterButtonsState: PropTypes.object,
 	import: PropTypes.bool,

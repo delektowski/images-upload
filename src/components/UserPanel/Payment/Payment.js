@@ -156,10 +156,10 @@ const Payment = ({
 Payment.propTypes = {
 	classes: PropTypes.object,
 	allImagesCost: PropTypes.number,
-	countFreePictures: PropTypes.number,
+	countFreePictures: PropTypes.any,
 	countPayPerImage: PropTypes.number,
 	isCheckout: PropTypes.bool,
-	picturePrice: PropTypes.string,
+	picturePrice: PropTypes.any,
 	selectedImages: PropTypes.number
 };
 

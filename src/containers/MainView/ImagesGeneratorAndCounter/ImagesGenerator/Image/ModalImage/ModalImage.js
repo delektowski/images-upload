@@ -401,11 +401,6 @@ class ModalImage extends PureComponent {
 			cardColor = 'cardBlue';
 		}
 
-		const mediaQuery =
-			window.innerWidth <= 600
-				? { width: 350, margin: '0 auto', marginTop: 100 }
-				: { width: 750, marginTop: 100 };
-
 		return (
 			<div>
 				<Dialog
@@ -413,7 +408,15 @@ class ModalImage extends PureComponent {
 					scroll="body"
 					open={isImageLarge}
 					onClose={onImageLargeClose}
-					PaperProps={{ style: mediaQuery }}
+					PaperProps={{
+						style: {
+							width: 750,
+							position: 'fixed',
+							top: '50%',
+							left: '50%',
+							transform: 'translate(-50%, -50%)'
+						}
+					}}
 					PaperComponent="div"
 				>
 					<DialogContent style={{ padding: 0 }} className={classes.widtha}>
