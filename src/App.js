@@ -8,7 +8,7 @@ class App extends Component {
 		return (
 			<React.Fragment>
 				<CssBaseline />
-				<BrowserRouter basename="https://delektowski.github.io/images-upload/">
+				<BrowserRouter basename="/images-upload">
 					<MainView />
 				</BrowserRouter>
 			</React.Fragment>
