@@ -116,7 +116,7 @@ const checkout = ({
 						>
 							wybieram: wszystkie zdjęcia
 						</Button>
-						<input type="hidden" name="after" value="/confirmation" />
+						<input type="hidden" name="after" value={`${window.location.href}confirmation`} />
 					</form>
 					<div className={classes.buttonContainer}>
 						<form
