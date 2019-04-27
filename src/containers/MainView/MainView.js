@@ -4,7 +4,7 @@ import Layout from '../../hoc/Layout/Layout';
 import Uploader from './Uploader/Uploader';
 import CreateUser from './CreateUser/CreateUser';
 import Confirmation from '../../components/UserPanel/Checkout/Confirmation/Confirmation';
-import AplicationBar from './AplicationBar/AplicationBar';
+import AplicationBar from './ApplicationBar/ApplicationBar';
 import ImagesGeneratorAndCounter from './ImagesGeneratorAndCounter/ImagesGeneratorAndCounter';
 import { AppBar, Toolbar, Typography, Fab, Drawer } from '@material-ui/core/';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,326 +15,335 @@ import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const styles = {
-	mainView: {},
-	icon: {
-		fontSize: '1rem',
-		marginRight: '2%'
-	},
-	footer: {
-		background: 'whitesmoke',
-		height: 20,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'fixed',
-		bottom: 0
-	},
-	toolbar__footer: {
-		display: 'flex',
-		width: 300,
+  mainView: {},
+  icon: {
+    fontSize: '1rem',
+    marginRight: '2%',
+  },
+  footer: {
+    background: 'whitesmoke',
+    height: '1.25rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    bottom: 0,
+  },
+  toolbar__footer: {
+    display: 'flex',
+    width: '18.75rem',
 
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	fab: {
-		position: 'fixed',
-		left: '2%',
-		zIndex: 10000,
-		top: '1%'
-	},
-	drawerPaper: {
-		width: '100%',
-		height: 160,
-		overflow: 'visible',
-		border: 0,
-		background: 'rgba(0, 0, 0, 0)',
-		zIndex: 1000
-	},
-	drawerPaperMenu: {
-		width: '100%',
-		height: 60,
-		overflow: 'visible',
-		border: 0,
-		background: 'rgba(0, 0, 0, 0)'
-	},
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fab: {
+    position: 'fixed',
+    left: '2%',
+    zIndex: 10000,
+    top: '1%',
+  },
+  drawerPaper: {
+    width: '100%',
+    height: '10rem',
+    overflow: 'visible',
+    border: 0,
+    background: 'rgba(0, 0, 0, 0)',
+    zIndex: 1000,
+  },
+  drawerPaperMenu: {
+    width: '100%',
+    height: '3.75rem',
+    overflow: 'visible',
+    border: 0,
+    background: 'rgba(0, 0, 0, 0)',
+  },
 
-	zindexNegative: {
-		zIndex: -1
-	},
-	route: {
-		background: 'green',
-		width: 200,
-		height: 100
-	},
-	modal: {
-		zIndex: 200,
-		width: '100%',
-		height: '100%',
-		position: 'fixed',
-		background: 'rgba(114, 114, 114, 0)',
-		pointerEvents: 'none',
-		overflow: 'hidden'
-	}
+  zindexNegative: {
+    zIndex: -1,
+  },
+  route: {
+    background: 'green',
+    width: '12.5rem',
+    height: '6.25rem',
+  },
+  modal: {
+    zIndex: '12.5rem',
+    width: '100%',
+    height: '100%',
+    position: 'fixed',
+    background: 'rgba(114, 114, 114, 0)',
+    pointerEvents: 'none',
+    overflow: 'hidden',
+  },
 };
 
 class MainView extends Component {
-	state = {
-		userName: '',
-		isLoginClicked: false,
-		isCreateClicked: false,
-		isCheckout: false,
-		createUserLogin: '',
-		createUserPassword: '',
-		imagesDataObj: null,
-		picturePrice: 0,
-		discountProcent: 0,
-		selectedfiles: [],
-		isButtonDisabled: true,
-		isAdminLogin: false,
-		isAuthenticated: false,
-		errorLogin: '',
-		onUserCreated: false,
-		isDrawerOpen: true,
-		isFooterHidden: false
-	};
+  state = {
+    userName: '',
+    isLoginClicked: false,
+    isCreateClicked: false,
+    isCheckout: false,
+    createUserLogin: '',
+    createUserPassword: '',
+    imagesDataObj: null,
+    picturePrice: 0,
+    discountProcent: 0,
+    selectedfiles: [],
+    isButtonDisabled: true,
+    isAdminLogin: false,
+    isAuthenticated: false,
+    errorLogin: '',
+    onUserCreated: false,
+    isDrawerOpen: true,
+    isFooterHidden: false,
+  };
 
-	componentDidMount() {
-		console.log('window.innerWidth', window.innerWidth);
-	}
+  onLoginDataPass = (
+    imagesDataObj,
+    freePicturesAmount,
+    picturePrice,
+    discountProcent,
+  ) => {
+    this.setState({
+      imagesDataObj: imagesDataObj,
+      isLoginClicked: false,
+      freePicturesAmount: freePicturesAmount,
+      picturePrice: picturePrice,
+      discountProcent: discountProcent,
+    });
+  };
 
-	onLoginDataPass = (imagesDataObj, freePicturesAmount, picturePrice, discountProcent) => {
-		console.log('onLoginDataPass', imagesDataObj);
+  onLogoutHandler = () => {
+    window.location.reload();
+  };
 
-		this.setState({
-			imagesDataObj: imagesDataObj,
-			isLoginClicked: false,
-			freePicturesAmount: freePicturesAmount,
-			picturePrice: picturePrice,
-			discountProcent: discountProcent
-		});
-	};
+  onDrawerOpenHandler = () => {
+    if (!this.state.imageClickedTitle) {
+      this.setState(prevState => {
+        return {
+          isDrawerOpen: !prevState.isDrawerOpen,
+        };
+      });
+    }
+  };
 
-	onLogoutHandler = () => {
-		window.location.reload();
-	};
+  onCheckoutReleaseHandler = () => {
+    this.setState({ isCheckout: true });
+  };
 
-	onDrawerOpenHandler = () => {
-		if (!this.state.imageClickedTitle) {
-			this.setState((prevState) => {
-				return {
-					isDrawerOpen: !prevState.isDrawerOpen
-				};
-			});
-		}
-	};
+  onCheckoutCloseHandler = () => {
+    this.setState({ isCheckout: false });
+  };
 
-	onCheckoutReleaseHandler = () => {
-		this.setState({ isCheckout: true });
-	};
+  onAuthenticationHandler = () => {
+    this.setState({ isAuthenticated: true });
+  };
 
-	onCheckoutCloseHandler = () => {
-		this.setState({ isCheckout: false });
-	};
+  onIsLoginClickedHandler = () => {
+    this.setState({ isLoginClicked: false });
+  };
 
-	onAuthenticationHandler = () => {
-		this.setState({ isAuthenticated: true });
-	};
+  onIsAdminLoginHandler = () => {
+    this.setState({ isAdminLogin: true });
+  };
 
-	onModalSpinnerHandler = (value) => {
-		this.setState({ isModalSpinner: value });
-	};
+  selectedfilesHandler = files => {
+    this.setState({ selectedfiles: files });
+  };
 
-	onIsLoginClickedHandler = () => {
-		this.setState({ isLoginClicked: false });
-	};
+  adminLoginHandler = () => {
+    this.setState({ isAdminLogin: true });
+  };
 
-	onIsAdminLoginHandler = () => {
-		this.setState({ isAdminLogin: true });
-	};
+  onChangeUserNameHandler = userName => {
+    this.setState({ userName: userName, createUserLogin: userName });
+  };
 
-	onChangeUserNameHandler = (userName) => {
-		this.setState({ userName: userName });
-	};
+  imagesDataObjHandler = images => {
+    this.setState({ imagesDataObj: images });
+  };
 
-	selectedfilesHandler = (files) => {
-		this.setState({ selectedfiles: files });
-	};
+  loginClickedHandler = () => {
+    this.setState({ isLoginClicked: false });
+  };
 
-	adminLoginHandler = () => {
-		this.setState({ isAdminLogin: true });
-	};
+  onUserCreatedHandler = () => {
+    this.setState({ isUserCreated: true });
+  };
 
-	onChangeUserNameHandler = (userName) => {
-		this.setState({ userName: userName, createUserLogin: userName });
-	};
+  render() {
+    const { classes } = this.props;
+    const {
+      freePicturesAmount,
+      picturePrice,
+      discountProcent,
+      imagesDataObj,
+      selectedfiles,
+      isUserCreated,
+      createUserLogin,
+      userName,
+      isButtonDisabled,
+      isAuthenticated,
+      isAdminLogin,
+      isDrawerOpen,
+      isCheckout,
+      errorLogin,
+    } = this.state;
 
-	imagesDataObjHandler = (images) => {
-		this.setState({ imagesDataObj: images });
-	};
+    let adminPanel = null;
+    let login = null;
+    let menuHideButton = null;
+    let footerBar = null;
+    let imagesGeneratorAndCounter = null;
 
-	loginClickedHandler = () => {
-		this.setState({ isLoginClicked: false });
-	};
+    if (isAdminLogin) {
+      adminPanel = (
+        <React.Fragment>
+          <CreateUser
+            clicked={this.onLogoutHandler}
+            adminLogin={this.adminLoginHandler}
+            onChangeUserName={this.onChangeUserNameHandler}
+            freePicturesAmount={freePicturesAmount}
+            picturePrice={picturePrice}
+            discountProcent={discountProcent}
+            imagesAmount={imagesDataObj ? Object.keys(imagesDataObj).length : 0}
+            loginClicked={this.loginClickedHandler}
+            uploadSelectedImages={selectedfiles}
+            onUserCreated={this.onUserCreatedHandler}
+          />
 
-	onUserCreatedHandler = () => {
-		this.setState({ isUserCreated: true });
-	};
+          <Uploader
+            userName={userName}
+            uploadSelectedImages={selectedfiles}
+            isButtonDisabled={isButtonDisabled}
+            disableButton={this.disableUploadButtonHandler}
+            imagesAmount={imagesDataObj ? Object.keys(imagesDataObj).length : 0}
+            loginClicked={this.loginClickedHandler}
+            selectedfiles={this.selectedfilesHandler}
+            isUserCreated={isUserCreated}
+            imagesDataObj={this.imagesDataObjHandler}
+          />
+        </React.Fragment>
+      );
+    }
 
-	render() {
-		const { classes } = this.props;
+    if (!isAdminLogin && !isAuthenticated) {
+      login = (
+        <Login
+          onLogin={this.onLoginClickedHandler}
+          onIsAdminLogin={this.onIsAdminLoginHandler}
+          onIsLoginClicked={this.onIsLoginClickedHandler}
+          onChangeUserName={this.onChangeUserNameHandler}
+          isCreateUserLogin={createUserLogin}
+          isAuthenticated={this.onAuthenticationHandler}
+          onLoginDataPass={this.onLoginDataPass}
+        />
+      );
+    }
 
-		let adminPanel = null;
-		let login = null;
-		let menuHideButton = null;
-		let footerBar = null;
-		let imagesGeneratorAndCounter = null;
+    if (isAuthenticated && !isCheckout) {
+      menuHideButton = (
+        <Fab
+          onClick={this.onDrawerOpenHandler}
+          size="small"
+          className={classes.fab}
+        >
+          {isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
+        </Fab>
+      );
+    }
 
-		if (this.state.isAdminLogin) {
-			adminPanel = (
-				<React.Fragment>
-					<CreateUser
-						clicked={this.onLogoutHandler}
-						adminLogin={this.adminLoginHandler}
-						onChangeUserName={this.onChangeUserNameHandler}
-						freePicturesAmount={this.state.freePicturesAmount}
-						picturePrice={this.state.picturePrice}
-						discountProcent={this.state.discountProcent}
-						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
-						loginClicked={this.loginClickedHandler}
-						uploadSelectedImages={this.state.selectedfiles}
-						onUserCreated={this.onUserCreatedHandler}
-					/>
+    if (isAuthenticated) {
+      imagesGeneratorAndCounter = (
+        <ImagesGeneratorAndCounter
+          imagesDataObj={imagesDataObj}
+          freePicturesAmount={freePicturesAmount}
+          discountProcent={discountProcent}
+          picturePrice={picturePrice}
+          userName={userName}
+          isAdminLogin={isAdminLogin}
+          onHideMenu={this.onDrawerOpenHandler}
+          isDrawerOpen={isDrawerOpen}
+          isCheckout={isCheckout}
+          isAuthenticated={isAuthenticated}
+        />
+      );
+    }
 
-					<Uploader
-						userName={this.state.userName}
-						uploadSelectedImages={this.state.selectedfiles}
-						isButtonDisabled={this.state.isButtonDisabled}
-						disableButton={this.disableUploadButtonHandler}
-						imagesAmount={this.state.imagesDataObj ? Object.keys(this.state.imagesDataObj).length : 0}
-						loginClicked={this.loginClickedHandler}
-						selectedfiles={this.selectedfilesHandler}
-						isUserCreated={this.state.isUserCreated}
-						imagesDataObj={this.imagesDataObjHandler}
-					/>
-				</React.Fragment>
-			);
-		}
+    if (!isAuthenticated) {
+      footerBar = (
+        <AppBar className={classes.footer} position="static" color="default">
+          <Toolbar className={classes.toolbar__footer}>
+            <Copyright className={classes.icon} />
+            <Typography variant="caption" color="inherit">
+              2019 Marcin Delektowski
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      );
+    }
 
-		if (!this.state.isAdminLogin && !this.state.isAuthenticated) {
-			login = (
-				<Login
-					onLogin={this.onLoginClickedHandler}
-					onIsAdminLogin={this.onIsAdminLoginHandler}
-					onIsLoginClicked={this.onIsLoginClickedHandler}
-					onChangeUserName={this.onChangeUserNameHandler}
-					isCreateUserLogin={this.state.createUserLogin}
-					isAuthenticated={this.onAuthenticationHandler}
-					onLoginDataPass={this.onLoginDataPass}
-				/>
-			);
-		}
+    console.count('MAINVIEW');
 
-		if (this.state.isAuthenticated && !this.state.isCheckout) {
-			menuHideButton = (
-				<Fab onClick={this.onDrawerOpenHandler} size="small" className={classes.fab}>
-					{this.state.isDrawerOpen ? <ChevronLeft /> : <ChevronRight />}
-				</Fab>
-			);
-		}
+    return (
+      <React.Fragment>
+        <Layout>
+          <header>
+            {menuHideButton}
+            <Drawer
+              transitionDuration={500}
+              variant="persistent"
+              anchor="left"
+              open={isDrawerOpen}
+              classes={{
+                paper: classes.drawerPaperMenu,
+              }}
+            >
+              <AplicationBar
+                userName={userName}
+                isAuthenticated={isAuthenticated}
+                imagesDataObj={imagesDataObj}
+                onLogoutHandler={this.onLogoutHandler}
+                isAdminLogin={isAdminLogin}
+                onCheckoutRelease={this.onCheckoutReleaseHandler}
+                onCheckoutClose={this.onCheckoutCloseHandler}
+                isCheckout={isCheckout}
+              />
+            </Drawer>
+          </header>
 
-		if (this.state.isAuthenticated) {
-			imagesGeneratorAndCounter = (
-				<ImagesGeneratorAndCounter
-					imagesDataObj={this.state.imagesDataObj}
-					freePicturesAmount={this.state.freePicturesAmount}
-					discountProcent={this.state.discountProcent}
-					picturePrice={this.state.picturePrice}
-					images={this.state.picturesPaths}
-					titles={this.state.picturesTitles}
-					userName={this.state.userName}
-					isAdminLogin={this.state.isAdminLogin}
-					onHideMenu={this.onDrawerOpenHandler}
-					isDrawerOpen={this.state.isDrawerOpen}
-					isCheckout={this.state.isCheckout}
-					isAuthenticated={this.state.isAuthenticated}
-				/>
-			);
-		}
+          <main>
+            <div className={classes.mainView}>
+              <section>
+                <Route
+                  path={`/confirmation`}
+                  render={() => {
+                    return <Confirmation open={true} />;
+                  }}
+                />
 
-		if (!this.state.isAuthenticated) {
-			footerBar = (
-				<AppBar className={classes.footer} position="static" color="default">
-					<Toolbar className={classes.toolbar__footer}>
-						<Copyright className={classes.icon} />
-						<Typography variant="caption" color="inherit">
-							2019 Marcin Delektowski
-						</Typography>
-					</Toolbar>
-				</AppBar>
-			);
-		}
+                {errorLogin ? <p>{errorLogin}</p> : null}
+                <Route
+                  path={`/`}
+                  render={() => {
+                    return login;
+                  }}
+                />
+              </section>
 
-		console.count('MAINVIEW');
-
-		return (
-			<React.Fragment>
-				<Layout>
-					<header>
-						{menuHideButton}
-						<Drawer
-							transitionDuration={500}
-							variant="persistent"
-							anchor="left"
-							open={this.state.isDrawerOpen}
-							classes={{
-								paper: classes.drawerPaperMenu
-							}}
-						>
-							<AplicationBar
-								userName={this.state.userName}
-								isAuthenticated={this.state.isAuthenticated}
-								imagesDataObj={this.state.imagesDataObj}
-								onLogoutHandler={this.onLogoutHandler}
-								isAdminLogin={this.state.isAdminLogin}
-								onCheckoutRelease={this.onCheckoutReleaseHandler}
-								onCheckoutClose={this.onCheckoutCloseHandler}
-								isCheckout={this.state.isCheckout}
-							/>
-						</Drawer>
-					</header>
-
-					<main>
-						<div className={classes.mainView}>
-							<section>
-								<Route
-									path={`/confirmation`}
-									render={() => {
-										return <Confirmation open={true} />;
-									}}
-								/>
-
-								{this.state.errorLogin ? <p>{this.state.errorLogin}</p> : null}
-								<Route
-									path={`/`}
-									render={() => {
-										return login;
-									}}
-								/>
-							</section>
-
-							<section>{adminPanel}</section>
-							{imagesGeneratorAndCounter}
-						</div>
-					</main>
-				</Layout>
-				<footer>{footerBar}</footer>
-			</React.Fragment>
-		);
-	}
+              <section>{adminPanel}</section>
+              {imagesGeneratorAndCounter}
+            </div>
+          </main>
+        </Layout>
+        <footer>{footerBar}</footer>
+      </React.Fragment>
+    );
+  }
 }
 
 MainView.propTypes = {
-	classes: PropTypes.object
+  classes: PropTypes.object,
 };
 
 export default withStyles(styles)(MainView);

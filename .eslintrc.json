@@ -1,0 +1,22 @@
+{
+  "extends": ["airbnb-base", "prettier", "prettier/react", "airbnb-base/whitespace"],
+  "plugins": ["react","prettier"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "warn",
+    "prefer-const": "error",
+    "no-const-assign": "error"
+  }
+}
