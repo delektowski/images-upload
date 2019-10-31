@@ -38,16 +38,16 @@ const menu = ({
     );
   }
 
-  if (!isAdminLogin && !isCheckout) {
-    checkout = (
-      <MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
-        <CheckoutRelease
-          onCheckoutRelease={onCheckoutRelease}
-          onMenuClose={onMenuClose}
-        />
-      </MenuItem>
-    );
-  }
+  // if (!isAdminLogin && !isCheckout) {
+  //   checkout = (
+  //     <MenuItem style={{ display: 'flex', justifyContent: 'center' }}>
+  //       <CheckoutRelease
+  //         onCheckoutRelease={onCheckoutRelease}
+  //         onMenuClose={onMenuClose}
+  //       />
+  //     </MenuItem>
+  //   );
+  // }
 
   if (isCheckout) {
     selection = (
